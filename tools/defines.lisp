@@ -6,7 +6,7 @@
      :VERSION-MINOR "#define XR_VERSION_MINOR(version) (uint16_t)(((uint64_t)(version) >> 32) & 0xffffULL)"
      :VERSION-PATCH "#define XR_VERSION_PATCH(version) (uint32_t)((uint64_t)(version) & 0xffffffffULL)"
      :CURRENT-API-VERSION "// OpenXR current version number.
-#define XR_CURRENT_API_VERSION XR_MAKE_VERSION(1, 0, 2)"
+#define XR_CURRENT_API_VERSION XR_MAKE_VERSION(1, 0, 9)"
      :MAY-ALIAS "#if !defined(XR_MAY_ALIAS)
 #if defined(__clang__) || (defined(__GNUC__) && (__GNUC__ > 4))
 #define XR_MAY_ALIAS __attribute__((__may_alias__))
@@ -41,4 +41,7 @@
      :MIN-HAPTIC-DURATION "#define XR_MIN_HAPTIC_DURATION -1"
      :FREQUENCY-UNSPECIFIED "#define XR_FREQUENCY_UNSPECIFIED 0"
      :MAX-EVENT-DATA-SIZE "#define XR_MAX_EVENT_DATA_SIZE sizeof(XrEventDataBuffer)"
-     :openxr-platform-defines "#include \"openxr_platform_defines.h\"")))
+     :openxr-platform-defines "#include \"openxr_platform_defines.h\""
+
+     :hand-joint-count-ext "#define XR_HAND_JOINT_COUNT_EXT 26"
+)))

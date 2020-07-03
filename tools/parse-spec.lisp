@@ -1,7 +1,7 @@
-#++
 (asdf:load-systems 'alexandria 'cl-ppcre 'split-sequence 'cxml 'xpath 'cxml-stp)
 
 (defvar *package-name* "3b-openxr")
+(defvar *bindings-package-name* "3b-openxr-bindings")
 (defvar *core-definer* 'defcfun)
 (defvar *ext-definer* 'defextfun)
 (defvar *noprint* nil)
@@ -10,6 +10,7 @@
 (defvar *ext-enum-block* 1000)
 (defvar *api-version* nil)
 (defvar *api-last-updated* nil)
+(defvar *exports* (make-hash-table :test 'equalp))
 
 (defparameter *defines*
   ;; some manually extracted #defines, not sure if these should be
@@ -20,7 +21,8 @@
     +no-duration+ 0
     +infinite-duration+ #x7fffffffffffffff
     +min-haptic-duration+ -1
-    +frequency-unspecified+ 0))
+    +frequency-unspecified+ 0
+    +hand-joint-count-ext+ 26))
 
 (defparameter *define-types*
   (alexandria:plist-hash-table '() :test 'equal))
@@ -62,15 +64,16 @@
      "EGLDisplay" ((:pointer :void) egl-display) ;;"EGL/egl.h"
      "EGLConfig" ((:pointer :void) egl-config)   ;;"EGL/egl.h"
      "EGLContext" ((:pointer :void) egl-context) ;;"EGL/egl.h"
+     "PFNEGLGETPROCADDRESSPROC" ((:pointer :void) pfn-egl-get-proc-address-proc) ;; "EGL/egl.h"
      "GLXFBConfig" (:opaque glx-fb-config)       ;;"GL/glxext.h"
      "GLXDrawable" (xid glx-drawable)            ;;"GL/glxext.h"
-     "GLXContext" (xid glc-context)              ;;"GL/glxext.h"
+     "GLXContext" (xid glx-context)              ;;"GL/glxext.h"
      "HGLRC" (handle hglrc)                      ;;"GL/wglext.h"
      "wl_display" (:opaque wl-display)           ;;"wayland-client.h"
      "HDC" (handle hdc)                          ;;"windows.h"
      "LUID" (:opaque luid)                       ;;"windows.h"
      "LARGE_INTEGER" (:int64 large-integer)      ;;"windows.h"
-     "Display" (opaque display)                  ;;"X11/Xlib.h"
+     "Display" (:opaque display)                  ;;"X11/Xlib.h"
      "VisualID" (:unsigned-long visual-id)       ;;"X11/Xlib.h"
      "Window" (xid window)                       ;;"X11/Xlib.h"
      "xcb_glx_fbconfig_t" (:uint32 xcb-glx-fbconfig-t) ;;"xcb/glx.h"
@@ -98,7 +101,10 @@
      "XrPath" path
      "XrSystemId" system-id
      "XR_DEFINE_ATOM" atom
-     "XR_DEFINE_HANDLE" xr-handle)
+     "XR_DEFINE_HANDLE" xr-handle
+     "PFN_xrDebugUtilsMessengerCallbackEXT" :pointer
+     "PFN_xrVoidFunction" :pointer
+)
    :test 'equalp))
 
 (defparameter *bitmask-types* (make-hash-table))
@@ -165,7 +171,7 @@
          ""))))))
 
 (defun %translate-type-name (name)
-  (unless  name
+  (unless name
     (return-from %translate-type-name name))
   (let ((os (gethash name *os-types*))
         (platform (gethash name *platform-types*))
@@ -196,6 +202,8 @@
   (let ((type (%translate-type-name name)))
     (when (and (eql type :char) (search "null-terminated" len))
       (setf type :string))
+    (when (gethash type *struct-types*)
+      (setf type (list :struct type)))
     (when (position #\* str)
       (loop repeat (count #\* str)
             do (setf type (list :pointer type))))
@@ -311,7 +319,7 @@
       (setf (gethash name
                      (getf (gethash *current-type* *struct-types*) :init))
             values)
-      (setf extra (format nil "= ~s" (translate-type-name values))))
+      (setf extra (format nil "= ~(~s~)" (translate-type-name values))))
     (when (and noautovalidity (not (string= "" noautovalidity)))
       (setf (gethash name
                      (getf (gethash *current-type* *struct-types*)
@@ -333,12 +341,12 @@
                       (getf (gethash *current-type* *struct-types*)
                             :counted-slots))
              len)
-       (format t "~&  (~a ~s) ;; count ~s~@[, ~a~]~%"
+       (format t "~&  ~((~a ~s)~) ;; count ~(~s~@[, ~a~]~)~%"
                name type  len extra))
       (t
        (loop for i below (count #\* (xps node))
              do (setf type (list :pointer type)))
-       (format t "~&  (~a ~s)~@[ ;; ~a~%~]" name type extra))))
+       (format t "~&  ~((~a ~s)~)~@[ ;; ~a~%~]" name type extra))))
   (setf *noprint* t))
 
 (defnode :types/type/member/type ())
@@ -377,29 +385,30 @@
       (:basetype
        (let ((name (translate-type-name (xps (xpath:evaluate "name" node))))
              (type (translate-type-name (xps (xpath:evaluate "type" node)))))
-         (format t "~&(defctype ~s ~s)~%~%" name type)
+         (format t "~&~((defctype ~s ~s)~)~%~%" name type)
          (return-from node nil)))
       (:bitmask
-       (let* ((name (translate-type-name name))
+       (let* ((tname (translate-type-name (xps (xpath:evaluate "name" node))))
               (bv (translate-type-name bitvalues))
-              (definition (or (gethash name *bitmask-types*)
+              (definition (or (gethash tname *bitmask-types*)
                               (gethash bv *bitmask-types*))))
          (assert definition)
          (destructuring-bind (&key name comment values def type)
              definition
+           (declare (ignorable name))
            (when comment
              (format-comment comment))
            (if type
-               (format t "~&(~a (~s ~s)" def name type)
-               (format t "~&(~a ~a" def name))
+               (format t "~&~((~a (~s ~s)~)" def tname type)
+               (format t "~&~((~a ~a~)" def tname))
            (loop for v in (reverse values)
-                 do (format t "~&~a" v))
+                 do (format t "~&~(~a~)" v))
            (format t ")~%~%"))
          (setf *noprint* t)))
       (:handle
        (let ((name (translate-type-name (xps (xpath:evaluate "name" node))))
              (type (translate-type-name (xps (xpath:evaluate "type" node)))))
-         (format t "~&(defctype ~s ~s)~%" name type)
+         (format t "~&~((defctype ~s ~s)~)~%" name type)
          (setf *noprint* t)))
       (:enum
        (let* ((name (translate-type-name name))
@@ -410,14 +419,14 @@
              (when comment
                (format-comment comment))
              (if type
-                 (format t "~&(~a (~s ~s)" def name type)
-                 (format t "~&(~a ~a" def name))
+                 (format t "~&~((~a (~s ~s)~)" def name type)
+                 (format t "~&~((~a ~a~)" def name))
              (loop for v in (reverse values)
-                   do (format t "~&~a" v))
+                   do (format t "~&~(~a~)" v))
              (format t ")~%~%")))
          (setf *noprint* t)))
       (:struct
-       (let* ((name (translate-type-name name))
+       (let* ((name (%translate-type-name name))
               (plist (list :name name :init (make-hash-table)
                            :counted-slots (make-hash-table)
                            :no-auto-validity (make-hash-table))))
@@ -429,9 +438,10 @@
            (setf (getf plist :bitvalues) bitvalues))
          (setf *current-type* name)
          (setf (gethash name *struct-types*) plist)
-         (format t "~&(defcstruct ~a" name)))
+         (setf (gethash name *exports*) t)
+         (format t "~&(defcstruct ~(~a~)" name)))
       (:funcpointer
-       (format t ";; ~a~%" (xps node))
+       (format t "~@<;;;~@; ~a~%~:>~%" (xps node))
        (setf *noprint* t))))
   (when (not category)
     (format t "type: ~s ~s~%" name category)))
@@ -465,7 +475,8 @@
           (name (xps (xpath:evaluate "name" node))))
       (unless type
         (break ",kjhg"))
-      (format t "~&(~s (~s ~s) ~s"
+      (setf (gethash (translate-type-name name) *exports*) t)
+      (format t "~&(~(~s~) (~s ~(~s~)) ~(~s~)"
               *core-definer*
               name
               (translate-type-name name)
@@ -481,12 +492,12 @@
                                    :len len :str (xps node)))
         (name (translate-var-name (xps (xpath:evaluate "name" node)))))
     (when len
-      (format t "~&  ;; count = ~s~%" (translate-var-name len)))
+      (format t "~&  ;; count = ~(~s~)~%" (translate-var-name len)))
     (when externsync
-      (format t "~&  ;; externsync = ~s~%" externsync))
+      (format t "~&  ;; externsync = ~(~a~)~%" externsync))
     (when optional
-      (format t "~&  ;; optional = ~s~%" externsync))
-    (format t "~&  (~s ~s)" name type)
+      (format t "~&  ;; optional = ~(~a~)~%" optional))
+    (format t "~& ~((~s ~s)~)" name type)
     (setf *noprint* t)
     #++(format t "  arg: ~s -> ~s ~%" name type)))
 
@@ -497,9 +508,9 @@
   (setf *noprint* t))
 
 (defnode :commands/command (errorcodes successcodes)
-  (format t ";; success ~a~%" (make-const-keyword successcodes))
+  (format t ";; success ~(~a~)~%" (make-const-keyword successcodes))
   (format-comment
-   (format nil " errors ~a~%" (mapcar 'make-const-keyword
+   (format nil " errors ~(~a~)~%" (mapcar 'make-const-keyword
                                       (split-sequence:split-sequence
                                        #\, errorcodes)))))
 (defmethod node :after ((tag (eql :commands/command)) node)
@@ -520,8 +531,9 @@
   (declare (ignore api name number)))
 
 (defnode :extensions ())
-(defnode :extensions/extension (protect supported type number name requires)
-  (declare (ignore protect supported type number name requires)))
+(defnode :extensions/extension (protect supported type number name requires
+                                provisional)
+  (declare (ignore protect supported type number name requires provisional)))
 (defnode :extensions/extension/require ())
 (defnode :extensions/extension/require/enum (name value comment dir offset extends)
   (declare (ignore name value comment dir offset extends)))
@@ -553,8 +565,9 @@
              (with-output-to-string (*standard-output*)
                (when comment
                  (format-comment comment :prefix "  "))
-               (format t "  (~s ~a)" (make-enum-name name parent) value))
+               (format t "  ~((~s ~a)~)" (make-enum-name name parent) value))
              children)))
+        (setf (gethash (translate-type-name name) *exports*) t)
         (cond
           ((or (not type) (string= type "enum"))
            (setf (gethash (translate-type-name name) *enum-types*)
@@ -572,9 +585,11 @@
   ;; add any enums from extensions
   (xpath:do-node-set (ext (xpath:evaluate "/registry/extensions/extension"
                                           xml))
-    (destructuring-bind (&key protect supported type number name requires)
+    (destructuring-bind (&key protect supported type number name requires
+                           provisional)
         (attrib-plist ext)
-      (declare (ignorable protect supported type number name requires))
+      (declare (ignorable protect supported type number name requires
+                          provisional))
       #++(format t "~%ext ~s: ~s ~s ~s ~s ~s~%"
                  name number type requires protect supported)
       (let (ext-name ext-version)
@@ -592,15 +607,49 @@
                  (break "~a" name))
                (let ((v (ext-enum-value number dir offset)))
                  (push
-                  (format nil "~@[  ;; ~a~%~]  (~s ~a)"
+                  (format nil "~@[  ;; ~a~%~]  ~((~s ~a)~)"
                           comment
                           (make-enum-name name extends) v)
                   (getf (gethash (translate-type-name extends) *enum-types*)
                         :values))))
               (t (break "?")))))))))
 
+(defun collect-struct-names (xml)
+  (clrhash *struct-types*)
+  (xpath:do-node-set (node (xpath:evaluate "/registry/types/type[@category='struct']" xml))
+    (format t "struct ~s ~s~%"
+            (getf (attrib-plist node) :name)
+            (%translate-type-name (getf (attrib-plist node) :name))
+            )
+    (setf (gethash (%translate-type-name (getf (attrib-plist node) :name))
+                   *struct-types*)
+          t)))
+
 #++
 (progn
   (collect-enum-values *xml*)
   (xpath:do-node-set (x (xpath:evaluate "/registry/*" *xml*))
     (node (make-keyword (stp:local-name x)) x)))
+
+(progn
+  (collect-enum-values *xml*)
+  (collect-struct-names *xml*)
+  (clrhash *exports*)
+  (alexandria:with-output-to-file (*standard-output*
+                                   (asdf:system-relative-pathname
+                                    :3b-openxr "bindings.lisp")
+                                   :if-exists :supersede)
+    (format t "(in-package #:~a)~%"
+            *bindings-package-name*)
+    (xpath:do-node-set (x (xpath:evaluate "/registry/*" *xml*))
+      (node (make-keyword (stp:local-name x)) x)))
+  (alexandria:with-output-to-file (*standard-output*
+                                   (asdf:system-relative-pathname
+                                    :3b-openxr "bindings-package.lisp")
+                                   :if-exists :supersede)
+    (format t "(defpackage #:~a~%" *bindings-package-name*)
+    (format t "  (:use :cl #:cffi)~%")
+    (format t "  (:shadow #:space #:time #:atom)~%")
+    (format t "  (:export ~(~{#:~s~^~%           ~}~)))~%"
+            (sort (alexandria:hash-table-keys *exports*)
+                  'string< :key 'string-downcase))))

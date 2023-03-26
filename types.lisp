@@ -20,6 +20,7 @@
 (defctype egl-display (:pointer :void)) ;;"EGL/egl.h"
 (defctype egl-config (:pointer :void))   ;;"EGL/egl.h"
 (defctype egl-context (:pointer :void)) ;;"EGL/egl.h"
+(defctype egl-enum (:unsigned-int)) ;;"EGL/egl.h"
 (defctype pfn-egl-get-proc-address-proc  (:pointer :void)) ;; "EGL/egl.h"
 (defctype glx-drawable :unsigned-long)       ;;XID "GL/glxext.h"
 (defctype glx-fb-config :pointer)            ;;"GL/glxext.h"
@@ -33,6 +34,7 @@
 (defctype hdc handle)                          ;;"windows.h"
 (defctype luid :pointer)                       ;;"windows.h"
 (defctype large-integer :int64)      ;;"windows.h"
+(defctype i-unknown :void) ;;"unknwn.h"
 
 (defctype display :pointer)                  ;;"X11/Xlib.h"
 (defctype visual-id :unsigned-long)       ;;"X11/Xlib.h"
@@ -49,7 +51,23 @@
 (defctype vk-image :pointer)    ;;"vulkan/vulkan.h"
 (defctype vk-image :pointer) ;;"vulkan/vulkan.h"
 (defctype vk-physical-device :pointer) ;;"vulkan/vulkan.h"
+(defctype vk-component-swizzle :pointer) ;; "vulkan/vulkan.h"
+(defctype vk-device-create-info :pointer) ;; "vulkan/vulkan.h"
+(defctype vk-filter :pointer)  ;; "vulkan/vulkan.h"
+(defctype vk-image-create-flags :pointer) ;; "vulkan/vulkan.h"
+(defctype vk-image-usage-flags :pointer) ;; "vulkan/vulkan.h"
+(defctype vk-instance-create-info :pointer) ;; "vulkan/vulkan.h"
+(defctype vk-instance-create-flags :pointer) ;; "vulkan/vulkan.h"
+(defctype vk-result :pointer)  ;; "vulkan/vulkan.h"
+(defctype vk-sampler-address-mode :pointer)  ;; "vulkan/vulkan.h"
+(defctype vk-sampler-mipmap-mode :pointer)  ;; "vulkan/vulkan.h"
+(defctype vk-allocation-callbacks :pointer)  ;; "vulkan/vulkan.h"
+(defctype vk-get-device-instance-proc-addr :pointer)  ;; "vulkan/vulkan.h"
+
+(defctype ml-coordinate-frame-uid :pointer) ;; "ml_coordinate_frame_uid.h"
 
 (defctype timespec :void) ;;"time.h" ;; only used through pointer?
 
 (defctype void-function :pointer)
+
+(defctype wchar_t #+windows :uint16 #-windows :uint32)

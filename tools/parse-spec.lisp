@@ -5,12 +5,15 @@
 (defvar *core-definer* 'defcfun)
 (defvar *ext-definer* 'defextfun)
 (defvar *noprint* nil)
+(defvar *override-function-name* nil)
 
 (defvar *ext-enum-base* (floor 1e10))
 (defvar *ext-enum-block* 1000)
 (defvar *api-version* nil)
 (defvar *api-last-updated* nil)
 (defvar *exports* (make-hash-table :test 'equalp))
+(defvar *enum-values* (make-hash-table :test 'equalp))
+(defvar *printed-structs* (make-hash-table))
 
 (defparameter *defines*
   ;; some manually extracted #defines, not sure if these should be
@@ -43,6 +46,8 @@
      "size_t" size-t
      "uintptr_t" uintptr-t
      "atom" :uint64
+     ;; fixme: figure out actual size of wchar_t portably?
+     "wchar_t" #+windows :uint16 #-windows :uint32
      ;; xr handle is (:pointer (:struct object_x)) on 64bit systems,
      ;; uint64 otherwise... just using uint64 for now
      "xr-handle" :uint64)
@@ -64,18 +69,20 @@
      "EGLDisplay" ((:pointer :void) egl-display) ;;"EGL/egl.h"
      "EGLConfig" ((:pointer :void) egl-config)   ;;"EGL/egl.h"
      "EGLContext" ((:pointer :void) egl-context) ;;"EGL/egl.h"
+     "EGLenum" (:unsigned-int egl-enum)          ;;"EGL/egl.h"
      "PFNEGLGETPROCADDRESSPROC" ((:pointer :void) pfn-egl-get-proc-address-proc) ;; "EGL/egl.h"
-     "GLXFBConfig" (:opaque glx-fb-config)       ;;"GL/glxext.h"
-     "GLXDrawable" (xid glx-drawable)            ;;"GL/glxext.h"
-     "GLXContext" (xid glx-context)              ;;"GL/glxext.h"
-     "HGLRC" (handle hglrc)                      ;;"GL/wglext.h"
-     "wl_display" (:opaque wl-display)           ;;"wayland-client.h"
-     "HDC" (handle hdc)                          ;;"windows.h"
-     "LUID" (:opaque luid)                       ;;"windows.h"
-     "LARGE_INTEGER" (:int64 large-integer)      ;;"windows.h"
-     "Display" (:opaque display)                  ;;"X11/Xlib.h"
-     "VisualID" (:unsigned-long visual-id)       ;;"X11/Xlib.h"
-     "Window" (xid window)                       ;;"X11/Xlib.h"
+     "GLXFBConfig" (:opaque glx-fb-config)  ;;"GL/glxext.h"
+     "GLXDrawable" (xid glx-drawable)       ;;"GL/glxext.h"
+     "GLXContext" (xid glx-context)         ;;"GL/glxext.h"
+     "HGLRC" (handle hglrc)                 ;;"GL/wglext.h"
+     "wl_display" (:opaque wl-display)      ;;"wayland-client.h"
+     "HDC" (handle hdc)                     ;;"windows.h"
+     "LUID" (:opaque luid)                  ;;"windows.h"
+     "LARGE_INTEGER" (:int64 large-integer) ;;"windows.h"
+     "IUnknown" (:opaque i-unknown)         ;;"unknwn.h"
+     "Display" (:opaque display)            ;;"X11/Xlib.h"
+     "VisualID" (:unsigned-long visual-id)  ;;"X11/Xlib.h"
+     "Window" (xid window)                  ;;"X11/Xlib.h"
      "xcb_glx_fbconfig_t" (:uint32 xcb-glx-fbconfig-t) ;;"xcb/glx.h"
      "xcb_glx_drawable_t" (:uint32 xcb-glx-drawable-t) ;;"xcb/glx.h"
      "xcb_glx_context_t" (:uint32 xcb-glx-context-t)   ;;"xcb/glx.h"
@@ -86,8 +93,23 @@
      "VkFormat" (:opaque vk-format)  ;;"vulkan/vulkan.h"
      "VkImage" (:opaque vk-image)    ;;"vulkan/vulkan.h"
      "VkInstance" (:opaque vk-image) ;;"vulkan/vulkan.h"
+     "PFN_vkGetInstanceProcAddr" ((:pointer :opaque) vk-get-device-instance-proc-addr) ;; "vulkan/vulkan.h"
+     "VkAllocationCallbacks" (:opaque vk-allocation-callbacks) ;;"vulkan/vulkan.h"
      "VkPhysicalDevice" (:opaque vk-physical-device) ;;"vulkan/vulkan.h"
-     "timespec" ((:struct timespec) timespec)        ;;"time.h"
+     "VkComponentSwizzle" (:opaque vk-component-swizzle) ;; "vulkan/vulkan.h"
+     "VkDeviceCreateInfo" (:opaque vk-device-create-info) ;; "vulkan/vulkan.h"
+     "VkFilter" (:opaque vk-filter) ;; "vulkan/vulkan.h"
+     "VkImageCreateFlags" (:opaque vk-image-create-flags) ;; "vulkan/vulkan.h"
+     "VkImageUsageFlags" (:opaque vk-image-usage-flags) ;; "vulkan/vulkan.h"
+     "VkInstanceCreateInfo" (:opaque vk-instance-create-info) ;; "vulkan/vulkan.h"
+     "VkInstanceCreateFlags" (:opaque vk-instance-create-flags) ;; "vulkan/vulkan.h"
+     "VkResult" (:opaque vk-result) ;; "vulkan/vulkan.h"
+     "VkSamplerAddressMode" (:opaque vk-sampler-address-mode) ;; "vulkan/vulkan.h"
+     "VkSamplerMipmapMode" (:opaque vk-sampler-mipmap-mode) ;; "vulkan/vulkan.h"
+
+     "MLCoordinateFrameUID" (:opaque ml-coordinate-frame-uid) ;; "ml_coordinate_frame_uid.h"
+
+     "timespec" ((:struct timespec) timespec) ;;"time.h"
      )
    :test 'equal))
 
@@ -104,12 +126,13 @@
      "XR_DEFINE_HANDLE" xr-handle
      "PFN_xrDebugUtilsMessengerCallbackEXT" :pointer
      "PFN_xrVoidFunction" :pointer
-)
+     )
    :test 'equalp))
 
 (defparameter *bitmask-types* (make-hash-table))
 (defparameter *enum-types* (make-hash-table))
 (defparameter *struct-types* (make-hash-table))
+(defparameter *struct-dependencies* (make-hash-table))
 
 (defun format-comment (s &key prefix)
   (with-input-from-string (ss s)
@@ -297,70 +320,106 @@
 
 (defnode :tags ())
 
-(defvar *current-type*)
+(defvar *current-type* nil)
 (defnode :types/type/name ())
 (defnode :types/type/type ())
 (defnode :types/type/member (values optional len noautovalidity)
-  (let ((name (translate-var-name (xps (xpath:evaluate "name" node))))
-        (type (translate-type-name (xps (xpath:evaluate "type" node))
-                                   :len len :str (xps node)))
-        (extra nil))
-    (when len
-      (setf len
-            (mapcar
-             'translate-var-name
-             (remove "null-terminated"
-                     (split-sequence:split-sequence #\, len)
-                     :test 'equal)))
-      (ecase (length len)
-        (0 (setf len nil))
-        (1 (setf len (car len)))))
-    (when values
-      (setf (gethash name
-                     (getf (gethash *current-type* *struct-types*) :init))
-            values)
-      (setf extra (format nil "= ~(~s~)" (translate-type-name values))))
-    (when (and noautovalidity (not (string= "" noautovalidity)))
-      (setf (gethash name
-                     (getf (gethash *current-type* *struct-types*)
-                           :no-auto-validity))
-            (if (string-equal "true" noautovalidity)
-                t
-                (make-keyword noautovalidity)))
-      (setf extra (format nil "~@[~a ~]noautovalidity" extra)))
-    (when optional
-      (pushnew name
-               (getf (gethash *current-type* *struct-types*) :optional))
-      (setf extra (format nil "~@[~a ~]optional" extra)))
-    (cond
-      (len
-       (assert (plusp (count #\* (xps node))))
-       (loop for i below (count #\* (xps node))
-             do (setf type (list :pointer type)))
-       (setf (gethash name
-                      (getf (gethash *current-type* *struct-types*)
-                            :counted-slots))
-             len)
-       (format t "~&  ~((~a ~s)~) ;; count ~(~s~@[, ~a~]~)~%"
-               name type  len extra))
-      (t
-       (loop for i below (count #\* (xps node))
-             do (setf type (list :pointer type)))
-       (format t "~&  ~((~a ~s)~)~@[ ;; ~a~%~]" name type extra))))
+  (when *current-type*
+    (let ((name (translate-var-name (xps (xpath:evaluate "name" node))))
+          (type (translate-type-name (xps (xpath:evaluate "type" node))
+                                     :len len :str (xps node)))
+          (extra nil))
+      (when len
+        (setf len
+              (mapcar
+               'translate-var-name
+               (remove "null-terminated"
+                       (split-sequence:split-sequence #\, len)
+                       :test 'equal)))
+        (ecase (length len)
+          (0 (setf len nil))
+          (1 (setf len (car len)))))
+      (when values
+        (setf (gethash name
+                       (getf (gethash (car *current-type*) *struct-types*) :init))
+              values)
+        (setf extra (format nil "= ~(~s~)" (translate-type-name values))))
+      (when (and noautovalidity (not (string= "" noautovalidity)))
+        (format *debug-io* "ct ~s~%" *current-type*)
+        (unless *current-type*
+          (format *debug-io*
+                  "node = ~s~%" (attrib-plist (stp:parent node)))
+          (format *debug-io*
+                  "node = ~s~%" (xpath:string-value (stp:parent node))))
+        (setf (gethash name
+                       (getf (gethash (car *current-type*) *struct-types*)
+                             :no-auto-validity))
+              (if (string-equal "true" noautovalidity)
+                  t
+                  (make-keyword noautovalidity)))
+        (setf extra (format nil "~@[~a ~]noautovalidity" extra)))
+      (when optional
+        (pushnew name
+                 (getf (gethash (car *current-type*) *struct-types*) :optional))
+        (setf extra (format nil "~@[~a ~]optional" extra)))
+      (cond
+        (len
+         (assert (plusp (count #\* (xps node))))
+         (loop for i below (count #\* (xps node))
+               do (setf type (list :pointer type)))
+         (setf (gethash name
+                        (getf (gethash (car *current-type*) *struct-types*)
+                              :counted-slots))
+               len)
+         (format t "~&  ~((~a ~s)~) ;; count ~(~s~@[, ~a~]~)~%"
+                 name type  len extra))
+        (t
+         (loop for i below (count #\* (xps node))
+               do (setf type (list :pointer type)))
+         (format t "~&  ~((~a ~s)~)~@[ ;; ~a~%~]" name type extra)))))
   (setf *noprint* t))
 
 (defnode :types/type/member/type ())
 (defnode :types/type/member/name ())
 (defnode :types/type/member/enum ())
+
+(defun get-one-node (xpath xml)
+  (let ((ns (xpath:evaluate xpath xml)))
+    (unless (and (xpath:node-set-p ns)
+                 (not (xpath:node-set-empty-p ns)))
+      (break "couldn't find node?~% q= ~s~%" xpath))
+    (let* ((nls (xpath:all-nodes ns)))
+      (when (cdr nls)
+        (break "found multiple nodes?~%q=~s~%" xpath))
+      (car nls))))
+
+(defun print-struct-deps (name)
+  (let* ((deps (gethash name *struct-dependencies*))
+         (unprinted (loop for i in deps unless (gethash i *printed-structs*)
+                          collect i)))
+    (when unprinted
+      (format *debug-io* ";;; print ~s early...~%" unprinted)
+      (loop for dep in unprinted
+            for orig = (gethash dep *struct-types*)
+            do (assert (stringp orig))
+               (let ((n (xpath:with-variables (("name" orig))
+                          (get-one-node "/registry/types/type[@name=$name]"
+                                        *xml*))))
+                 (format *debug-io* "--> ~s~%" (xpath:string-value n))
+                 (assert n)
+                 (node :types/type n))))))
+
 (defnode :types/type (category name requires bitvalues parent mayalias
-                      returnedonly protect structextends parentstruct)
+                      returnedonly protect structextends parentstruct
+                      alias)
   (declare (ignorable category name requires bitvalues parent mayalias
-                      returnedonly protect structextends parentstruct))
+                      returnedonly protect structextends parentstruct
+                      alias))
   ;; types from OS headers or openxr_platform_defines.h\
   (when (and requires (not category))
     (unless (or (gethash name *os-types*)
                 (gethash name *platform-types*))
-      (break "unknown type ~s (~s)" name requires))
+      (break "unknown type ~s (~a) ;; ~s" name (copy-seq name) requires))
     (return-from node nil))
   (when category
     (ecase (make-keyword category)
@@ -380,7 +439,11 @@
                          (split-sequence:split-sequence
                           #\, (string-trim "()" ver)))))
          ;; make sure #defines haven't been added or changes
-         (assert (string= str (gethash name *defines-xmlval*)))
+         #++(assert (string= str (gethash name *defines-xmlval*)))
+         (unless (string= str (gethash name *defines-xmlval*))
+           (let ((n (second (print (split-sequence:split-sequence #\space str)))))
+             (break "unknown define ~s~%~s ~s~%"
+                    str (make-const-keyword n) (copy-seq str))))
          (setf *noprint* t)))
       (:basetype
        (let ((name (translate-type-name (xps (xpath:evaluate "name" node))))
@@ -436,10 +499,14 @@
            (setf (getf plist :requires) requires))
          (when bitvalues
            (setf (getf plist :bitvalues) bitvalues))
-         (setf *current-type* name)
-         (setf (gethash name *struct-types*) plist)
-         (setf (gethash name *exports*) t)
-         (format t "~&(defcstruct ~(~a~)" name)))
+         (unless (gethash name *printed-structs*)
+           (setf (gethash name *printed-structs*) t)
+           (print-struct-deps name)
+           (format *debug-io* "ct ~s~% -> ~s~%" *current-type* name)
+           (push name *current-type*)
+           (setf (gethash name *struct-types*) plist)
+           (setf (gethash name *exports*) t)
+           (format t "~&(defcstruct ~(~a~)" name))))
       (:funcpointer
        (format t "~@<;;;~@; ~a~%~:>~%" (xps node))
        (setf *noprint* t))))
@@ -447,8 +514,10 @@
     (format t "type: ~s ~s~%" name category)))
 
 (defmethod node :after ((name (eql :types/type)) node)
-  (when (string-equal "struct" (getf (attrib-plist node) :category))
-    (setf *current-type* nil)
+  (when (and (string-equal "struct" (getf (attrib-plist node) :category))
+             *current-type*)
+    (format *debug-io* "ct <- ~s~%" *current-type*)
+    (pop *current-type*)
     (format t ")~%~%")))
 
 (defnode :types/comment ()
@@ -472,7 +541,8 @@
 (defnode :commands/command/proto ()
   (destructuring-bind () (attrib-plist node)
     (let ((type (xps (xpath:evaluate "type" node)))
-          (name (xps (xpath:evaluate "name" node))))
+          (name (or *override-function-name*
+                    (xps (xpath:evaluate "name" node)))))
       (unless type
         (break ",kjhg"))
       (setf (gethash (translate-type-name name) *exports*) t)
@@ -507,12 +577,28 @@
   (format-comment (xps node) :prefix "  ")
   (setf *noprint* t))
 
-(defnode :commands/command (errorcodes successcodes)
+(defmethod node :around ((tag (eql :commands/command)) node)
+  (let* ((%attribs (attrib-plist node))
+         (alias (getf %attribs :alias)))
+    (cond
+      (alias
+       (xpath:with-variables (("name" alias))
+         (let* ((name (getf %attribs :name))
+                (fun (get-one-node "/registry/commands/command[proto/name=$name]" *xml*)))
+           (format *debug-io* ";; alias ~s -> ~s~%" name alias)
+           (format t ";; alias ~s -> ~s~%" name alias)
+           (let ((*override-function-name* name))
+             (node :commands/command fun)))))
+      (t (call-next-method)))))
+
+(defnode :commands/command (errorcodes successcodes name alias)
+  (declare (ignore name alias))
   (format t ";; success ~(~a~)~%" (make-const-keyword successcodes))
   (format-comment
    (format nil " errors ~(~a~)~%" (mapcar 'make-const-keyword
-                                      (split-sequence:split-sequence
-                                       #\, errorcodes)))))
+                                          (split-sequence:split-sequence
+                                           #\, errorcodes)))))
+
 (defmethod node :after ((tag (eql :commands/command)) node)
   (format t ")~%~%"))
 
@@ -532,22 +618,45 @@
 
 (defnode :extensions ())
 (defnode :extensions/extension (protect supported type number name requires
-                                provisional)
-  (declare (ignore protect supported type number name requires provisional)))
-(defnode :extensions/extension/require ())
-(defnode :extensions/extension/require/enum (name value comment dir offset extends)
-  (declare (ignore name value comment dir offset extends)))
+                                provisional promotedto)
+  (declare (ignore protect supported type number name requires provisional
+                   provisional promotedto)))
+(defnode :extensions/extension/require (extension)
+  (declare (ignore extension)))
+(defnode :extensions/extension/require/enum (name value comment dir offset extends alias bitpos)
+  (declare (ignore name value comment dir offset extends alias bitpos)))
 (defnode :extensions/extension/require/type (name)
   (declare (ignore name)))
 (defnode :extensions/extension/require/command (name)
   (declare (ignore name)))
+(defnode :extensions/extension/require/extend (interaction_profile_path)
+  (declare (ignore interaction_profile_path)))
+(defnode :extensions/extension/require/extend/component (type subpath)
+  (declare (ignore type subpath)))
 
+(defnode :interaction_profiles ()
+  )
 
+(defnode :feature/require/interaction_profile (name)
+  (declare (ignore name)))
 
+(defnode :interaction_profiles/interaction_profile (name title)
+  (declare (ignore name title)))
+
+(defnode :interaction_profiles/interaction_profile/user_path (path)
+  (declare (ignore path)))
+
+(defnode :interaction_profiles/interaction_profile/component (type subpath
+                                                              system user_path)
+  (declare (ignore type subpath system user_path)))
+
+(defnode :extensions/extension/require/interaction_profile (name)
+  (declare (ignore name)))
 
 (defun collect-enum-values (xml)
   (clrhash *enum-types*)
   (clrhash *bitmask-types*)
+  (clrhash *enum-values*)
   ;; add base enum/bitmask types
   (xpath:do-node-set (node (xpath:evaluate "/registry/enums" xml))
     (destructuring-bind (&key name type comment)
@@ -586,15 +695,16 @@
   (xpath:do-node-set (ext (xpath:evaluate "/registry/extensions/extension"
                                           xml))
     (destructuring-bind (&key protect supported type number name requires
-                           provisional)
+                           provisional promotedto)
         (attrib-plist ext)
       (declare (ignorable protect supported type number name requires
-                          provisional))
+                          provisional promotedto))
       #++(format t "~%ext ~s: ~s ~s ~s ~s ~s~%"
                  name number type requires protect supported)
       (let (ext-name ext-version)
         (xpath:do-node-set (enum (xpath:evaluate "require/enum" ext))
-          (destructuring-bind (&key name value comment dir extends offset)
+          (destructuring-bind (&key name value comment dir extends offset
+                                 alias bitpos)
               (attrib-plist enum)
             (cond
               ((alexandria:ends-with-subseq "_SPEC_VERSION" name)
@@ -606,24 +716,74 @@
                (when (search "BIT" name)
                  (break "~a" name))
                (let ((v (ext-enum-value number dir offset)))
+                 (setf (gethash (list extends name) *enum-values*) v)
                  (push
                   (format nil "~@[  ;; ~a~%~]  ~((~s ~a)~)"
                           comment
                           (make-enum-name name extends) v)
                   (getf (gethash (translate-type-name extends) *enum-types*)
                         :values))))
+              ;; try to detect untyped enums
+              ((and name value (not (or dir extends offset)))
+               ;; just adding to 'API Constants' for now
+               (setf (gethash (list extends name) *enum-values*) value)
+               (push
+                (format nil "~@[  ;; ~a~%~]  ~((~s ~a)~)"
+                        comment
+                        (make-enum-name name nil) value)
+                (getf (gethash 'api-constants *enum-types*) :values)))
+              (alias
+               (let* ((v (gethash (list extends alias) *enum-values*))
+                      (tx (translate-type-name extends))
+                      (base (or (gethash tx *enum-types*)
+                                (gethash tx *bitmask-types*))))
+                 (unless v
+                   (break "couldn't find enum~% ~s ::~% ~s~% extends alias~% from ~s"
+                          extends alias name))
+                 (format *debug-io* "enum alias ~s:: ~s -> ~s (~s)~%"
+                         extends name alias v)
+                 (push
+                  (format nil "  ;; alias ~a~%  ;;    -> ~a~%~@[  ;; ~a~%~]  ~((~s ~a)~)"
+                          name alias
+                          comment
+                          (make-enum-name name extends) v)
+                  (getf base :values))))
+              (bitpos
+               (assert extends)
+               (assert (not value))
+               (setf value (format nil "#x~8,'0x"
+                                   (expt 2 (parse-integer bitpos))))
+               (setf (gethash (list extends name) *enum-values*) value)
+               (push
+                (format nil "~@[  ;; ~a~%~]  ~((~s ~a)~)"
+                        comment
+                        (make-enum-name name extends) value)
+                (getf (gethash (translate-type-name extends) *bitmask-types*)
+                      :values)))
               (t (break "?")))))))))
 
 (defun collect-struct-names (xml)
   (clrhash *struct-types*)
+  (clrhash *struct-dependencies*)
   (xpath:do-node-set (node (xpath:evaluate "/registry/types/type[@category='struct']" xml))
-    (format t "struct ~s ~s~%"
-            (getf (attrib-plist node) :name)
-            (%translate-type-name (getf (attrib-plist node) :name))
-            )
-    (setf (gethash (%translate-type-name (getf (attrib-plist node) :name))
-                   *struct-types*)
-          t)))
+    (let* ((name (getf (attrib-plist node) :name))
+           (tname (%translate-type-name name)))
+      (format t "struct ~s ~s~%" name tname)
+      (setf (gethash tname *struct-types*) name)
+      (xpath:do-node-set (type-node (xpath:evaluate "member/type" node))
+        (let ((type (xpath:string-value type-node)))
+          #++(format t "~s~%" type)
+          (pushnew type (gethash tname *struct-dependencies*) :test 'string=)))))
+  (maphash (lambda (k v)
+             (let ((v (remove nil (mapcar (lambda (a)
+                                            (and (gethash (%translate-type-name a)
+                                                          *struct-types*)
+                                                 (%translate-type-name a)))
+                                          v))))
+               (if v
+                   (setf (gethash k *struct-dependencies*) v)
+                   (remhash k *struct-dependencies*))))
+           *struct-dependencies*))
 
 #++
 (progn
@@ -635,6 +795,7 @@
   (collect-enum-values *xml*)
   (collect-struct-names *xml*)
   (clrhash *exports*)
+  (clrhash *printed-structs*)
   (alexandria:with-output-to-file (*standard-output*
                                    (asdf:system-relative-pathname
                                     :3b-openxr "bindings.lisp")

@@ -13,106 +13,270 @@
            #:action-suggested-binding
            #:actions-sync-info
            #:active-action-set
+           #:active-action-set-priorities-ext
+           #:active-action-set-priority-ext
+           #:android-surface-swapchain-create-info-fb
            #:api-layer-properties
            #:application-info
+           #:apply-force-feedback-curl-mndx
+           #:apply-foveation-htc
            #:apply-haptic-feedback
            #:attach-session-action-sets
            #:base-in-structure
            #:base-out-structure
            #:begin-frame
            #:begin-session
+           #:binding-modification-base-header-khr
+           #:binding-modifications-khr
+           #:body-joint-location-fb
+           #:body-joint-locations-fb
+           #:body-joints-locate-info-fb
+           #:body-skeleton-fb
+           #:body-skeleton-joint-fb
+           #:body-tracker-create-info-fb
            #:bound-sources-for-action-enumerate-info
+           #:boundary-2dfb
+           #:clear-spatial-anchor-store-msft
            #:color-4f
+           #:composition-layer-alpha-blend-fb
            #:composition-layer-base-header
+           #:composition-layer-color-scale-bias-khr
            #:composition-layer-cube-khr
            #:composition-layer-cylinder-khr
            #:composition-layer-depth-info-khr
+           #:composition-layer-depth-test-fb
+           #:composition-layer-depth-test-varjo
+           #:composition-layer-equirect-2-khr
            #:composition-layer-equirect-khr
+           #:composition-layer-image-layout-fb
+           #:composition-layer-passthrough-fb
+           #:composition-layer-passthrough-htc
            #:composition-layer-projection
            #:composition-layer-projection-view
            #:composition-layer-quad
+           #:composition-layer-reprojection-info-msft
+           #:composition-layer-reprojection-plane-override-msft
+           #:composition-layer-secure-content-fb
+           #:composition-layer-settings-fb
+           #:composition-layer-space-warp-info-fb
+           #:compute-new-scene-msft
+           #:controller-model-key-state-msft
+           #:controller-model-node-properties-msft
+           #:controller-model-node-state-msft
+           #:controller-model-properties-msft
+           #:controller-model-state-msft
            #:convert-time-to-timespec-time-khr
            #:convert-time-to-win-32performance-counter-khr
            #:convert-timespec-time-to-time-khr
            #:convert-win-32performance-counter-to-time-khr
+           #:coordinate-space-create-info-ml
            #:create-action
            #:create-action-set
            #:create-action-space
+           #:create-body-tracker-fb
            #:create-debug-utils-messenger-ext
+           #:create-eye-tracker-fb
+           #:create-face-tracker-fb
+           #:create-facial-tracker-htc
+           #:create-foveation-profile-fb
+           #:create-geometry-instance-fb
            #:create-hand-mesh-space-msft
            #:create-hand-tracker-ext
            #:create-instance
+           #:create-keyboard-space-fb
+           #:create-marker-space-varjo
+           #:create-passthrough-fb
+           #:create-passthrough-htc
+           #:create-passthrough-layer-fb
            #:create-reference-space
+           #:create-scene-msft
+           #:create-scene-observer-msft
            #:create-session
+           #:create-space-from-coordinate-frame-uidml
+           #:create-space-user-fb
+           #:create-spatial-anchor-fb
+           #:create-spatial-anchor-from-perception-anchor-msft
+           #:create-spatial-anchor-from-persisted-name-msft
            #:create-spatial-anchor-msft
            #:create-spatial-anchor-space-msft
+           #:create-spatial-anchor-store-connection-msft
            #:create-spatial-graph-node-space-msft
            #:create-swapchain
            #:create-swapchain-android-surface-khr
+           #:create-triangle-mesh-fb
+           #:create-vulkan-device-khr
+           #:create-vulkan-instance-khr
            #:debug-utils-label-ext
            #:debug-utils-messenger-callback-data-ext
            #:debug-utils-messenger-create-info-ext
            #:debug-utils-object-name-info-ext
+           #:deserialize-scene-fragment-msft
+           #:deserialize-scene-msft
            #:destroy-action
            #:destroy-action-set
+           #:destroy-body-tracker-fb
            #:destroy-debug-utils-messenger-ext
+           #:destroy-eye-tracker-fb
+           #:destroy-face-tracker-fb
+           #:destroy-facial-tracker-htc
+           #:destroy-foveation-profile-fb
+           #:destroy-geometry-instance-fb
            #:destroy-hand-tracker-ext
            #:destroy-instance
+           #:destroy-passthrough-fb
+           #:destroy-passthrough-htc
+           #:destroy-passthrough-layer-fb
+           #:destroy-scene-msft
+           #:destroy-scene-observer-msft
            #:destroy-session
            #:destroy-space
+           #:destroy-space-user-fb
            #:destroy-spatial-anchor-msft
+           #:destroy-spatial-anchor-store-connection-msft
+           #:destroy-spatial-graph-node-binding-msft
            #:destroy-swapchain
+           #:destroy-triangle-mesh-fb
+           #:device-pcm-sample-rate-get-info-fb
+           #:device-pcm-sample-rate-state-fb
+           #:digital-lens-control-almalence
            #:end-frame
            #:end-session
            #:enumerate-api-layer-properties
            #:enumerate-bound-sources-for-action
+           #:enumerate-color-spaces-fb
+           #:enumerate-display-refresh-rates-fb
            #:enumerate-environment-blend-modes
+           #:enumerate-external-cameras-oculus
            #:enumerate-instance-extension-properties
+           #:enumerate-performance-metrics-counter-paths-meta
+           #:enumerate-persisted-spatial-anchor-names-msft
            #:enumerate-reference-spaces
+           #:enumerate-render-model-paths-fb
+           #:enumerate-reprojection-modes-msft
+           #:enumerate-scene-compute-features-msft
+           #:enumerate-space-supported-components-fb
            #:enumerate-swapchain-formats
            #:enumerate-swapchain-images
            #:enumerate-view-configuration-views
            #:enumerate-view-configurations
+           #:enumerate-vive-tracker-paths-htcx
+           #:erase-space-fb
            #:event-data-base-header
            #:event-data-buffer
+           #:event-data-display-refresh-rate-changed-fb
            #:event-data-events-lost
            #:event-data-instance-loss-pending
            #:event-data-interaction-profile-changed
            #:event-data-main-session-visibility-changed-extx
+           #:event-data-marker-tracking-update-varjo
+           #:event-data-passthrough-state-changed-fb
            #:event-data-perf-settings-ext
            #:event-data-reference-space-change-pending
+           #:event-data-scene-capture-complete-fb
            #:event-data-session-state-changed
+           #:event-data-space-erase-complete-fb
+           #:event-data-space-list-save-complete-fb
+           #:event-data-space-query-complete-fb
+           #:event-data-space-query-results-available-fb
+           #:event-data-space-save-complete-fb
+           #:event-data-space-set-status-complete-fb
+           #:event-data-space-share-complete-fb
+           #:event-data-spatial-anchor-create-complete-fb
            #:event-data-visibility-mask-changed-khr
+           #:event-data-vive-tracker-connected-htcx
            #:extension-properties
            #:extent-2d-f
            #:extent-2d-i
+           #:extent-3df-fb
+           #:external-camera-extrinsics-oculus
+           #:external-camera-intrinsics-oculus
+           #:external-camera-oculus
+           #:eye-gaze-fb
            #:eye-gaze-sample-time-ext
+           #:eye-gazes-fb
+           #:eye-gazes-info-fb
+           #:eye-tracker-create-info-fb
+           #:face-expression-info-fb
+           #:face-expression-status-fb
+           #:face-expression-weights-fb
+           #:face-tracker-create-info-fb
+           #:facial-expressions-htc
+           #:facial-tracker-create-info-htc
+           #:force-feedback-curl-apply-location-mndx
+           #:force-feedback-curl-apply-locations-mndx
            #:fov-f
+           #:foveated-view-configuration-view-varjo
+           #:foveation-apply-info-htc
+           #:foveation-configuration-htc
+           #:foveation-custom-mode-info-htc
+           #:foveation-dynamic-mode-info-htc
+           #:foveation-eye-tracked-profile-create-info-meta
+           #:foveation-eye-tracked-state-meta
+           #:foveation-level-profile-create-info-fb
+           #:foveation-profile-create-info-fb
            #:frame-begin-info
            #:frame-end-info
+           #:frame-end-info-ml
            #:frame-state
            #:frame-wait-info
+           #:geometry-instance-create-info-fb
+           #:geometry-instance-set-transform-fb
+           #:geometry-instance-transform-fb
            #:get-action-state-boolean
            #:get-action-state-float
            #:get-action-state-pose
            #:get-action-state-vector-2f
+           #:get-audio-input-device-guid-oculus
+           #:get-audio-output-device-guid-oculus
+           #:get-body-skeleton-fb
+           #:get-controller-model-key-msft
+           #:get-controller-model-properties-msft
+           #:get-controller-model-state-msft
            #:get-current-interaction-profile
            #:get-d3d11graphics-requirements-khr
            #:get-d3d12graphics-requirements-khr
+           #:get-device-sample-rate-fb
+           #:get-display-refresh-rate-fb
+           #:get-eye-gazes-fb
+           #:get-face-expression-weights-fb
+           #:get-facial-expressions-htc
+           #:get-foveation-eye-tracked-state-meta
+           #:get-hand-mesh-fb
            #:get-input-source-localized-name
            #:get-instance-proc-addr
            #:get-instance-properties
+           #:get-marker-size-varjo
            #:get-opengl-esgraphics-requirements-khr
            #:get-opengl-graphics-requirements-khr
+           #:get-performance-metrics-state-meta
            #:get-reference-space-bounds-rect
+           #:get-render-model-properties-fb
+           #:get-scene-components-msft
+           #:get-scene-compute-state-msft
+           #:get-scene-mesh-buffers-msft
+           #:get-serialized-scene-fragment-data-msft
+           #:get-space-boundary-2dfb
+           #:get-space-bounding-box-2dfb
+           #:get-space-bounding-box-3dfb
+           #:get-space-component-status-fb
+           #:get-space-container-fb
+           #:get-space-room-layout-fb
+           #:get-space-semantic-labels-fb
+           #:get-space-user-id-fb
+           #:get-space-uuid-fb
+           #:get-spatial-graph-node-binding-properties-msft
+           #:get-swapchain-state-fb
            #:get-system
            #:get-system-properties
            #:get-view-configuration-properties
            #:get-visibility-mask-khr
            #:get-vulkan-device-extensions-khr
+           #:get-vulkan-graphics-device-2-khr
            #:get-vulkan-graphics-device-khr
+           #:get-vulkan-graphics-requirements-2-khr
            #:get-vulkan-graphics-requirements-khr
            #:get-vulkan-instance-extensions-khr
+           #:global-dimmer-frame-end-info-ml
            #:graphics-binding-d3d11-khr
            #:graphics-binding-d3d12-khr
            #:graphics-binding-eglmndx
@@ -121,17 +285,21 @@
            #:graphics-binding-opengl-win-32-khr
            #:graphics-binding-opengl-xcb-khr
            #:graphics-binding-opengl-xlib-khr
+           #:graphics-binding-vulkan-2-khr
            #:graphics-binding-vulkan-khr
            #:graphics-requirements-d3d11-khr
            #:graphics-requirements-d3d12-khr
            #:graphics-requirements-opengl-es-khr
            #:graphics-requirements-opengl-khr
+           #:graphics-requirements-vulkan-2-khr
            #:graphics-requirements-vulkan-khr
+           #:hand-capsule-fb
            #:hand-joint-location-ext
            #:hand-joint-locations-ext
            #:hand-joint-velocities-ext
            #:hand-joint-velocity-ext
            #:hand-joints-locate-info-ext
+           #:hand-joints-motion-range-info-ext
            #:hand-mesh-index-buffer-msft
            #:hand-mesh-msft
            #:hand-mesh-space-create-info-msft
@@ -140,37 +308,124 @@
            #:hand-mesh-vertex-msft
            #:hand-pose-type-info-msft
            #:hand-tracker-create-info-ext
+           #:hand-tracking-aim-state-fb
+           #:hand-tracking-capsules-state-fb
+           #:hand-tracking-mesh-fb
+           #:hand-tracking-scale-fb
            #:haptic-action-info
+           #:haptic-amplitude-envelope-vibration-fb
            #:haptic-base-header
+           #:haptic-pcm-vibration-fb
            #:haptic-vibration
+           #:holographic-window-attachment-msft
+           #:initialize-loader-khr
            #:input-source-localized-name-get-info
            #:instance-create-info
            #:instance-create-info-android-khr
            #:instance-properties
+           #:interaction-profile-analog-threshold-valve
+           #:interaction-profile-dpad-binding-ext
            #:interaction-profile-state
            #:interaction-profile-suggested-binding
+           #:keyboard-space-create-info-fb
+           #:keyboard-tracking-description-fb
+           #:keyboard-tracking-query-fb
+           #:load-controller-model-msft
+           #:load-render-model-fb
+           #:loader-init-info-android-khr
+           #:loader-init-info-base-header-khr
+           #:local-dimming-frame-end-info-meta
+           #:locate-body-joints-fb
            #:locate-hand-joints-ext
+           #:locate-scene-components-msft
            #:locate-space
            #:locate-views
+           #:marker-space-create-info-varjo
+           #:new-scene-compute-info-msft
            #:offset-2d-f
            #:offset-2d-i
+           #:offset-3df-fb
+           #:passthrough-brightness-contrast-saturation-fb
+           #:passthrough-color-htc
+           #:passthrough-color-map-mono-to-mono-fb
+           #:passthrough-color-map-mono-to-rgba-fb
+           #:passthrough-create-info-fb
+           #:passthrough-create-info-htc
+           #:passthrough-keyboard-hands-intensity-fb
+           #:passthrough-layer-create-info-fb
+           #:passthrough-layer-pause-fb
+           #:passthrough-layer-resume-fb
+           #:passthrough-layer-set-keyboard-hands-intensity-fb
+           #:passthrough-layer-set-style-fb
+           #:passthrough-mesh-transform-info-htc
+           #:passthrough-pause-fb
+           #:passthrough-start-fb
+           #:passthrough-style-fb
            #:path-to-string
            #:perf-settings-set-performance-level-ext
+           #:performance-metrics-counter-meta
+           #:performance-metrics-state-meta
+           #:persist-spatial-anchor-msft
            #:poll-event
            #:pose-f
            #:quaternion-f
+           #:query-performance-metrics-counter-meta
+           #:query-spaces-fb
+           #:query-system-tracked-keyboard-fb
            #:rect-2d-f
            #:rect-2d-i
+           #:rect-3df-fb
            #:reference-space-create-info
            #:release-swapchain-image
+           #:render-model-buffer-fb
+           #:render-model-capabilities-request-fb
+           #:render-model-load-info-fb
+           #:render-model-path-info-fb
+           #:render-model-properties-fb
+           #:request-display-refresh-rate-fb
            #:request-exit-session
+           #:request-scene-capture-fb
            #:result-to-string
+           #:retrieve-space-query-results-fb
+           #:room-layout-fb
+           #:save-space-fb
+           #:save-space-list-fb
+           #:scene-bounds-msft
+           #:scene-capture-request-info-fb
+           #:scene-component-location-msft
+           #:scene-component-locations-msft
+           #:scene-component-msft
+           #:scene-component-parent-filter-info-msft
+           #:scene-components-get-info-msft
+           #:scene-components-locate-info-msft
+           #:scene-components-msft
+           #:scene-create-info-msft
+           #:scene-deserialize-info-msft
+           #:scene-frustum-bound-msft
+           #:scene-mesh-buffers-get-info-msft
+           #:scene-mesh-buffers-msft
+           #:scene-mesh-indices-uint-16-msft
+           #:scene-mesh-indices-uint-32-msft
+           #:scene-mesh-msft
+           #:scene-mesh-vertex-buffer-msft
+           #:scene-meshes-msft
+           #:scene-object-msft
+           #:scene-object-types-filter-info-msft
+           #:scene-objects-msft
+           #:scene-observer-create-info-msft
+           #:scene-oriented-box-bound-msft
+           #:scene-plane-alignment-filter-info-msft
+           #:scene-plane-msft
+           #:scene-planes-msft
+           #:scene-sphere-bound-msft
            #:secondary-view-configuration-frame-end-info-msft
            #:secondary-view-configuration-frame-state-msft
            #:secondary-view-configuration-layer-info-msft
            #:secondary-view-configuration-session-begin-info-msft
            #:secondary-view-configuration-state-msft
            #:secondary-view-configuration-swapchain-create-info-msft
+           #:semantic-labels-fb
+           #:serialized-scene-fragment-data-get-info-msft
            #:session-action-sets-attach-info
            #:session-begin-debug-utils-label-region-ext
            #:session-begin-info
@@ -179,54 +434,133 @@
            #:session-end-debug-utils-label-region-ext
            #:session-insert-debug-utils-label-ext
            #:set-android-application-thread-khr
+           #:set-color-space-fb
            #:set-debug-utils-object-name-ext
+           #:set-digital-lens-control-almalence
+           #:set-environment-depth-estimation-varjo
            #:set-input-device-active-ext
            #:set-input-device-location-ext
            #:set-input-device-state-bool-ext
            #:set-input-device-state-float-ext
            #:set-input-device-state-vector-2f-ext
+           #:set-marker-tracking-prediction-varjo
+           #:set-marker-tracking-timeout-varjo
+           #:set-marker-tracking-varjo
+           #:set-performance-metrics-state-meta
+           #:set-space-component-status-fb
+           #:set-tracking-optimization-settings-hint-qcom
+           #:set-view-offset-varjo
+           #:share-spaces-fb
+           #:space-component-filter-info-fb
+           #:space-component-status-fb
+           #:space-component-status-set-info-fb
+           #:space-container-fb
+           #:space-erase-info-fb
+           #:space-filter-info-base-header-fb
+           #:space-list-save-info-fb
            #:space-location
+           #:space-query-info-base-header-fb
+           #:space-query-info-fb
+           #:space-query-result-fb
+           #:space-query-results-fb
+           #:space-save-info-fb
+           #:space-share-info-fb
+           #:space-storage-location-filter-info-fb
+           #:space-user-create-info-fb
+           #:space-uuid-filter-info-fb
            #:space-velocity
+           #:spatial-anchor-create-info-fb
            #:spatial-anchor-create-info-msft
+           #:spatial-anchor-from-persisted-anchor-create-info-msft
+           #:spatial-anchor-persistence-info-msft
+           #:spatial-anchor-persistence-name-msft
            #:spatial-anchor-space-create-info-msft
+           #:spatial-graph-node-binding-properties-get-info-msft
+           #:spatial-graph-node-binding-properties-msft
            #:spatial-graph-node-space-create-info-msft
+           #:spatial-graph-static-node-binding-create-info-msft
            #:stop-haptic-feedback
            #:string-to-path
            #:structure-type-to-string
            #:submit-debug-utils-message-ext
            #:suggest-interaction-profile-bindings
            #:swapchain-create-info
+           #:swapchain-create-info-foveation-fb
            #:swapchain-image-acquire-info
            #:swapchain-image-base-header
            #:swapchain-image-d3d11-khr
            #:swapchain-image-d3d12-khr
+           #:swapchain-image-foveation-vulkan-fb
            #:swapchain-image-opengl-es-khr
            #:swapchain-image-opengl-khr
            #:swapchain-image-release-info
+           #:swapchain-image-vulkan-2-khr
            #:swapchain-image-vulkan-khr
            #:swapchain-image-wait-info
+           #:swapchain-state-android-surface-dimensions-fb
+           #:swapchain-state-base-header-fb
+           #:swapchain-state-foveation-fb
+           #:swapchain-state-sampler-opengl-esfb
+           #:swapchain-state-sampler-vulkan-fb
            #:swapchain-sub-image
            #:sync-actions
+           #:system-body-tracking-properties-fb
+           #:system-color-space-properties-fb
            #:system-eye-gaze-interaction-properties-ext
+           #:system-eye-tracking-properties-fb
+           #:system-face-tracking-properties-fb
+           #:system-facial-tracking-properties-htc
+           #:system-force-feedback-curl-properties-mndx
+           #:system-foveated-rendering-properties-varjo
+           #:system-foveation-eye-tracked-properties-meta
            #:system-get-info
            #:system-graphics-properties
            #:system-hand-tracking-mesh-properties-msft
            #:system-hand-tracking-properties-ext
+           #:system-headset-id-properties-meta
+           #:system-keyboard-tracking-properties-fb
+           #:system-marker-tracking-properties-varjo
+           #:system-passthrough-properties-2fb
+           #:system-passthrough-properties-fb
            #:system-properties
+           #:system-render-model-properties-fb
+           #:system-space-warp-properties-fb
+           #:system-spatial-entity-properties-fb
            #:system-tracking-properties
            #:thermal-get-temperature-trend-ext
+           #:triangle-mesh-begin-update-fb
+           #:triangle-mesh-begin-vertex-buffer-update-fb
+           #:triangle-mesh-create-info-fb
+           #:triangle-mesh-end-update-fb
+           #:triangle-mesh-end-vertex-buffer-update-fb
+           #:triangle-mesh-get-index-buffer-fb
+           #:triangle-mesh-get-vertex-buffer-fb
+           #:try-create-spatial-graph-static-node-binding-msft
+           #:try-get-perception-anchor-from-spatial-anchor-msft
+           #:unpersist-spatial-anchor-msft
            #:update-hand-mesh-msft
+           #:update-swapchain-fb
+           #:uuid-ext
+           #:uuid-msft
            #:vector-2f
            #:vector-3f
            #:vector-4f
+           #:vector-4s-fb
            #:view
            #:view-configuration-depth-range-ext
            #:view-configuration-properties
            #:view-configuration-view
            #:view-configuration-view-fov-epic
+           #:view-locate-foveated-rendering-varjo
            #:view-locate-info
            #:view-state
            #:visibility-mask-khr
+           #:visual-mesh-compute-lod-info-msft
+           #:vive-tracker-paths-htcx
+           #:vulkan-device-create-info-khr
+           #:vulkan-graphics-device-get-info-khr
+           #:vulkan-instance-create-info-khr
+           #:vulkan-swapchain-create-info-meta
            #:vulkan-swapchain-format-list-create-info-khr
            #:wait-frame
            #:wait-swapchain-image))

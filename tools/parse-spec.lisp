@@ -14,6 +14,7 @@
 (defvar *exports* (make-hash-table :test 'equalp))
 (defvar *enum-values* (make-hash-table :test 'equalp))
 (defvar *printed-structs* (make-hash-table))
+(defvar *constants* (make-hash-table :test 'equal))
 
 (defparameter *defines*
   ;; some manually extracted #defines, not sure if these should be
@@ -222,14 +223,33 @@
          (t (error "todo ~s" name)))))))
 
 (defun translate-type-name (name &key len str)
-  (let ((type (%translate-type-name name)))
+  (let ((type (%translate-type-name name))
+        (pointer (position #\* str))
+        (array (position #\[ str)))
     (when (and (eql type :char) (search "null-terminated" len))
       (setf type :string))
     (when (gethash type *struct-types*)
       (setf type (list :struct type)))
-    (when (position #\* str)
+    (when (and pointer array)
+      (error "todo: pointer + array str"))
+    (when pointer
       (loop repeat (count #\* str)
             do (setf type (list :pointer type))))
+    (when array
+      ;; things like <member><type>char</type>
+      ;; <name>layerName</name>[<enum>XR_MAX_API_LAYER_NAME_SIZE</enum>]</member>,
+      ;; probably should parse the <enum> etc at higher level, but
+      ;; just trying to extract from string for now
+      (assert (= 1 (count #\[ str)))
+      (let ((count (subseq str
+                           (1+ (position #\[ str))
+                           (position #\] str))))
+        (assert count)
+        (setf count (if (get-constant count)
+                        (numeric-value (get-constant count))
+                        (numeric-value count)))
+        ;; :@ is hack to mark lists that should be expanded in caller
+        (setf type (list :@ type :count count))))
     type))
 
 (defun translate-var-name (name)
@@ -249,6 +269,14 @@
   (let ((start (if (alexandria:starts-with-subseq "XR_" name) 3 0)))
     (alexandria:make-keyword
      (subseq (substitute #\- #\_ name) start))))
+
+(defun add-constant (name value)
+  (assert (or (not (nth-value 1 (gethash name *constants*)))
+              (equalp value (gethash name *constants*))))
+  (setf (gethash name *constants*) value))
+
+(defun get-constant (name)
+  (gethash name *constants*))
 
 (defun ext-enum-value (ext dir value)
   (when (char= #\" (char value 0))
@@ -376,7 +404,9 @@
         (t
          (loop for i below (count #\* (xps node))
                do (setf type (list :pointer type)))
-         (format t "~&  ~((~a ~s)~)~@[ ;; ~a~%~]" name type extra)))))
+         (if (typep type '(cons (eql :@)))
+             (format t "~&  ~((~a~{ ~s~})~)~@[ ;; ~a~%~]" name (cdr type) extra)
+             (format t "~&  ~((~a ~s)~)~@[ ;; ~a~%~]" name type extra))))))
   (setf *noprint* t))
 
 (defnode :types/type/member/type ())
@@ -657,6 +687,7 @@
   (clrhash *enum-types*)
   (clrhash *bitmask-types*)
   (clrhash *enum-values*)
+  (clrhash *constants*)
   ;; add base enum/bitmask types
   (xpath:do-node-set (node (xpath:evaluate "/registry/enums" xml))
     (destructuring-bind (&key name type comment)
@@ -670,6 +701,9 @@
               (assert (not value))
               (setf value (format nil "#x~8,'0x"
                                   (expt 2 (parse-integer bitpos)))))
+            (setf (gethash (list parent name) *enum-values*)
+                  value)
+            (add-constant name value)
             (push
              (with-output-to-string (*standard-output*)
                (when comment
@@ -716,6 +750,7 @@
                (when (search "BIT" name)
                  (break "~a" name))
                (let ((v (ext-enum-value number dir offset)))
+                 (add-constant name v)
                  (setf (gethash (list extends name) *enum-values*) v)
                  (push
                   (format nil "~@[  ;; ~a~%~]  ~((~s ~a)~)"
@@ -725,7 +760,7 @@
                         :values))))
               ;; try to detect untyped enums
               ((and name value (not (or dir extends offset)))
-               ;; just adding to 'API Constants' for now
+               (add-constant name value)
                (setf (gethash (list extends name) *enum-values*) value)
                (push
                 (format nil "~@[  ;; ~a~%~]  ~((~s ~a)~)"
@@ -753,6 +788,7 @@
                (assert (not value))
                (setf value (format nil "#x~8,'0x"
                                    (expt 2 (parse-integer bitpos))))
+               (add-constant name value)
                (setf (gethash (list extends name) *enum-values*) value)
                (push
                 (format nil "~@[  ;; ~a~%~]  ~((~s ~a)~)"

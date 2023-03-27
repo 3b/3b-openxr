@@ -316,7 +316,7 @@
 (defctype eye-tracker-fb xr-handle)
 (defctype space-user-fb xr-handle)
 ;; Structure type enumerant
-(defcenum (structure-type :uint32)
+(defcenum structure-type
   (:type-unknown 0)
   (:type-api-layer-properties 1)
   (:type-extension-properties 2)
@@ -1309,6 +1309,52 @@
   ;; force feedback for little finger curl
   (:little-curl-mndx 4))
 
+(defconstant +max-api-layer-name-size+ 256)
+
+(defconstant +max-api-layer-description-size+ 256)
+
+(defconstant +max-extension-name-size+ 128)
+
+(defconstant +max-application-name-size+ 128)
+
+(defconstant +max-engine-name-size+ 128)
+
+(defconstant +max-runtime-name-size+ 128)
+
+(defconstant +max-system-name-size+ 256)
+
+(defconstant +max-action-set-name-size+ 64)
+
+(defconstant +max-localized-action-set-name-size+ 128)
+
+(defconstant +max-action-name-size+ 64)
+
+(defconstant +max-localized-action-name-size+ 128)
+
+(defconstant +guid-size-msft+ 16)
+
+(defconstant +eye-position-count-fb+ 2)
+
+(defconstant +max-controller-model-node-name-size-msft+ 64)
+
+(defconstant +foveation-center-size-meta+ 2)
+
+(defconstant +hand-tracking-capsule-point-count-fb+ 2)
+
+(defconstant +hand-tracking-capsule-count-fb+ 19)
+
+(defconstant +max-render-model-name-size-fb+ 64)
+
+(defconstant +max-keyboard-tracking-name-size-fb+ 128)
+
+(defconstant +passthrough-color-map-mono-size-fb+ 256)
+
+(defconstant +max-spatial-anchor-name-size-msft+ 256)
+
+(defconstant +uuid-size-ext+ 16)
+
+(defconstant +max-external-camera-name-size-oculus+ 32)
+
 (defcstruct vector-2f
   (x :float)
   (y :float))
@@ -1378,21 +1424,21 @@
 (defcstruct api-layer-properties
   (type structure-type) ;; = type-api-layer-properties
   (next (:pointer (:pointer :void)))
-  (layer-name :char)
+  (layer-name :char :count +max-api-layer-name-size+)
   (spec-version version)
   (layer-version :uint32)
-  (description :char))
+  (description :char :count +max-api-layer-description-size+))
 
 (defcstruct extension-properties
   (type structure-type) ;; = type-extension-properties
   (next (:pointer (:pointer :void)))
-  (extension-name :char :count 128)
+  (extension-name :char :count +max-extension-name-size+)
   (extension-version :uint32))
 
 (defcstruct application-info
-  (application-name :char)
+  (application-name :char :count +max-application-name-size+)
   (application-version :uint32)
-  (engine-name :char)
+  (engine-name :char :count +max-engine-name-size+)
   (engine-version :uint32)
   (api-version version))
 
@@ -1411,7 +1457,7 @@
   (type structure-type) ;; = type-instance-properties
   (next (:pointer (:pointer :void)))
   (runtime-version version)
-  (runtime-name :char))
+  (runtime-name :char :count +max-runtime-name-size+))
 
 (defcstruct system-get-info
   (type structure-type) ;; = type-system-get-info
@@ -1432,7 +1478,7 @@
   (next (:pointer (:pointer :void)))
   (system-id system-id)
   (vendor-id :uint32)
-  (system-name :char)
+  (system-name :char :count +max-system-name-size+)
   (graphics-properties (:struct system-graphics-properties))
   (tracking-properties (:struct system-tracking-properties)))
 
@@ -1744,7 +1790,7 @@
 (defcstruct event-data-buffer
   (type structure-type) ;; = type-event-data-buffer
   (next (:pointer (:pointer :void)))
-  (varying :uint8))
+  (varying :uint8 :count 4000))
 
 (defcstruct event-data-events-lost
   (type structure-type) ;; = type-event-data-events-lost
@@ -1839,8 +1885,8 @@
 (defcstruct action-set-create-info
   (type structure-type) ;; = type-action-set-create-info
   (next (:pointer (:pointer :void)))
-  (action-set-name :char)
-  (localized-action-set-name :char)
+  (action-set-name :char :count +max-action-set-name-size+)
+  (localized-action-set-name :char :count +max-localized-action-set-name-size+)
   (priority :uint32))
 
 (defcstruct action-suggested-binding
@@ -1897,11 +1943,11 @@
 (defcstruct action-create-info
   (type structure-type) ;; = type-action-create-info
   (next (:pointer (:pointer :void)))
-  (action-name :char)
+  (action-name :char :count +max-action-name-size+)
   (action-type action-type)
   (count-subaction-paths :uint32) ;; optional
   (subaction-paths (:pointer (:pointer path))) ;; count count-subaction-paths, optional
-  (localized-action-name :char))
+  (localized-action-name :char :count +max-localized-action-name-size+))
 
 (defcstruct instance-create-info-android-khr
   (type structure-type) ;; = type-instance-create-info-android-khr
@@ -2160,7 +2206,7 @@
   (type structure-type) ;; = type-spatial-graph-node-space-create-info-msft
   (next (:pointer (:pointer :void)))
   (node-type spatial-graph-node-type-msft)
-  (node-id :uint8)
+  (node-id :uint8 :count +guid-size-msft+)
   (pose (:struct pose-f)))
 
 (defcstruct spatial-graph-static-node-binding-create-info-msft
@@ -2177,7 +2223,7 @@
 (defcstruct spatial-graph-node-binding-properties-msft
   (type structure-type) ;; = type-spatial-graph-node-binding-properties-msft
   (next (:pointer (:pointer :void)))
-  (node-id :uint8)
+  (node-id :uint8 :count +guid-size-msft+)
   (pose-in-node-space (:struct pose-f)))
 
 (defcenum hand-ext
@@ -2352,7 +2398,7 @@
 (defcstruct eye-gazes-fb
   (type structure-type) ;; = type-eye-gazes-fb
   (next (:pointer (:pointer :void)))
-  (gaze (:struct eye-gaze-fb))
+  (gaze (:struct eye-gaze-fb) :count +eye-position-count-fb+)
   (time time))
 
 (defcenum hand-joints-motion-range-ext
@@ -2561,8 +2607,8 @@
 (defcstruct controller-model-node-properties-msft
   (type structure-type) ;; = type-controller-model-node-properties-msft
   (next (:pointer (:pointer :void)))
-  (parent-node-name :char)
-  (node-name :char))
+  (parent-node-name :char :count +max-controller-model-node-name-size-msft+)
+  (node-name :char :count +max-controller-model-node-name-size-msft+))
 
 (defcstruct controller-model-properties-msft
   (type structure-type) ;; = type-controller-model-properties-msft
@@ -2635,7 +2681,7 @@
   (:unlimited-msft 4))
 
 (defcstruct uuid-msft
-  (bytes :uint8))
+  (bytes :uint8 :count 16))
 
 (defcstruct scene-observer-create-info-msft
   (type structure-type) ;; = type-scene-observer-create-info-msft
@@ -2865,7 +2911,7 @@
   (change-pending bool-32))
 
 (defcstruct uuid-ext
-  (data :uint8))
+  (data :uint8 :count +uuid-size-ext+))
 
 (defcstruct event-data-spatial-anchor-create-complete-fb
   (type structure-type) ;; = type-event-data-spatial-anchor-create-complete-fb
@@ -2939,7 +2985,7 @@
 (defcstruct foveation-eye-tracked-state-meta
   (type structure-type) ;; = type-foveation-eye-tracked-state-meta
   (next (:pointer (:pointer :void)))
-  (foveation-center (:struct vector-2f))
+  (foveation-center (:struct vector-2f) :count +foveation-center-size-meta+)
   (flags foveation-eye-tracked-state-flags-meta))
 
 (defcstruct system-foveation-eye-tracked-properties-meta
@@ -2993,14 +3039,14 @@
   (pinch-strength-little :float))
 
 (defcstruct hand-capsule-fb
-  (points (:struct vector-3f))
+  (points (:struct vector-3f) :count +hand-tracking-capsule-point-count-fb+)
   (radius :float)
   (joint hand-joint-ext))
 
 (defcstruct hand-tracking-capsules-state-fb
   (type structure-type) ;; = type-hand-tracking-capsules-state-fb
   (next (:pointer (:pointer :void)))
-  (capsules (:struct hand-capsule-fb)))
+  (capsules (:struct hand-capsule-fb) :count +hand-tracking-capsule-count-fb+))
 
 (defcstruct render-model-path-info-fb
   (type structure-type) ;; = type-render-model-path-info-fb
@@ -3011,7 +3057,7 @@
   (type structure-type) ;; = type-render-model-properties-fb
   (next (:pointer (:pointer :void)))
   (vendor-id :uint32)
-  (model-name :char)
+  (model-name :char :count +max-render-model-name-size-fb+)
   (model-key render-model-key-fb)
   (model-version :uint32)
   (flags render-model-flags-fb))
@@ -3054,8 +3100,7 @@
   (max-result-count :uint32)
   (timeout duration)
   (filter (:pointer (:pointer (:struct space-filter-info-base-header-fb)))) ;; optional
-  (exclude-filter (:pointer
-                   (:pointer (:struct space-filter-info-base-header-fb)))) ;; optional
+  (exclude-filter (:pointer (:pointer (:struct space-filter-info-base-header-fb)))) ;; optional
 )
 
 (defcstruct space-storage-location-filter-info-fb
@@ -3227,7 +3272,7 @@
   (tracked-keyboard-id :uint64)
   (size (:struct vector-3f))
   (flags keyboard-tracking-flags-fb)
-  (name :char))
+  (name :char :count +max-keyboard-tracking-name-size-fb+))
 
 (defcstruct keyboard-space-create-info-fb
   (type structure-type) ;; = type-keyboard-space-create-info-fb
@@ -3344,12 +3389,12 @@
 (defcstruct passthrough-color-map-mono-to-rgba-fb
   (type structure-type) ;; = type-passthrough-color-map-mono-to-rgba-fb
   (next (:pointer (:pointer :void)))
-  (texture-color-map (:struct color-4f)))
+  (texture-color-map (:struct color-4f) :count +passthrough-color-map-mono-size-fb+))
 
 (defcstruct passthrough-color-map-mono-to-mono-fb
   (type structure-type) ;; = type-passthrough-color-map-mono-to-mono-fb
   (next (:pointer (:pointer :void)))
-  (texture-color-map :uint8))
+  (texture-color-map :uint8 :count +passthrough-color-map-mono-size-fb+))
 
 (defcstruct passthrough-brightness-contrast-saturation-fb
   (type structure-type) ;; = type-passthrough-brightness-contrast-saturation-fb
@@ -3376,21 +3421,19 @@
 
 (defctype spatial-anchor-store-connection-msft xr-handle)
 (defcstruct spatial-anchor-persistence-name-msft
-  (name :char))
+  (name :char :count +max-spatial-anchor-name-size-msft+))
 
 (defcstruct spatial-anchor-persistence-info-msft
   (type structure-type) ;; = type-spatial-anchor-persistence-info-msft
   (next (:pointer (:pointer :void)))
-  (spatial-anchor-persistence-name (:struct
-                                    spatial-anchor-persistence-name-msft))
+  (spatial-anchor-persistence-name (:struct spatial-anchor-persistence-name-msft))
   (spatial-anchor spatial-anchor-msft))
 
 (defcstruct spatial-anchor-from-persisted-anchor-create-info-msft
   (type structure-type) ;; = type-spatial-anchor-from-persisted-anchor-create-info-msft
   (next (:pointer (:pointer :void)))
   (spatial-anchor-store spatial-anchor-store-connection-msft)
-  (spatial-anchor-persistence-name (:struct
-                                    spatial-anchor-persistence-name-msft)))
+  (spatial-anchor-persistence-name (:struct spatial-anchor-persistence-name-msft)))
 
 (defcstruct facial-tracker-create-info-htc
   (type structure-type) ;; = type-facial-tracker-create-info-htc
@@ -3570,7 +3613,7 @@
 (defcstruct external-camera-oculus
   (type structure-type) ;; = type-external-camera-oculus
   (next (:pointer (:pointer :void)))
-  (name :char)
+  (name :char :count +max-external-camera-name-size-oculus+)
   (intrinsics (:struct external-camera-intrinsics-oculus))
   (extrinsics (:struct external-camera-extrinsics-oculus)))
 
@@ -3724,7 +3767,7 @@
 (defcfun ("xrEnumerateInstanceExtensionProperties" enumerate-instance-extension-properties) result
   ;; count = null-terminated
   ;; optional = true
-  (layer-name :string)
+ (layer-name (:pointer :string))
   ;; optional = true
  (property-capacity-input :uint32)
  (property-count-output (:pointer :uint32))
@@ -3753,7 +3796,8 @@
 (defcfun ("xrResultToString" result-to-string) result
  (instance instance)
  (value result)
- (buffer :char))
+  ;; count = +max-result-string-size+ (64)
+ (buffer (:pointer :char)))
 
 ;; success success
 ;;  errors (error-validation-failure error-runtime-failure error-handle-invalid
@@ -3761,7 +3805,8 @@
 (defcfun ("xrStructureTypeToString" structure-type-to-string) result
  (instance instance)
  (value structure-type)
- (buffer :char))
+  ;; count = +max-structure-name-size+ (64)
+ (buffer (:pointer :char)))
 
 ;; success success
 ;;  errors (error-validation-failure error-runtime-failure error-handle-invalid
@@ -4562,7 +4607,6 @@
 ;;  errors (error-function-unsupported error-validation-failure
 ;;          error-handle-invalid error-instance-lost error-session-lost
 ;;          error-path-unsupported error-path-invalid)
-#++
 (defcfun ("xrSetInputDeviceStateVector2fEXT" set-input-device-state-vector-2f-ext) result
  (session session)
  (top-level-path path)
@@ -4573,7 +4617,6 @@
 ;;  errors (error-function-unsupported error-validation-failure
 ;;          error-handle-invalid error-instance-lost error-session-lost
 ;;          error-pose-invalid error-path-unsupported error-path-invalid)
-#++
 (defcfun ("xrSetInputDeviceLocationEXT" set-input-device-location-ext) result
  (session session)
  (top-level-path path)
@@ -5113,7 +5156,8 @@
 ;;          error-feature-unsupported)
 (defcfun ("xrGetAudioOutputDeviceGuidOculus" get-audio-output-device-guid-oculus) result
  (instance instance)
- (buffer :uint16))
+  ;; count = +max-audio-device-str-size-oculus+ (128)
+ (buffer (:pointer :uint16)))
 
 ;; success success
 ;;  errors (error-function-unsupported error-validation-failure
@@ -5121,7 +5165,8 @@
 ;;          error-feature-unsupported)
 (defcfun ("xrGetAudioInputDeviceGuidOculus" get-audio-input-device-guid-oculus) result
  (instance instance)
- (buffer :uint16))
+  ;; count = +max-audio-device-str-size-oculus+ (128)
+ (buffer (:pointer :uint16)))
 
 ;; success success,xr-session-loss-pending
 ;;  errors (error-function-unsupported error-validation-failure

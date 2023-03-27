@@ -1,7 +1,30 @@
 (defpackage #:3b-openxr-bindings
   (:use :cl #:cffi)
   (:shadow #:space #:time #:atom)
-  (:export #:acquire-swapchain-image
+  (:export #:"+eye-position-count-fb+"
+           #:"+foveation-center-size-meta+"
+           #:"+guid-size-msft+"
+           #:"+hand-tracking-capsule-count-fb+"
+           #:"+hand-tracking-capsule-point-count-fb+"
+           #:"+max-action-name-size+"
+           #:"+max-action-set-name-size+"
+           #:"+max-api-layer-description-size+"
+           #:"+max-api-layer-name-size+"
+           #:"+max-application-name-size+"
+           #:"+max-controller-model-node-name-size-msft+"
+           #:"+max-engine-name-size+"
+           #:"+max-extension-name-size+"
+           #:"+max-external-camera-name-size-oculus+"
+           #:"+max-keyboard-tracking-name-size-fb+"
+           #:"+max-localized-action-name-size+"
+           #:"+max-localized-action-set-name-size+"
+           #:"+max-render-model-name-size-fb+"
+           #:"+max-runtime-name-size+"
+           #:"+max-spatial-anchor-name-size-msft+"
+           #:"+max-system-name-size+"
+           #:"+passthrough-color-map-mono-size-fb+"
+           #:"+uuid-size-ext+"
+           #:acquire-swapchain-image
            #:action-create-info
            #:action-set-create-info
            #:action-space-create-info

@@ -1448,9 +1448,9 @@
   (create-flags instance-create-flags) ;; optional
   (application-info (:struct application-info))
   (enabled-api-layer-count :uint32) ;; optional
-  (enabled-api-layer-names (:pointer (:pointer (:pointer (:pointer :string))))) ;; count enabled-api-layer-count
+  (enabled-api-layer-names (:pointer (:pointer (:pointer :string)))) ;; count enabled-api-layer-count
   (enabled-extension-count :uint32) ;; optional
-  (enabled-extension-names (:pointer (:pointer (:pointer (:pointer :string))))) ;; count enabled-extension-count
+  (enabled-extension-names (:pointer (:pointer (:pointer :string)))) ;; count enabled-extension-count
 )
 
 (defcstruct instance-properties
@@ -1967,20 +1967,20 @@
   (next (:pointer (:pointer :void)))
   (object-type object-type)
   (object-handle :uint64)
-  (object-name (:pointer (:pointer :string))) ;; optional
+  (object-name (:pointer :string)) ;; optional
 )
 
 (defcstruct debug-utils-label-ext
   (type structure-type) ;; = type-debug-utils-label-ext
   (next (:pointer (:pointer :void)))
-  (label-name (:pointer (:pointer :string))))
+  (label-name (:pointer :string)))
 
 (defcstruct debug-utils-messenger-callback-data-ext
   (type structure-type) ;; = type-debug-utils-messenger-callback-data-ext
   (next (:pointer (:pointer :void)))
-  (message-id (:pointer (:pointer :string)))
-  (function-name (:pointer (:pointer :string)))
-  (message (:pointer (:pointer :string)))
+  (message-id (:pointer :string))
+  (function-name (:pointer :string))
+  (message (:pointer :string))
   (object-count :uint32) ;; optional
   (objects (:pointer (:pointer (:struct debug-utils-object-name-info-ext)))) ;; count object-count, noautovalidity optional
   (session-label-count :uint32) ;; optional
@@ -3746,7 +3746,7 @@
   ;; optional = true
  (instance instance)
   ;; count = null-terminated
- (name (:pointer :string))
+ (name :string)
  (function (:pointer :pointer)))
 
 ;; success success
@@ -3767,7 +3767,7 @@
 (defcfun ("xrEnumerateInstanceExtensionProperties" enumerate-instance-extension-properties) result
   ;; count = null-terminated
   ;; optional = true
- (layer-name (:pointer :string))
+ (layer-name :string)
   ;; optional = true
  (property-capacity-input :uint32)
  (property-count-output (:pointer :uint32))
@@ -4119,7 +4119,7 @@
 (defcfun ("xrStringToPath" string-to-path) result
  (instance instance)
   ;; count = null-terminated
- (path-string (:pointer :string))
+ (path-string :string)
  (path (:pointer path)))
 
 ;; success success

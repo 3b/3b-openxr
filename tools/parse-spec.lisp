@@ -274,7 +274,10 @@
     (when (and pointer array)
       (error "todo: pointer + array str"))
     (when pointer
-      (loop repeat (count #\* str)
+      (loop repeat (- (count #\* str)
+                      ;; :string implies 1 pointer, so subtract 1 in
+                      ;; that case
+                      (if (eql type :string) 1 0))
             do (setf type (list :pointer type))))
     (when array
       (assert allow-arrays)

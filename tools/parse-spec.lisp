@@ -15,6 +15,7 @@
 (defvar *enum-values* (make-hash-table :test 'equalp))
 (defvar *printed-structs* (make-hash-table))
 (defvar *constants* (make-hash-table :test 'equal))
+(defvar *named-constants* nil)
 
 (defparameter *defines*
   ;; some manually extracted #defines, not sure if these should be
@@ -222,7 +223,47 @@
           (list :pointer (translate-type-name (subseq name 4))))
          (t (error "todo ~s" name)))))))
 
-(defun translate-type-name (name &key len str)
+(defclass array-type-name ()
+  ((base-type :accessor base-type :initarg :type)
+   (count-enum :accessor count-enum :initarg :enum)
+   (count-value :accessor count-value :initarg :count)))
+
+(defmethod array-type-as-member (at)
+  (format nil "~s" at))
+
+(defun count-enum-constant (at)
+  (if (get-constant (count-enum at))
+      (format nil "~(+~a+~)" (make-const-keyword (count-enum at)))
+      (count-value at)))
+
+(defmethod array-type-as-member ((at array-type-name))
+  (format nil "~s :count ~a"
+          (base-type at)
+          (count-enum-constant at)))
+
+(defmethod array-type-as-param ((at array-type-name))
+  (list :pointer (base-type at)))
+
+(defmethod array-type-comment ((at array-type-name))
+  (format nil "count = ~a (~a)"
+          (count-enum-constant at)
+          (count-value at)))
+
+(defun extract-array-size (str)
+  ;; things like <member><type>char</type>
+  ;; <name>layerName</name>[<enum>XR_MAX_API_LAYER_NAME_SIZE</enum>]</member>,
+  ;; probably should parse the <enum> etc at higher level, but just
+  ;; trying to extract from string for now
+  (when (position #\[ str)
+    (assert (= 1 (count #\[ str)))
+    (let* ((enum (subseq str (1+ (position #\[ str)) (position #\] str)))
+           (count (if (get-constant enum)
+                      (numeric-value (get-constant enum))
+                      (numeric-value enum))))
+      (assert (and enum count))
+      (values enum count))))
+
+(defun translate-type-name (name &key len str allow-arrays)
   (let ((type (%translate-type-name name))
         (pointer (position #\* str))
         (array (position #\[ str)))
@@ -236,20 +277,12 @@
       (loop repeat (count #\* str)
             do (setf type (list :pointer type))))
     (when array
-      ;; things like <member><type>char</type>
-      ;; <name>layerName</name>[<enum>XR_MAX_API_LAYER_NAME_SIZE</enum>]</member>,
-      ;; probably should parse the <enum> etc at higher level, but
-      ;; just trying to extract from string for now
-      (assert (= 1 (count #\[ str)))
-      (let ((count (subseq str
-                           (1+ (position #\[ str))
-                           (position #\] str))))
-        (assert count)
-        (setf count (if (get-constant count)
-                        (numeric-value (get-constant count))
-                        (numeric-value count)))
-        ;; :@ is hack to mark lists that should be expanded in caller
-        (setf type (list :@ type :count count))))
+      (assert allow-arrays)
+      (multiple-value-bind (enum count ) (extract-array-size str)
+        (setf type (make-instance 'array-type-name
+                                  :enum enum
+                                  :count count
+                                  :type type))))
     type))
 
 (defun translate-var-name (name)
@@ -355,7 +388,8 @@
   (when *current-type*
     (let ((name (translate-var-name (xps (xpath:evaluate "name" node))))
           (type (translate-type-name (xps (xpath:evaluate "type" node))
-                                     :len len :str (xps node)))
+                                     :len len :str (xps node)
+                                     :allow-arrays t))
           (extra nil))
       (when len
         (setf len
@@ -404,14 +438,22 @@
         (t
          (loop for i below (count #\* (xps node))
                do (setf type (list :pointer type)))
-         (if (typep type '(cons (eql :@)))
-             (format t "~&  ~((~a~{ ~s~})~)~@[ ;; ~a~%~]" name (cdr type) extra)
-             (format t "~&  ~((~a ~s)~)~@[ ;; ~a~%~]" name type extra))))))
+         (format t "~&  ~((~a ~a)~)~@[ ;; ~a~%~]" name
+                 (array-type-as-member type) extra)))))
   (setf *noprint* t))
 
 (defnode :types/type/member/type ())
 (defnode :types/type/member/name ())
 (defnode :types/type/member/enum ())
+
+(defun print-named-constants ()
+  (loop for i in (reverse *named-constants*)
+        for n = (numeric-value (get-constant i))
+        for cn = (when n
+                   (format nil "~(+~a+~)" (make-const-keyword i)))
+        when cn
+          do (format t "(defconstant ~a ~a)~%~%" cn n)
+             (setf (gethash cn *exports*) t)))
 
 (defun get-one-node (xpath xml)
   (let ((ns (xpath:evaluate xpath xml)))
@@ -519,6 +561,10 @@
              (format t ")~%~%")))
          (setf *noprint* t)))
       (:struct
+       ;; print constants before first struct
+       (when *named-constants*
+         (print-named-constants)
+         (setf *named-constants* nil))
        (let* ((name (%translate-type-name name))
               (plist (list :name name :init (make-hash-table)
                            :counted-slots (make-hash-table)
@@ -589,10 +635,16 @@
 
 (defnode :commands/command/param (optional len externsync)
   (let ((type (translate-type-name (xps (xpath:evaluate "type" node))
-                                   :len len :str (xps node)))
+                                   :len len :str (xps node)
+                                   :allow-arrays t))
         (name (translate-var-name (xps (xpath:evaluate "name" node)))))
     (when len
       (format t "~&  ;; count = ~(~s~)~%" (translate-var-name len)))
+
+    (when (typep type 'array-type-name)
+      (format t "~&  ;; ~a~%" (array-type-comment type))
+      (setf type (array-type-as-param type)))
+
     (when externsync
       (format t "~&  ;; externsync = ~(~a~)~%" externsync))
     (when optional
@@ -801,6 +853,7 @@
 (defun collect-struct-names (xml)
   (clrhash *struct-types*)
   (clrhash *struct-dependencies*)
+  (setf *named-constants* nil)
   (xpath:do-node-set (node (xpath:evaluate "/registry/types/type[@category='struct']" xml))
     (let* ((name (getf (attrib-plist node) :name))
            (tname (%translate-type-name name)))
@@ -809,7 +862,10 @@
       (xpath:do-node-set (type-node (xpath:evaluate "member/type" node))
         (let ((type (xpath:string-value type-node)))
           #++(format t "~s~%" type)
-          (pushnew type (gethash tname *struct-dependencies*) :test 'string=)))))
+          (pushnew type (gethash tname *struct-dependencies*) :test 'string=)))
+      (xpath:do-node-set (mn (xpath:evaluate "member" node))
+        (let ((enum (extract-array-size (xps mn))))
+          (when enum (pushnew enum *named-constants* :test 'string=))))))
   (maphash (lambda (k v)
              (let ((v (remove nil (mapcar (lambda (a)
                                             (and (gethash (%translate-type-name a)

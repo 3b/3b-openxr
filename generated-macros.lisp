@@ -1,3 +1,4 @@
+;;;generated file, do not edit.
 (in-package #:3b-openxr-mid-level)
 ;; used by with-two-call
 (defparameter %struct-types% (make-hash-table))

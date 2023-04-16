@@ -1,3 +1,4 @@
+;;;generated file, do not edit.
 (in-package #:3b-openxr-bindings)
 ;; API Constants
 ;; SECTION: OpenXR enumerant (token) definitions.

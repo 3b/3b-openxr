@@ -1,3 +1,4 @@
+;;;generated file, do not edit.
 (in-package #:3b-openxr-bindings)
 ;; Copyright (c) 2017-2023, The Khronos Group Inc.
 ;;

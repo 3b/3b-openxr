@@ -825,6 +825,7 @@
                                    (asdf:system-relative-pathname
                                     :3b-openxr "bindings.lisp")
                                    :if-exists :supersede)
+    (format t ";;;generated file, do not edit.~%")
     (format t "(in-package #:~a)~%" *bindings-package-name*)
     (let ((*print-constants* nil))
       (print-comment *spec*)
@@ -835,6 +836,7 @@
                                    (asdf:system-relative-pathname
                                     :3b-openxr "constants.lisp")
                                    :if-exists :supersede)
+    (format t ";;;generated file, do not edit.~%")
     (format t "(in-package #:~a)~%" *bindings-package-name*)
     (format t ";; API Constants")
     (let ((ac (car (gethash 'api-constants *enum-types*))))
@@ -858,6 +860,7 @@
                                    (asdf:system-relative-pathname
                                     :3b-openxr "bindings-package.lisp")
                                    :if-exists :supersede)
+    (format t ";;;generated file, do not edit.~%")
     (format t "(defpackage #:~a~%" *bindings-package-name*)
     (format t "  (:use :cl #:cffi)~%")
     (format t "  (:shadow ~(~{#:~a~^~%           ~}~))~%"
@@ -885,6 +888,7 @@
                           (asdf:system-relative-pathname
                            :3b-openxr "generated-macros.lisp")
                           :if-exists :supersede)
+    (format t ";;;generated file, do not edit.~%")
     (format t "(in-package #:~a)~%" *mid-level-package-name*)
     (format t ";; used by with-two-call~%")
     (format t "(defparameter %struct-types% (make-hash-table))~%")

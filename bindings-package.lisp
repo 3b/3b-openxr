@@ -1,3 +1,4 @@
+;;;generated file, do not edit.
 (defpackage #:3b-openxr-bindings
   (:use :cl #:cffi)
   (:shadow #:append

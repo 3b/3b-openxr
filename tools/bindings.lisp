@@ -1,6 +1,6 @@
 #++
 (ql:quickload '3b-openxr-generator)
-(in-package #:3b-openxr-parse-spec2)
+(in-package #:3b-openxr-parse-spec)
 
 ;; generate low-level bindings
 
@@ -113,16 +113,16 @@
                      (split-sequence:split-sequence
                       #\, (subseq (text d) (1+ o) c)))))
      (print-comment d)
-     (add-export (a:format-symbol '3b-openxr-parse-spec2 "+~a+" (name d)))
+     (add-export (a:format-symbol '3b-openxr-parse-spec "+~a+" (name d)))
      (format t "~&~((defconstant +~a+ ~a)~)" (name d) `(make-version ,@*api-version*)))
     ;; constants that are easier to define manually
     ((:null-handle)
      (print-comment d)
-     (add-export (a:format-symbol '3b-openxr-parse-spec2 "+~a+" (name d)))
+     (add-export (a:format-symbol '3b-openxr-parse-spec "+~a+" (name d)))
      (format t "~&~((defconstant +~a+ ~a)~)" (name d) 0))
     (:max-event-data-size
      (print-comment d)
-     (add-export (a:format-symbol '3b-openxr-parse-spec2 "+~a+" (name d)))
+     (add-export (a:format-symbol '3b-openxr-parse-spec "+~a+" (name d)))
      (format t "~&~((defconstant +~a+ #.(cffi:foreign-type-size '(:struct event-data-buffer)))~)" (name d)))
     ;; constants that can be used directly
     ((:null-path
@@ -142,7 +142,7 @@
       :max-haptic-amplitude-envelope-samples-fb
       :max-haptic-pcm-buffer-size-fb)
      (print-comment d)
-     (add-export (a:format-symbol '3b-openxr-parse-spec2 "+~a+" (name d)))
+     (add-export (a:format-symbol '3b-openxr-parse-spec "+~a+" (name d)))
      (let ((v (numeric-value
                (subseq (text d) (1+(position #\space (text d) :from-end t))))))
        (if (search "0x" (text d))
@@ -479,7 +479,7 @@
       (format t "~&(defparameter ~(~a~a~a~) ~a)" mark (name e) mark (value e))
       (format t "~&~((defconstant ~a~a~a ~a)~)" mark (name e) mark (value e)))
   (if mark
-      (add-export (a:format-symbol '3b-openxr-parse-spec2
+      (add-export (a:format-symbol '3b-openxr-parse-spec
                                    "~a~a~a" mark (name e) mark))
       (add-export (name e))))
 
@@ -707,7 +707,7 @@
     ;; skip the 'parent class' structs with `type` member but no
     ;; value, and any alias that accidentally get here
     (return-from print-with-struct nil))
-  (let ((w (a:format-symbol '#:3b-openxr-parse-spec2
+  (let ((w (a:format-symbol '#:3b-openxr-parse-spec
                             "WITH-~a" name))
         (slots (map 'list 'name (member struct)))
         (-p (make-hash-table)))
@@ -719,7 +719,7 @@
                    ;; no default specified, use -p
                    (progn
                      (setf (gethash n -p)
-                           (a:format-symbol '#:3b-openxr-parse-spec2
+                           (a:format-symbol '#:3b-openxr-parse-spec
                                             "~a-p" n))
                      (list n nil (gethash n -p)))
                    ;; default specified, just use that

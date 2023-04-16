@@ -9,7 +9,7 @@
                 :serial t
                 :components ((:file "common")
                              (:file "defines")
-                             (:file "parse-spec2")
+                             (:file "parse-spec")
                              (:file "schema")
                              (:file "methods")
                              (:file "spec")

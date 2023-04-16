@@ -1,6 +1,6 @@
-(in-package #:3b-openxr-parse-spec2)
+(in-package #:3b-openxr-parse-spec)
 
-;; this needs to be separate from definitions in parse-spec2 since it
+;; this needs to be separate from definitions in parse-spec since it
 ;; has side-effects at macroexpansion time, and easier to just put it
 ;; in a separate file than fix it
 (eval-when (:compile-toplevel :load-toplevel :execute)

@@ -1,11 +1,11 @@
 #++
 (ql:quickload '3b-openxr-generator)
-(defpackage #:3b-openxr-parse-spec2
+(defpackage #:3b-openxr-parse-spec
   (:use :cl)
   (:local-nicknames (#:a #:alexandria-2))
   (:shadow #:type #:number #:require #:member #:values))
 
-(in-package #:3b-openxr-parse-spec2)
+(in-package #:3b-openxr-parse-spec)
 
 ;; we don't always have enough info to translate an enum name within a
 ;; node, so store them as we see them
@@ -248,7 +248,7 @@
                         (string-upcase
                          (subseq (substitute #\- #\_ name) start)))
                 (string-upcase (subseq (substitute #\- #\_ name) start)))
-            '#:3b-openxr-parse-spec2)))
+            '#:3b-openxr-parse-spec)))
 
 (defun make-const-keyword (name)
   (let ((start (if (alexandria:starts-with-subseq "XR_" name) 3 0)))

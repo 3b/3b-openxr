@@ -1,4 +1,4 @@
-(in-package #:3b-openxr-parse-spec2)
+(in-package #:3b-openxr-parse-spec)
 
 ;; stuff that needs definitions from schema.lisp, and doesn't like to
 ;; be in same file

@@ -1,4 +1,4 @@
-(in-package #:3b-openxr-parse-spec2)
+(in-package #:3b-openxr-parse-spec)
 (defvar *defines-xmlval*
   (alexandria:plist-hash-table
    '(:MAKE-VERSION "#define XR_MAKE_VERSION(major, minor, patch) \\

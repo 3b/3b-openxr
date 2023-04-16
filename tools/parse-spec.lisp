@@ -1,4 +1,4 @@
-(in-package #:3b-openxr-parse-spec2)
+(in-package #:3b-openxr-parse-spec)
 
 (defvar *package-name* "3b-openxr")
 (defvar *bindings-package-name* "3b-openxr-bindings")
@@ -27,7 +27,7 @@
 
 (defun translate-node-name (n)
   (let ((r (find-symbol (string-upcase (substitute #\- #\_ n))
-                        (find-package '#:3b-openxr-parse-spec2))))
+                        (find-package '#:3b-openxr-parse-spec))))
     (assert r)
     r))
 
@@ -581,7 +581,7 @@
                          (assert (eql node *node*))
                          (not (getf *node-attribs* attrib)))
                 class attrib))
-      (setf class (a:format-symbol '#:3b-openxr-parse-spec2 "~a/~a" name class))
+      (setf class (a:format-symbol '#:3b-openxr-parse-spec "~a/~a" name class))
       (setf r (list* :filter filter r))
       (let ((slots (append attribs (a:hash-table-keys *parser-slots*))))
         (when text (push 'text slots))

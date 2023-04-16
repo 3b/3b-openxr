@@ -1,7 +1,7 @@
 
 (defsystem 3b-openxr-generator
   :description "Internal tools for generating bindings for 3b-openxr"
-  :depends-on (alexandria cl-ppcre split-sequence cxml xpath cxml-stp)
+  :depends-on (cffi alexandria cl-ppcre split-sequence cxml xpath cxml-stp)
   :serial t
   :license "MIT"
   :author "Bart Botta <00003b at gmail.com>"

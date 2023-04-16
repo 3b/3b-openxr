@@ -1,32 +1,68 @@
 (defpackage #:3b-openxr-bindings
   (:use :cl #:cffi)
-  (:shadow #:space #:time #:atom)
-  (:export #:"+eye-position-count-fb+"
-           #:"+foveation-center-size-meta+"
-           #:"+guid-size-msft+"
-           #:"+hand-tracking-capsule-count-fb+"
-           #:"+hand-tracking-capsule-point-count-fb+"
-           #:"+max-action-name-size+"
-           #:"+max-action-set-name-size+"
-           #:"+max-api-layer-description-size+"
-           #:"+max-api-layer-name-size+"
-           #:"+max-application-name-size+"
-           #:"+max-controller-model-node-name-size-msft+"
-           #:"+max-engine-name-size+"
-           #:"+max-extension-name-size+"
-           #:"+max-external-camera-name-size-oculus+"
-           #:"+max-keyboard-tracking-name-size-fb+"
-           #:"+max-localized-action-name-size+"
-           #:"+max-localized-action-set-name-size+"
-           #:"+max-render-model-name-size-fb+"
-           #:"+max-runtime-name-size+"
-           #:"+max-spatial-anchor-name-size-msft+"
-           #:"+max-system-name-size+"
-           #:"+passthrough-color-map-mono-size-fb+"
-           #:"+uuid-size-ext+"
+  (:shadow #:append
+           #:format
+           #:position
+           #:space
+           #:time
+           #:type)
+  (:export #:+current-api-version+
+           #:+facial-expression-eye-count-htc+
+           #:+facial-expression-lip-count-htc+
+           #:+false+
+           #:+foveation-center-size-meta+
+           #:+frequency-unspecified+
+           #:+guid-size-msft+
+           #:+hand-forearm-joint-count-ultraleap+
+           #:+hand-joint-count-ext+
+           #:+hand-tracking-capsule-count-fb+
+           #:+hand-tracking-capsule-point-count-fb+
+           #:+infinite-duration+
+           #:+max-action-name-size+
+           #:+max-action-set-name-size+
+           #:+max-api-layer-description-size+
+           #:+max-api-layer-name-size+
+           #:+max-application-name-size+
+           #:+max-controller-model-node-name-size-msft+
+           #:+max-engine-name-size+
+           #:+max-event-data-size+
+           #:+max-extension-name-size+
+           #:+max-external-camera-name-size-oculus+
+           #:+max-graphics-apis-supported+
+           #:+max-haptic-amplitude-envelope-samples-fb+
+           #:+max-haptic-pcm-buffer-size-fb+
+           #:+max-keyboard-tracking-name-size-fb+
+           #:+max-localized-action-name-size+
+           #:+max-localized-action-set-name-size+
+           #:+max-path-length+
+           #:+max-render-model-name-size-fb+
+           #:+max-result-string-size+
+           #:+max-runtime-name-size+
+           #:+max-spatial-anchor-name-size-msft+
+           #:+max-structure-name-size+
+           #:+max-system-name-size+
+           #:+min-composition-layers-supported+
+           #:+min-haptic-duration+
+           #:+no-duration+
+           #:+null-controller-model-key-msft+
+           #:+null-handle+
+           #:+null-path+
+           #:+null-render-model-key-fb+
+           #:+null-system-id+
+           #:+passthrough-color-map-mono-size-fb+
+           #:+true+
+           #:+uuid-size-ext+
+           #:a
            #:acquire-swapchain-image
+           #:action
            #:action-create-info
+           #:action-name
+           #:action-set
            #:action-set-create-info
+           #:action-set-name
+           #:action-set-priorities
+           #:action-set-priority-count
+           #:action-sets
            #:action-space-create-info
            #:action-state-boolean
            #:action-state-float
@@ -34,33 +70,119 @@
            #:action-state-pose
            #:action-state-vector-2f
            #:action-suggested-binding
+           #:action-type
            #:actions-sync-info
+           #:active
            #:active-action-set
            #:active-action-set-priorities-ext
            #:active-action-set-priority-ext
+           #:active-action-sets
+           #:adapter-luid
+           #:additional-create-flags
+           #:additional-usage-flags
+           #:aim-pose
+           #:alignment
+           #:alignment-count
+           #:alignments
+           #:almalence-digital-lens-control-extension-name
+           #:almalence-digital-lens-control-spec-version
+           #:alpha
+           #:amplitude
+           #:amplitude-count
+           #:amplitudes
+           #:anchor
            #:android-surface-swapchain-create-info-fb
+           #:android-surface-swapchain-flags-fb
+           #:android-thread-type-khr
+           #:angle-down
+           #:angle-left
+           #:angle-right
+           #:angle-up
+           #:angular-velocity
            #:api-layer-properties
+           #:api-version
+           #:app-space-delta-pose
+           #:append
+           #:application-activity
+           #:application-context
            #:application-info
+           #:application-name
+           #:application-version
+           #:application-vm
            #:apply-force-feedback-curl-mndx
            #:apply-foveation-htc
            #:apply-haptic-feedback
+           #:array-size
+           #:aspect-ratio
+           #:async-request-id-fb
            #:attach-session-action-sets
+           #:attached-to-device
+           #:b
            #:base-in-structure
            #:base-out-structure
+           #:base-space
+           #:bd-controller-interaction-extension-name
+           #:bd-controller-interaction-spec-version
            #:begin-frame
            #:begin-session
+           #:bias
+           #:binding
            #:binding-modification-base-header-khr
+           #:binding-modification-count
+           #:binding-modifications
            #:binding-modifications-khr
+           #:blend-factor-fb
+           #:body-joint-fb
            #:body-joint-location-fb
            #:body-joint-locations-fb
+           #:body-joint-set
+           #:body-joint-set-fb
            #:body-joints-locate-info-fb
            #:body-skeleton-fb
            #:body-skeleton-joint-fb
            #:body-tracker-create-info-fb
+           #:body-tracker-fb
+           #:bool-32
+           #:border-color
            #:bound-sources-for-action-enumerate-info
-           #:boundary-2dfb
+           #:boundary-2d-fb
+           #:bounds
+           #:box-count
+           #:boxes
+           #:brightness
+           #:buffer
+           #:buffer-capacity-input
+           #:buffer-count-output
+           #:buffer-size
+           #:bytes
+           #:camera-status-flags
+           #:capabilities
+           #:capsules
+           #:ceiling-uuid
+           #:center
+           #:center-region
+           #:central-angle
+           #:central-horizontal-angle
+           #:cfuid
+           #:change-pending
+           #:change-time
+           #:changed-since-last-sync
+           #:clear-fov-degree
            #:clear-spatial-anchor-store-msft
+           #:color
            #:color-4f
+           #:color-bias
+           #:color-scale
+           #:color-space
+           #:color-space-fb
+           #:compare-op
+           #:compare-op-fb
+           #:component-capacity-input
+           #:component-count-output
+           #:component-id-count
+           #:component-ids
+           #:component-type
+           #:components
            #:composition-layer-alpha-blend-fb
            #:composition-layer-base-header
            #:composition-layer-color-scale-bias-khr
@@ -71,7 +193,9 @@
            #:composition-layer-depth-test-varjo
            #:composition-layer-equirect-2-khr
            #:composition-layer-equirect-khr
+           #:composition-layer-flags
            #:composition-layer-image-layout-fb
+           #:composition-layer-image-layout-flags-fb
            #:composition-layer-passthrough-fb
            #:composition-layer-passthrough-htc
            #:composition-layer-projection
@@ -80,19 +204,40 @@
            #:composition-layer-reprojection-info-msft
            #:composition-layer-reprojection-plane-override-msft
            #:composition-layer-secure-content-fb
+           #:composition-layer-secure-content-flags-fb
            #:composition-layer-settings-fb
+           #:composition-layer-settings-flags-fb
            #:composition-layer-space-warp-info-fb
+           #:composition-layer-space-warp-info-flags-fb
            #:compute-new-scene-msft
+           #:confidence
+           #:confidence-count
+           #:confidences
+           #:config
+           #:config-count
+           #:configs
+           #:connection
+           #:consistency
+           #:context
+           #:contrast
+           #:controller-model-key-msft
            #:controller-model-key-state-msft
            #:controller-model-node-properties-msft
            #:controller-model-node-state-msft
            #:controller-model-properties-msft
            #:controller-model-state-msft
            #:convert-time-to-timespec-time-khr
-           #:convert-time-to-win-32performance-counter-khr
+           #:convert-time-to-win32-performance-counter-khr
            #:convert-timespec-time-to-time-khr
-           #:convert-win-32performance-counter-to-time-khr
+           #:convert-win32-performance-counter-to-time-khr
            #:coordinate-space-create-info-ml
+           #:core-window
+           #:count-action-sets
+           #:count-active-action-sets
+           #:count-subaction-paths
+           #:count-suggested-bindings
+           #:counter-flags
+           #:counter-unit
            #:create-action
            #:create-action-set
            #:create-action-space
@@ -101,6 +246,7 @@
            #:create-eye-tracker-fb
            #:create-face-tracker-fb
            #:create-facial-tracker-htc
+           #:create-flags
            #:create-foveation-profile-fb
            #:create-geometry-instance-fb
            #:create-hand-mesh-space-msft
@@ -115,7 +261,7 @@
            #:create-scene-msft
            #:create-scene-observer-msft
            #:create-session
-           #:create-space-from-coordinate-frame-uidml
+           #:create-space-from-coordinate-frame-uid-ml
            #:create-space-user-fb
            #:create-spatial-anchor-fb
            #:create-spatial-anchor-from-perception-anchor-msft
@@ -129,10 +275,22 @@
            #:create-triangle-mesh-fb
            #:create-vulkan-device-khr
            #:create-vulkan-instance-khr
+           #:current-output
+           #:current-state
+           #:data
            #:debug-utils-label-ext
+           #:debug-utils-message-severity-flags-ext
+           #:debug-utils-message-type-flags-ext
            #:debug-utils-messenger-callback-data-ext
            #:debug-utils-messenger-create-info-ext
+           #:debug-utils-messenger-ext
            #:debug-utils-object-name-info-ext
+           #:depth
+           #:depth-mask
+           #:depth-sub-image
+           #:depth-test-range-far-z
+           #:depth-test-range-near-z
+           #:description
            #:deserialize-scene-fragment-msft
            #:deserialize-scene-msft
            #:destroy-action
@@ -159,11 +317,31 @@
            #:destroy-spatial-graph-node-binding-msft
            #:destroy-swapchain
            #:destroy-triangle-mesh-fb
+           #:device
            #:device-pcm-sample-rate-get-info-fb
            #:device-pcm-sample-rate-state-fb
            #:digital-lens-control-almalence
+           #:digital-lens-control-flags-almalence
+           #:dimmer-value
+           #:display
+           #:display-time
+           #:domain
+           #:dst-factor-alpha
+           #:dst-factor-color
+           #:duration
+           #:dynamic
+           #:dynamic-flags
+           #:edge-color
+           #:enabled
+           #:enabled-api-layer-count
+           #:enabled-api-layer-names
+           #:enabled-extension-count
+           #:enabled-extension-names
+           #:enabled-view-configuration-types
            #:end-frame
            #:end-session
+           #:engine-name
+           #:engine-version
            #:enumerate-api-layer-properties
            #:enumerate-bound-sources-for-action
            #:enumerate-color-spaces-fb
@@ -183,7 +361,93 @@
            #:enumerate-view-configuration-views
            #:enumerate-view-configurations
            #:enumerate-vive-tracker-paths-htcx
+           #:environment-blend-mode
+           #:epic-view-configuration-fov-extension-name
+           #:epic-view-configuration-fov-spec-version
            #:erase-space-fb
+           #:error-action-type-mismatch
+           #:error-actionset-not-attached
+           #:error-actionsets-already-attached
+           #:error-android-thread-settings-failure-khr
+           #:error-android-thread-settings-id-invalid-khr
+           #:error-api-layer-not-present
+           #:error-api-version-unsupported
+           #:error-call-order-invalid
+           #:error-color-space-unsupported-fb
+           #:error-compute-new-scene-not-completed-msft
+           #:error-controller-model-key-invalid-msft
+           #:error-create-spatial-anchor-failed-msft
+           #:error-display-refresh-rate-unsupported-fb
+           #:error-environment-blend-mode-unsupported
+           #:error-extension-not-present
+           #:error-feature-already-created-passthrough-fb
+           #:error-feature-required-passthrough-fb
+           #:error-feature-unsupported
+           #:error-file-access-error
+           #:error-file-contents-invalid
+           #:error-form-factor-unavailable
+           #:error-form-factor-unsupported
+           #:error-function-unsupported
+           #:error-graphics-device-invalid
+           #:error-graphics-requirements-call-missing
+           #:error-handle-invalid
+           #:error-hint-already-set-qcom
+           #:error-index-out-of-range
+           #:error-initialization-failed
+           #:error-instance-lost
+           #:error-insufficient-resources-passthrough-fb
+           #:error-layer-invalid
+           #:error-layer-limit-exceeded
+           #:error-limit-reached
+           #:error-localized-name-duplicated
+           #:error-localized-name-invalid
+           #:error-marker-id-invalid-varjo
+           #:error-marker-not-tracked-varjo
+           #:error-name-duplicated
+           #:error-name-invalid
+           #:error-not-permitted-passthrough-fb
+           #:error-out-of-memory
+           #:error-path-count-exceeded
+           #:error-path-format-invalid
+           #:error-path-invalid
+           #:error-path-unsupported
+           #:error-pose-invalid
+           #:error-reference-space-unsupported
+           #:error-render-model-key-invalid-fb
+           #:error-reprojection-mode-unsupported-msft
+           #:error-runtime-failure
+           #:error-runtime-unavailable
+           #:error-scene-component-id-invalid-msft
+           #:error-scene-component-type-mismatch-msft
+           #:error-scene-compute-consistency-mismatch-msft
+           #:error-scene-compute-feature-incompatible-msft
+           #:error-scene-mesh-buffer-id-invalid-msft
+           #:error-secondary-view-configuration-type-not-enabled-msft
+           #:error-session-lost
+           #:error-session-not-ready
+           #:error-session-not-running
+           #:error-session-not-stopping
+           #:error-session-running
+           #:error-size-insufficient
+           #:error-space-cloud-storage-disabled-fb
+           #:error-space-component-not-enabled-fb
+           #:error-space-component-not-supported-fb
+           #:error-space-component-status-already-set-fb
+           #:error-space-component-status-pending-fb
+           #:error-space-localization-failed-fb
+           #:error-space-mapping-insufficient-fb
+           #:error-space-network-request-failed-fb
+           #:error-space-network-timeout-fb
+           #:error-spatial-anchor-name-invalid-msft
+           #:error-spatial-anchor-name-not-found-msft
+           #:error-swapchain-format-unsupported
+           #:error-swapchain-rect-invalid
+           #:error-system-invalid
+           #:error-time-invalid
+           #:error-unexpected-state-passthrough-fb
+           #:error-unknown-passthrough-fb
+           #:error-validation-failure
+           #:error-view-configuration-type-unsupported
            #:event-data-base-header
            #:event-data-buffer
            #:event-data-display-refresh-rate-changed-fb
@@ -207,42 +471,225 @@
            #:event-data-spatial-anchor-create-complete-fb
            #:event-data-visibility-mask-changed-khr
            #:event-data-vive-tracker-connected-htcx
+           #:event-unavailable
+           #:exclude-filter
+           #:expression-count
+           #:expression-weightings
+           #:ext-active-action-set-priority-extension-name
+           #:ext-active-action-set-priority-spec-version
+           #:ext-conformance-automation-extension-name
+           #:ext-conformance-automation-spec-version
+           #:ext-debug-utils-extension-name
+           #:ext-debug-utils-spec-version
+           #:ext-dpad-binding-extension-name
+           #:ext-dpad-binding-spec-version
+           #:ext-eye-gaze-interaction-extension-name
+           #:ext-eye-gaze-interaction-spec-version
+           #:ext-hand-joints-motion-range-extension-name
+           #:ext-hand-joints-motion-range-spec-version
+           #:ext-hand-tracking-extension-name
+           #:ext-hand-tracking-spec-version
+           #:ext-hp-mixed-reality-controller-extension-name
+           #:ext-hp-mixed-reality-controller-spec-version
+           #:ext-local-floor-extension-name
+           #:ext-local-floor-spec-version
+           #:ext-palm-pose-extension-name
+           #:ext-palm-pose-spec-version
+           #:ext-performance-settings-extension-name
+           #:ext-performance-settings-spec-version
+           #:ext-samsung-odyssey-controller-extension-name
+           #:ext-samsung-odyssey-controller-spec-version
+           #:ext-thermal-query-extension-name
+           #:ext-thermal-query-spec-version
+           #:ext-uuid-extension-name
+           #:ext-uuid-spec-version
+           #:ext-view-configuration-depth-range-extension-name
+           #:ext-view-configuration-depth-range-spec-version
+           #:ext-win32-appcontainer-compatible-extension-name
+           #:ext-win32-appcontainer-compatible-spec-version
+           #:extension-name
            #:extension-properties
+           #:extension-version
+           #:extent
            #:extent-2d-f
            #:extent-2d-i
-           #:extent-3df-fb
+           #:extent-3d-f-fb
+           #:extents
+           #:external-camera-attached-to-device-oculus
            #:external-camera-extrinsics-oculus
            #:external-camera-intrinsics-oculus
            #:external-camera-oculus
+           #:external-camera-status-flags-oculus
+           #:extrinsics
+           #:extx-overlay-extension-name
+           #:extx-overlay-spec-version
+           #:eye-expression-htc
            #:eye-gaze-fb
            #:eye-gaze-sample-time-ext
            #:eye-gazes-fb
            #:eye-gazes-info-fb
+           #:eye-position-fb
            #:eye-tracker-create-info-fb
+           #:eye-tracker-fb
+           #:eye-visibility
+           #:face-confidence-fb
+           #:face-count
+           #:face-expression-fb
            #:face-expression-info-fb
+           #:face-expression-set
+           #:face-expression-set-fb
            #:face-expression-status-fb
            #:face-expression-weights-fb
            #:face-tracker-create-info-fb
+           #:face-tracker-fb
            #:facial-expressions-htc
            #:facial-tracker-create-info-htc
+           #:facial-tracker-htc
+           #:facial-tracking-type
+           #:facial-tracking-type-htc
+           #:far-distance
+           #:far-z
+           #:fb-android-surface-swapchain-create-extension-name
+           #:fb-android-surface-swapchain-create-spec-version
+           #:fb-body-tracking-extension-name
+           #:fb-body-tracking-spec-version
+           #:fb-color-space-extension-name
+           #:fb-color-space-spec-version
+           #:fb-composition-layer-alpha-blend-extension-name
+           #:fb-composition-layer-alpha-blend-spec-version
+           #:fb-composition-layer-depth-test-extension-name
+           #:fb-composition-layer-depth-test-spec-version
+           #:fb-composition-layer-image-layout-extension-name
+           #:fb-composition-layer-image-layout-spec-version
+           #:fb-composition-layer-secure-content-extension-name
+           #:fb-composition-layer-secure-content-spec-version
+           #:fb-composition-layer-settings-extension-name
+           #:fb-composition-layer-settings-spec-version
+           #:fb-display-refresh-rate-extension-name
+           #:fb-display-refresh-rate-spec-version
+           #:fb-eye-tracking-social-extension-name
+           #:fb-eye-tracking-social-spec-version
+           #:fb-face-tracking-extension-name
+           #:fb-face-tracking-spec-version
+           #:fb-foveation-configuration-extension-name
+           #:fb-foveation-configuration-spec-version
+           #:fb-foveation-extension-name
+           #:fb-foveation-spec-version
+           #:fb-foveation-vulkan-extension-name
+           #:fb-foveation-vulkan-spec-version
+           #:fb-hand-tracking-aim-extension-name
+           #:fb-hand-tracking-aim-spec-version
+           #:fb-hand-tracking-capsule-count
+           #:fb-hand-tracking-capsule-point-count
+           #:fb-hand-tracking-capsules-extension-name
+           #:fb-hand-tracking-capsules-spec-version
+           #:fb-hand-tracking-mesh-extension-name
+           #:fb-hand-tracking-mesh-spec-version
+           #:fb-haptic-amplitude-envelope-extension-name
+           #:fb-haptic-amplitude-envelope-spec-version
+           #:fb-haptic-pcm-extension-name
+           #:fb-haptic-pcm-spec-version
+           #:fb-keyboard-tracking-extension-name
+           #:fb-keyboard-tracking-spec-version
+           #:fb-passthrough-extension-name
+           #:fb-passthrough-keyboard-hands-extension-name
+           #:fb-passthrough-keyboard-hands-spec-version
+           #:fb-passthrough-spec-version
+           #:fb-render-model-extension-name
+           #:fb-render-model-spec-version
+           #:fb-scene-capture-extension-name
+           #:fb-scene-capture-spec-version
+           #:fb-scene-extension-name
+           #:fb-scene-spec-version
+           #:fb-space-warp-extension-name
+           #:fb-space-warp-spec-version
+           #:fb-spatial-entity-container-extension-name
+           #:fb-spatial-entity-container-spec-version
+           #:fb-spatial-entity-extension-name
+           #:fb-spatial-entity-query-extension-name
+           #:fb-spatial-entity-query-spec-version
+           #:fb-spatial-entity-sharing-extension-name
+           #:fb-spatial-entity-sharing-spec-version
+           #:fb-spatial-entity-spec-version
+           #:fb-spatial-entity-storage-batch-extension-name
+           #:fb-spatial-entity-storage-batch-spec-version
+           #:fb-spatial-entity-storage-extension-name
+           #:fb-spatial-entity-storage-spec-version
+           #:fb-spatial-entity-user-extension-name
+           #:fb-spatial-entity-user-spec-version
+           #:fb-swapchain-update-state-android-surface-extension-name
+           #:fb-swapchain-update-state-android-surface-spec-version
+           #:fb-swapchain-update-state-extension-name
+           #:fb-swapchain-update-state-opengl-es-extension-name
+           #:fb-swapchain-update-state-opengl-es-spec-version
+           #:fb-swapchain-update-state-spec-version
+           #:fb-swapchain-update-state-vulkan-extension-name
+           #:fb-swapchain-update-state-vulkan-spec-version
+           #:fb-touch-controller-pro-extension-name
+           #:fb-touch-controller-pro-spec-version
+           #:fb-touch-controller-proximity-extension-name
+           #:fb-touch-controller-proximity-spec-version
+           #:fb-triangle-mesh-extension-name
+           #:fb-triangle-mesh-spec-version
+           #:fbconfigid
+           #:filter
+           #:flags
+           #:flags-64
+           #:float-value
+           #:floor-uuid
+           #:focal-center-offset
+           #:focus-distance
            #:force-feedback-curl-apply-location-mndx
            #:force-feedback-curl-apply-locations-mndx
+           #:force-feedback-curl-location-mndx
+           #:force-threshold
+           #:force-threshold-released
+           #:form
+           #:form-factor
+           #:format
+           #:fov
            #:fov-f
+           #:fov-mutable
+           #:foveated-rendering-active
            #:foveated-view-configuration-view-varjo
            #:foveation-apply-info-htc
+           #:foveation-center
            #:foveation-configuration-htc
            #:foveation-custom-mode-info-htc
+           #:foveation-dynamic-fb
+           #:foveation-dynamic-flags-htc
            #:foveation-dynamic-mode-info-htc
+           #:foveation-eye-tracked-profile-create-flags-meta
            #:foveation-eye-tracked-profile-create-info-meta
+           #:foveation-eye-tracked-state-flags-meta
            #:foveation-eye-tracked-state-meta
+           #:foveation-level-fb
+           #:foveation-level-htc
            #:foveation-level-profile-create-info-fb
+           #:foveation-mode-htc
            #:foveation-profile-create-info-fb
+           #:foveation-profile-fb
+           #:fragment-count
+           #:fragments
            #:frame-begin-info
+           #:frame-discarded
            #:frame-end-info
+           #:frame-end-info-flags-ml
            #:frame-end-info-ml
            #:frame-state
            #:frame-wait-info
+           #:frequency
+           #:from-display-refresh-rate
+           #:from-level
+           #:frustum-count
+           #:frustums
+           #:function-name
+           #:g
+           #:gaze
+           #:gaze-confidence
+           #:gaze-pose
            #:geometry-instance-create-info-fb
+           #:geometry-instance-fb
            #:geometry-instance-set-transform-fb
            #:geometry-instance-transform-fb
            #:get-action-state-boolean
@@ -256,8 +703,8 @@
            #:get-controller-model-properties-msft
            #:get-controller-model-state-msft
            #:get-current-interaction-profile
-           #:get-d3d11graphics-requirements-khr
-           #:get-d3d12graphics-requirements-khr
+           #:get-d3d11-graphics-requirements-khr
+           #:get-d3d12-graphics-requirements-khr
            #:get-device-sample-rate-fb
            #:get-display-refresh-rate-fb
            #:get-eye-gazes-fb
@@ -269,18 +716,19 @@
            #:get-instance-proc-addr
            #:get-instance-properties
            #:get-marker-size-varjo
-           #:get-opengl-esgraphics-requirements-khr
+           #:get-opengl-es-graphics-requirements-khr
            #:get-opengl-graphics-requirements-khr
            #:get-performance-metrics-state-meta
+           #:get-proc-address
            #:get-reference-space-bounds-rect
            #:get-render-model-properties-fb
            #:get-scene-components-msft
            #:get-scene-compute-state-msft
            #:get-scene-mesh-buffers-msft
            #:get-serialized-scene-fragment-data-msft
-           #:get-space-boundary-2dfb
-           #:get-space-bounding-box-2dfb
-           #:get-space-bounding-box-3dfb
+           #:get-space-boundary-2d-fb
+           #:get-space-bounding-box-2d-fb
+           #:get-space-bounding-box-3d-fb
            #:get-space-component-status-fb
            #:get-space-container-fb
            #:get-space-room-layout-fb
@@ -299,29 +747,42 @@
            #:get-vulkan-graphics-requirements-2-khr
            #:get-vulkan-graphics-requirements-khr
            #:get-vulkan-instance-extensions-khr
+           #:global-dimmer-frame-end-info-flags-ml
            #:global-dimmer-frame-end-info-ml
+           #:glx-context
+           #:glx-drawable
+           #:glx-fbconfig
            #:graphics-binding-d3d11-khr
            #:graphics-binding-d3d12-khr
            #:graphics-binding-eglmndx
-           #:graphics-binding-opengl-esandroid-khr
+           #:graphics-binding-opengl-es-android-khr
            #:graphics-binding-opengl-wayland-khr
-           #:graphics-binding-opengl-win-32-khr
+           #:graphics-binding-opengl-win32-khr
            #:graphics-binding-opengl-xcb-khr
            #:graphics-binding-opengl-xlib-khr
            #:graphics-binding-vulkan-2-khr
            #:graphics-binding-vulkan-khr
+           #:graphics-properties
            #:graphics-requirements-d3d11-khr
            #:graphics-requirements-d3d12-khr
            #:graphics-requirements-opengl-es-khr
            #:graphics-requirements-opengl-khr
            #:graphics-requirements-vulkan-2-khr
            #:graphics-requirements-vulkan-khr
+           #:hand
            #:hand-capsule-fb
+           #:hand-ext
+           #:hand-forearm-joint-ultraleap
+           #:hand-joint-ext
            #:hand-joint-location-ext
            #:hand-joint-locations-ext
+           #:hand-joint-set
+           #:hand-joint-set-ext
            #:hand-joint-velocities-ext
            #:hand-joint-velocity-ext
            #:hand-joints-locate-info-ext
+           #:hand-joints-motion-range
+           #:hand-joints-motion-range-ext
            #:hand-joints-motion-range-info-ext
            #:hand-mesh-index-buffer-msft
            #:hand-mesh-msft
@@ -329,8 +790,12 @@
            #:hand-mesh-update-info-msft
            #:hand-mesh-vertex-buffer-msft
            #:hand-mesh-vertex-msft
+           #:hand-pose-type
            #:hand-pose-type-info-msft
+           #:hand-pose-type-msft
            #:hand-tracker-create-info-ext
+           #:hand-tracker-ext
+           #:hand-tracking-aim-flags-fb
            #:hand-tracking-aim-state-fb
            #:hand-tracking-capsules-state-fb
            #:hand-tracking-mesh-fb
@@ -340,107 +805,471 @@
            #:haptic-base-header
            #:haptic-pcm-vibration-fb
            #:haptic-vibration
+           #:hdc
+           #:height
+           #:hglrc
+           #:holographic-space
            #:holographic-window-attachment-msft
+           #:htc-facial-tracking-extension-name
+           #:htc-facial-tracking-spec-version
+           #:htc-foveation-extension-name
+           #:htc-foveation-spec-version
+           #:htc-hand-interaction-extension-name
+           #:htc-hand-interaction-spec-version
+           #:htc-passthrough-extension-name
+           #:htc-passthrough-spec-version
+           #:htc-vive-cosmos-controller-interaction-extension-name
+           #:htc-vive-cosmos-controller-interaction-spec-version
+           #:htc-vive-focus3-controller-interaction-extension-name
+           #:htc-vive-focus3-controller-interaction-spec-version
+           #:htc-vive-wrist-tracker-interaction-extension-name
+           #:htc-vive-wrist-tracker-interaction-spec-version
+           #:htcx-vive-tracker-interaction-extension-name
+           #:htcx-vive-tracker-interaction-spec-version
+           #:huawei-controller-interaction-extension-name
+           #:huawei-controller-interaction-spec-version
+           #:id
+           #:image
+           #:image-array-index
+           #:image-rect
+           #:image-sensor-pixel-resolution
+           #:index-buffer
+           #:index-buffer-changed
+           #:index-buffer-key
+           #:index-capacity-input
+           #:index-count
+           #:index-count-output
+           #:indices
            #:initialize-loader-khr
+           #:input-source-localized-name-flags
            #:input-source-localized-name-get-info
+           #:instance
+           #:instance-create-flags
            #:instance-create-info
            #:instance-create-info-android-khr
            #:instance-properties
+           #:interaction-profile
            #:interaction-profile-analog-threshold-valve
            #:interaction-profile-dpad-binding-ext
            #:interaction-profile-state
            #:interaction-profile-suggested-binding
+           #:intrinsics
+           #:is-active
+           #:is-eye-following-blendshapes-valid
+           #:is-predicted
+           #:is-sticky
+           #:is-valid
+           #:joint
+           #:joint-bind-poses
+           #:joint-capacity-input
+           #:joint-count
+           #:joint-count-output
+           #:joint-locations
+           #:joint-parents
+           #:joint-radi-i
+           #:joint-velocities
+           #:joints
            #:keyboard-space-create-info-fb
            #:keyboard-tracking-description-fb
+           #:keyboard-tracking-flags-fb
            #:keyboard-tracking-query-fb
+           #:keyboard-tracking-query-flags-fb
+           #:khr-android-create-instance-extension-name
+           #:khr-android-create-instance-spec-version
+           #:khr-android-surface-swapchain-extension-name
+           #:khr-android-surface-swapchain-spec-version
+           #:khr-android-thread-settings-extension-name
+           #:khr-android-thread-settings-spec-version
+           #:khr-binding-modification-extension-name
+           #:khr-binding-modification-spec-version
+           #:khr-composition-layer-color-scale-bias-extension-name
+           #:khr-composition-layer-color-scale-bias-spec-version
+           #:khr-composition-layer-cube-extension-name
+           #:khr-composition-layer-cube-spec-version
+           #:khr-composition-layer-cylinder-extension-name
+           #:khr-composition-layer-cylinder-spec-version
+           #:khr-composition-layer-depth-extension-name
+           #:khr-composition-layer-depth-spec-version
+           #:khr-composition-layer-equirect-extension-name
+           #:khr-composition-layer-equirect-spec-version
+           #:khr-composition-layer-equirect2-extension-name
+           #:khr-composition-layer-equirect2-spec-version
+           #:khr-convert-timespec-time-extension-name
+           #:khr-convert-timespec-time-spec-version
+           #:khr-d3d11-enable-extension-name
+           #:khr-d3d11-enable-spec-version
+           #:khr-d3d12-enable-extension-name
+           #:khr-d3d12-enable-spec-version
+           #:khr-loader-init-android-extension-name
+           #:khr-loader-init-android-spec-version
+           #:khr-loader-init-extension-name
+           #:khr-loader-init-spec-version
+           #:khr-opengl-enable-extension-name
+           #:khr-opengl-enable-spec-version
+           #:khr-opengl-es-enable-extension-name
+           #:khr-opengl-es-enable-spec-version
+           #:khr-swapchain-usage-input-attachment-bit-spec-version
+           #:khr-swapchain-usage-input-attachment-extension-name
+           #:khr-visibility-mask-extension-name
+           #:khr-visibility-mask-spec-version
+           #:khr-vulkan-enable-extension-name
+           #:khr-vulkan-enable-spec-version
+           #:khr-vulkan-enable2-extension-name
+           #:khr-vulkan-enable2-spec-version
+           #:khr-vulkan-swapchain-format-list-extension-name
+           #:khr-vulkan-swapchain-format-list-spec-version
+           #:khr-win32-convert-performance-counter-time-extension-name
+           #:khr-win32-convert-performance-counter-time-spec-version
+           #:label-name
+           #:last-change-time
+           #:layer
+           #:layer-count
+           #:layer-flags
+           #:layer-handle
+           #:layer-name
+           #:layer-version
+           #:layers
+           #:left-hand-intensity
+           #:level
+           #:linear-velocity
+           #:lip-expression-htc
            #:load-controller-model-msft
            #:load-render-model-fb
            #:loader-init-info-android-khr
            #:loader-init-info-base-header-khr
            #:local-dimming-frame-end-info-meta
+           #:local-dimming-mode
+           #:local-dimming-mode-meta
+           #:localized-action-name
+           #:localized-action-set-name
            #:locate-body-joints-fb
            #:locate-hand-joints-ext
            #:locate-scene-components-msft
            #:locate-space
            #:locate-views
+           #:location
+           #:location-count
+           #:location-flags
+           #:locations
+           #:lod
+           #:loss-time
+           #:lost-event-count
+           #:lower-vertical-angle
+           #:mag-filter
+           #:make-version
+           #:marker-id
            #:marker-space-create-info-varjo
+           #:max-anisotropy
+           #:max-api-version-supported
+           #:max-audio-device-str-size-oculus
+           #:max-depth
+           #:max-far-z
+           #:max-hand-mesh-index-count
+           #:max-hand-mesh-vertex-count
+           #:max-image-rect-height
+           #:max-image-rect-width
+           #:max-layer-count
+           #:max-mutable-fov
+           #:max-result-count
+           #:max-swapchain-image-height
+           #:max-swapchain-image-width
+           #:max-swapchain-sample-count
+           #:mesh
+           #:mesh-buffer-id
+           #:mesh-compute-lod-msft
+           #:message
+           #:message-id
+           #:message-severities
+           #:message-types
+           #:meta-foveation-eye-tracked-extension-name
+           #:meta-foveation-eye-tracked-spec-version
+           #:meta-headset-id-extension-name
+           #:meta-headset-id-spec-version
+           #:meta-local-dimming-extension-name
+           #:meta-local-dimming-spec-version
+           #:meta-performance-metrics-extension-name
+           #:meta-performance-metrics-spec-version
+           #:meta-vulkan-swapchain-create-info-extension-name
+           #:meta-vulkan-swapchain-create-info-spec-version
+           #:min-api-version-supported
+           #:min-depth
+           #:min-feature-level
+           #:min-filter
+           #:min-near-z
+           #:mip-count
+           #:mipmap-mode
+           #:ml-compat-extension-name
+           #:ml-compat-spec-version
+           #:ml-frame-end-info-extension-name
+           #:ml-frame-end-info-spec-version
+           #:ml-global-dimmer-extension-name
+           #:ml-global-dimmer-spec-version
+           #:ml-ml2-controller-interaction-extension-name
+           #:ml-ml2-controller-interaction-spec-version
+           #:mnd-headless-extension-name
+           #:mnd-headless-spec-version
+           #:mnd-swapchain-usage-input-attachment-bit-spec-version
+           #:mnd-swapchain-usage-input-attachment-extension-name
+           #:mndx-egl-enable-extension-name
+           #:mndx-egl-enable-spec-version
+           #:mndx-force-feedback-curl-extension-name
+           #:mndx-force-feedback-curl-spec-version
+           #:mode
+           #:model-key
+           #:model-name
+           #:model-version
+           #:motion-vector-sub-image
+           #:msft-composition-layer-reprojection-extension-name
+           #:msft-composition-layer-reprojection-spec-version
+           #:msft-controller-model-extension-name
+           #:msft-controller-model-spec-version
+           #:msft-first-person-observer-extension-name
+           #:msft-first-person-observer-spec-version
+           #:msft-hand-interaction-extension-name
+           #:msft-hand-interaction-spec-version
+           #:msft-hand-tracking-mesh-extension-name
+           #:msft-hand-tracking-mesh-spec-version
+           #:msft-holographic-window-attachment-extension-name
+           #:msft-holographic-window-attachment-spec-version
+           #:msft-perception-anchor-interop-extension-name
+           #:msft-perception-anchor-interop-spec-version
+           #:msft-scene-understanding-extension-name
+           #:msft-scene-understanding-serialization-extension-name
+           #:msft-scene-understanding-serialization-spec-version
+           #:msft-scene-understanding-spec-version
+           #:msft-secondary-view-configuration-extension-name
+           #:msft-secondary-view-configuration-spec-version
+           #:msft-spatial-anchor-extension-name
+           #:msft-spatial-anchor-persistence-extension-name
+           #:msft-spatial-anchor-persistence-spec-version
+           #:msft-spatial-anchor-spec-version
+           #:msft-spatial-graph-bridge-extension-name
+           #:msft-spatial-graph-bridge-spec-version
+           #:msft-unbounded-reference-space-extension-name
+           #:msft-unbounded-reference-space-spec-version
+           #:name
+           #:nder-model-unavailable-fb
+           #:near-z
            #:new-scene-compute-info-msft
+           #:next
+           #:node-capacity-input
+           #:node-count-output
+           #:node-id
+           #:node-name
+           #:node-pose
+           #:node-properties
+           #:node-states
+           #:node-type
+           #:normal
+           #:object-count
+           #:object-handle
+           #:object-name
+           #:object-type
+           #:object-type-count
+           #:object-types
+           #:objects
+           #:oculus-android-session-state-enable-extension-name
+           #:oculus-android-session-state-enable-spec-version
+           #:oculus-audio-device-guid-extension-name
+           #:oculus-audio-device-guid-spec-version
+           #:oculus-external-camera-extension-name
+           #:oculus-external-camera-spec-version
+           #:off-haptic
+           #:off-threshold
+           #:offset
            #:offset-2d-f
            #:offset-2d-i
-           #:offset-3df-fb
+           #:offset-3d-f-fb
+           #:on-haptic
+           #:on-threshold
+           #:orientation
+           #:orientation-tracking
+           #:overlay-main-session-flags-extx
+           #:overlay-session-create-flags-extx
+           #:override-hand-scale
+           #:override-value-input
+           #:parent-id
+           #:parent-joint
+           #:parent-node-name
+           #:parse-version
+           #:passthrough
            #:passthrough-brightness-contrast-saturation-fb
+           #:passthrough-capability-flags-fb
            #:passthrough-color-htc
            #:passthrough-color-map-mono-to-mono-fb
            #:passthrough-color-map-mono-to-rgba-fb
            #:passthrough-create-info-fb
            #:passthrough-create-info-htc
+           #:passthrough-fb
+           #:passthrough-flags-fb
+           #:passthrough-form-htc
+           #:passthrough-htc
            #:passthrough-keyboard-hands-intensity-fb
            #:passthrough-layer-create-info-fb
+           #:passthrough-layer-fb
            #:passthrough-layer-pause-fb
+           #:passthrough-layer-purpose-fb
            #:passthrough-layer-resume-fb
            #:passthrough-layer-set-keyboard-hands-intensity-fb
            #:passthrough-layer-set-style-fb
            #:passthrough-mesh-transform-info-htc
            #:passthrough-pause-fb
            #:passthrough-start-fb
+           #:passthrough-state-changed-flags-fb
            #:passthrough-style-fb
+           #:path
            #:path-to-string
+           #:paths
+           #:perf-settings-domain-ext
+           #:perf-settings-level-ext
+           #:perf-settings-notification-level-ext
            #:perf-settings-set-performance-level-ext
+           #:perf-settings-sub-domain-ext
+           #:performance-metrics-counter-flags-meta
            #:performance-metrics-counter-meta
+           #:performance-metrics-counter-unit-meta
            #:performance-metrics-state-meta
            #:persist-spatial-anchor-msft
+           #:persistence-mode
+           #:persistent-path
+           #:pfn-debug-utils-messenger-callback-ext
+           #:pfn-get-instance-proc-addr
+           #:pfn-void-function
+           #:physical-device
+           #:pinch-strength-index
+           #:pinch-strength-little
+           #:pinch-strength-middle
+           #:pinch-strength-ring
+           #:points
            #:poll-event
+           #:pose
            #:pose-f
+           #:pose-in-action-space
+           #:pose-in-anchor-space
+           #:pose-in-coordinate-space
+           #:pose-in-hand-mesh-space
+           #:pose-in-marker-space
+           #:pose-in-node-space
+           #:pose-in-previous-space
+           #:pose-in-reference-space
+           #:pose-in-space
+           #:pose-valid
+           #:position
+           #:position-tracking
+           #:predicted-display-period
+           #:predicted-display-time
+           #:primary-view-configuration-type
+           #:priority
+           #:priority-override
+           #:profile
+           #:purpose
+           #:qcom-tracking-optimization-settings-extension-name
+           #:qcom-tracking-optimization-settings-spec-version
            #:quaternion-f
+           #:query-action
            #:query-performance-metrics-counter-meta
            #:query-spaces-fb
            #:query-system-tracked-keyboard-fb
+           #:queue
+           #:queue-family-index
+           #:queue-index
+           #:r
+           #:radius
+           #:recommended-far-z
+           #:recommended-fov
+           #:recommended-image-rect-height
+           #:recommended-image-rect-width
+           #:recommended-motion-vector-image-rect-height
+           #:recommended-motion-vector-image-rect-width
+           #:recommended-near-z
+           #:recommended-swapchain-sample-count
            #:rect-2d-f
            #:rect-2d-i
-           #:rect-3df-fb
+           #:rect-3d-f-fb
            #:reference-space-create-info
+           #:reference-space-type
+           #:relative-pose
            #:release-swapchain-image
            #:render-model-buffer-fb
            #:render-model-capabilities-request-fb
+           #:render-model-flags-fb
+           #:render-model-key-fb
            #:render-model-load-info-fb
            #:render-model-path-info-fb
            #:render-model-properties-fb
+           #:reprojection-mode
+           #:reprojection-mode-msft
+           #:request
+           #:request-byte-count
            #:request-display-refresh-rate-fb
            #:request-exit-session
+           #:request-id
            #:request-scene-capture-fb
+           #:requested-feature-count
+           #:requested-features
+           #:result
+           #:result-capacity-input
+           #:result-count-output
            #:result-to-string
+           #:results
            #:retrieve-space-query-results-fb
+           #:right-hand-intensity
+           #:role-path
            #:room-layout-fb
+           #:runtime-name
+           #:runtime-version
+           #:sample-count
+           #:sample-rate
+           #:sample-time
+           #:samples-consumed
+           #:saturation
            #:save-space-fb
            #:save-space-list-fb
+           #:scale
            #:scene-bounds-msft
            #:scene-capture-request-info-fb
            #:scene-component-location-msft
            #:scene-component-locations-msft
            #:scene-component-msft
            #:scene-component-parent-filter-info-msft
+           #:scene-component-type-msft
            #:scene-components-get-info-msft
            #:scene-components-locate-info-msft
            #:scene-components-msft
+           #:scene-compute-consistency-msft
+           #:scene-compute-feature-msft
+           #:scene-compute-state-msft
            #:scene-create-info-msft
            #:scene-deserialize-info-msft
+           #:scene-fragment-id
            #:scene-frustum-bound-msft
            #:scene-mesh-buffers-get-info-msft
            #:scene-mesh-buffers-msft
+           #:scene-mesh-count
            #:scene-mesh-indices-uint-16-msft
            #:scene-mesh-indices-uint-32-msft
            #:scene-mesh-msft
            #:scene-mesh-vertex-buffer-msft
+           #:scene-meshes
            #:scene-meshes-msft
+           #:scene-msft
+           #:scene-object-count
            #:scene-object-msft
+           #:scene-object-type-msft
            #:scene-object-types-filter-info-msft
+           #:scene-objects
            #:scene-objects-msft
            #:scene-observer-create-info-msft
+           #:scene-observer-msft
            #:scene-oriented-box-bound-msft
            #:scene-plane-alignment-filter-info-msft
+           #:scene-plane-alignment-type-msft
+           #:scene-plane-count
            #:scene-plane-msft
+           #:scene-planes
            #:scene-planes-msft
            #:scene-sphere-bound-msft
+           #:screen-number
            #:secondary-view-configuration-frame-end-info-msft
            #:secondary-view-configuration-frame-state-msft
            #:secondary-view-configuration-layer-info-msft
@@ -448,14 +1277,23 @@
            #:secondary-view-configuration-state-msft
            #:secondary-view-configuration-swapchain-create-info-msft
            #:semantic-labels-fb
+           #:sensor-output
            #:serialized-scene-fragment-data-get-info-msft
+           #:session
            #:session-action-sets-attach-info
            #:session-begin-debug-utils-label-region-ext
            #:session-begin-info
+           #:session-create-flags
            #:session-create-info
            #:session-create-info-overlay-extx
            #:session-end-debug-utils-label-region-ext
            #:session-insert-debug-utils-label-ext
+           #:session-label-count
+           #:session-labels
+           #:session-layers-placement
+           #:session-loss-pending
+           #:session-not-focused
+           #:session-state
            #:set-android-application-thread-khr
            #:set-color-space-fb
            #:set-debug-utils-object-name-ext
@@ -474,39 +1312,98 @@
            #:set-tracking-optimization-settings-hint-qcom
            #:set-view-offset-varjo
            #:share-spaces-fb
+           #:should-render
+           #:size
+           #:skeleton-changed-count
+           #:source-path
+           #:space
+           #:space-bounds-unavailable
            #:space-component-filter-info-fb
            #:space-component-status-fb
            #:space-component-status-set-info-fb
+           #:space-component-type-fb
            #:space-container-fb
+           #:space-count
            #:space-erase-info-fb
            #:space-filter-info-base-header-fb
            #:space-list-save-info-fb
            #:space-location
+           #:space-location-flags
+           #:space-persistence-mode-fb
+           #:space-query-action-fb
            #:space-query-info-base-header-fb
            #:space-query-info-fb
            #:space-query-result-fb
            #:space-query-results-fb
            #:space-save-info-fb
            #:space-share-info-fb
+           #:space-storage-location-fb
            #:space-storage-location-filter-info-fb
            #:space-user-create-info-fb
+           #:space-user-fb
+           #:space-user-id-fb
            #:space-uuid-filter-info-fb
            #:space-velocity
+           #:space-velocity-flags
+           #:spaces
+           #:spatial-anchor
            #:spatial-anchor-create-info-fb
            #:spatial-anchor-create-info-msft
            #:spatial-anchor-from-persisted-anchor-create-info-msft
+           #:spatial-anchor-msft
            #:spatial-anchor-persistence-info-msft
+           #:spatial-anchor-persistence-name
            #:spatial-anchor-persistence-name-msft
            #:spatial-anchor-space-create-info-msft
+           #:spatial-anchor-store
+           #:spatial-anchor-store-connection-msft
+           #:spatial-graph-node-binding-msft
            #:spatial-graph-node-binding-properties-get-info-msft
            #:spatial-graph-node-binding-properties-msft
            #:spatial-graph-node-space-create-info-msft
+           #:spatial-graph-node-type-msft
            #:spatial-graph-static-node-binding-create-info-msft
+           #:spec-version
+           #:sphere-count
+           #:spheres
+           #:src-factor-alpha
+           #:src-factor-color
+           #:state
+           #:status
            #:stop-haptic-feedback
            #:string-to-path
+           #:structure-type
            #:structure-type-to-string
+           #:sub-domain
+           #:sub-image
+           #:sub-image-count
+           #:sub-images
+           #:subaction-path
+           #:subaction-paths
            #:submit-debug-utils-message-ext
+           #:success
            #:suggest-interaction-profile-bindings
+           #:suggested-bindings
+           #:support-eye-facial-tracking
+           #:support-lip-facial-tracking
+           #:supports-body-tracking
+           #:supports-eye-gaze-interaction
+           #:supports-eye-tracking
+           #:supports-face-tracking
+           #:supports-force-feedback-curl
+           #:supports-foveated-rendering
+           #:supports-foveation-eye-tracked
+           #:supports-hand-tracking
+           #:supports-hand-tracking-mesh
+           #:supports-indices-uint-16
+           #:supports-keyboard-tracking
+           #:supports-marker-tracking
+           #:supports-passthrough
+           #:supports-render-model-loading
+           #:supports-spatial-entity
+           #:swapchain
+           #:swapchain-create-flags
+           #:swapchain-create-foveation-flags-fb
            #:swapchain-create-info
            #:swapchain-create-info-foveation-fb
            #:swapchain-image-acquire-info
@@ -523,9 +1420,15 @@
            #:swapchain-state-android-surface-dimensions-fb
            #:swapchain-state-base-header-fb
            #:swapchain-state-foveation-fb
-           #:swapchain-state-sampler-opengl-esfb
+           #:swapchain-state-foveation-flags-fb
+           #:swapchain-state-sampler-opengl-es-fb
            #:swapchain-state-sampler-vulkan-fb
            #:swapchain-sub-image
+           #:swapchain-usage-flags
+           #:swizzle-alpha
+           #:swizzle-blue
+           #:swizzle-green
+           #:swizzle-red
            #:sync-actions
            #:system-body-tracking-properties-fb
            #:system-color-space-properties-fb
@@ -541,49 +1444,161 @@
            #:system-hand-tracking-mesh-properties-msft
            #:system-hand-tracking-properties-ext
            #:system-headset-id-properties-meta
+           #:system-id
            #:system-keyboard-tracking-properties-fb
            #:system-marker-tracking-properties-varjo
-           #:system-passthrough-properties-2fb
+           #:system-name
+           #:system-passthrough-properties-2-fb
            #:system-passthrough-properties-fb
            #:system-properties
            #:system-render-model-properties-fb
            #:system-space-warp-properties-fb
            #:system-spatial-entity-properties-fb
            #:system-tracking-properties
+           #:texture
+           #:texture-color-map
+           #:texture-opacity-factor
            #:thermal-get-temperature-trend-ext
+           #:time
+           #:timeout
+           #:timeout-expired
+           #:to-display-refresh-rate
+           #:to-level
+           #:tracked-keyboard-id
+           #:tracking-optimization-settings-domain-qcom
+           #:tracking-optimization-settings-hint-qcom
+           #:tracking-properties
+           #:triangle-count
            #:triangle-mesh-begin-update-fb
            #:triangle-mesh-begin-vertex-buffer-update-fb
            #:triangle-mesh-create-info-fb
            #:triangle-mesh-end-update-fb
            #:triangle-mesh-end-vertex-buffer-update-fb
+           #:triangle-mesh-fb
+           #:triangle-mesh-flags-fb
            #:triangle-mesh-get-index-buffer-fb
            #:triangle-mesh-get-vertex-buffer-fb
            #:try-create-spatial-graph-static-node-binding-msft
            #:try-get-perception-anchor-from-spatial-anchor-msft
+           #:type
+           #:uint-value
+           #:ultraleap-hand-tracking-forearm-extension-name
+           #:ultraleap-hand-tracking-forearm-spec-version
            #:unpersist-spatial-anchor-msft
            #:update-hand-mesh-msft
            #:update-swapchain-fb
+           #:update-time
+           #:upper-vertical-angle
+           #:usage-flags
+           #:user-callback
+           #:user-count
+           #:user-data
+           #:user-id
+           #:users
+           #:uuid
+           #:uuid-capacity-input
+           #:uuid-count
+           #:uuid-count-output
            #:uuid-ext
            #:uuid-msft
+           #:uuids
+           #:value
+           #:valve-analog-threshold-extension-name
+           #:valve-analog-threshold-spec-version
+           #:varjo-composition-layer-depth-test-extension-name
+           #:varjo-composition-layer-depth-test-spec-version
+           #:varjo-environment-depth-estimation-extension-name
+           #:varjo-environment-depth-estimation-spec-version
+           #:varjo-foveated-rendering-extension-name
+           #:varjo-foveated-rendering-spec-version
+           #:varjo-marker-tracking-extension-name
+           #:varjo-marker-tracking-spec-version
+           #:varjo-quad-views-extension-name
+           #:varjo-quad-views-spec-version
+           #:varjo-view-offset-extension-name
+           #:varjo-view-offset-spec-version
+           #:varying
            #:vector-2f
            #:vector-3f
            #:vector-4f
            #:vector-4s-fb
+           #:velocity
+           #:velocity-flags
+           #:vendor-id
+           #:version
+           #:version-major
+           #:version-minor
+           #:version-patch
+           #:vertex-blend-indices
+           #:vertex-blend-weights
+           #:vertex-buffer
+           #:vertex-buffer-changed
+           #:vertex-capacity-input
+           #:vertex-count
+           #:vertex-count-output
+           #:vertex-normals
+           #:vertex-positions
+           #:vertex-update-time
+           #:vertex-uvs
+           #:vertical-offset
+           #:vertices
            #:view
+           #:view-configuration-count
            #:view-configuration-depth-range-ext
+           #:view-configuration-layers-info
            #:view-configuration-properties
+           #:view-configuration-states
+           #:view-configuration-type
            #:view-configuration-view
            #:view-configuration-view-fov-epic
+           #:view-count
+           #:view-format-count
+           #:view-formats
+           #:view-index
            #:view-locate-foveated-rendering-varjo
            #:view-locate-info
            #:view-state
+           #:view-state-flags
+           #:views
+           #:virtual-far-plane-distance
+           #:virtual-near-plane-distance
            #:visibility-mask-khr
+           #:visibility-mask-type-khr
+           #:visible
            #:visual-mesh-compute-lod-info-msft
+           #:visualid
            #:vive-tracker-paths-htcx
+           #:vulkan-allocator
+           #:vulkan-create-info
+           #:vulkan-device-create-flags-khr
            #:vulkan-device-create-info-khr
            #:vulkan-graphics-device-get-info-khr
+           #:vulkan-instance
+           #:vulkan-instance-create-flags-khr
            #:vulkan-instance-create-info-khr
+           #:vulkan-physical-device
            #:vulkan-swapchain-create-info-meta
            #:vulkan-swapchain-format-list-create-info-khr
+           #:w
            #:wait-frame
-           #:wait-swapchain-image))
+           #:wait-swapchain-image
+           #:wall-uuid-capacity-input
+           #:wall-uuid-count-output
+           #:wall-uuids
+           #:wedge-angle
+           #:weight-count
+           #:weights
+           #:which-components
+           #:width
+           #:winding-order
+           #:winding-order-fb
+           #:wrap-mode-s
+           #:wrap-mode-t
+           #:x
+           #:x-display
+           #:y
+           #:z))
+(in-package #:3b-openxr-bindings)
+;; internals used by extension function wrapper generator
+(defconstant %extension-function-count% 166)
+(deftype %extension-function-vector% () `(simple-array function (166)))

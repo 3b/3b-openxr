@@ -1,4 +1,4 @@
-(in-package #:3b-openxr)
+(in-package #:3b-openxr-bindings)
 
 
 (cffi:define-foreign-library openxr-loader

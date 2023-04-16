@@ -103,21 +103,11 @@
                  (break "enum type ~s?" type))
                (%translate-type-name type))
               (require
-               ;; vector of type and enum value names?
-               #++(break "~s" (map 'vector (lambda (a)
-                                             (or (gethash a *known-enum-names*)
-                                                 (%translate-type-name a)))
-                                   type))
                (map 'vector (lambda (a)
                               (or (gethash a *known-enum-names*)
                                   (%translate-type-name a)))
                     type))
               (extension/require
-               ;; vector of type and enum value names?
-               #++(break "e/r ~s" (map 'vector (lambda (a)
-                                                 (or (gethash a *known-enum-names*)
-                                                     (%translate-type-name a)))
-                                       type))
                (map 'vector (lambda (a)
                               (or (gethash a *known-enum-names*)
                                   (%translate-type-name a)))
@@ -161,8 +151,6 @@
       (setf (slot-value o 'raw-extends) extends)
       (setf (slot-value o 'extends)
             (typecase o
-              #++((or type/struct command/alias)
-                  (%translate-type-name extends))
               (enum/ext
                (%translate-type-name extends))
               (t

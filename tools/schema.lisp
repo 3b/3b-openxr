@@ -24,16 +24,6 @@
                  :class t)))
 
      (tag types (:unique t)
-       #++(tag type (:class :by-attribs
-                     :attribs (name categore requires))
-            (by-attrib requires)
-            (by-attrib (category include))
-            (by-attrib (category define))
-            (by-attrib (category basetype))
-            (by-attrib (category bitmask))
-            (by-attrib (category handle))
-            (by-attrib (category enum))
-            (by-attrib (category struct)))
        (attrib-tag type requires
            (:attribs (name requires)))
        (attrib-tag type (category include)

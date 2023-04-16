@@ -66,68 +66,11 @@
 (defparameter *enum-types* (make-hash-table))
 (defparameter *struct-types* (make-hash-table))
 (defparameter *struct-dependencies* (make-hash-table))
-#++
-(defclass array-type-name ()
-  ((base-type :accessor base-type :initarg :type)
-   (count-enum :accessor count-enum :initarg :enum)
-   (count-value :accessor count-value :initarg :count)))
-
-#++
-(defmethod array-type-as-member (at)
-  (format nil "~s" at))
-
-#++
-(defun count-enum-constant (at)
-  (if (get-constant (count-enum at))
-      (format nil "~(+~a+~)" (make-const-keyword (count-enum at)))
-      (count-value at)))
-
-#++
-(defmethod array-type-as-member ((at array-type-name))
-  (format nil "~s :count ~a"
-          (base-type at)
-          (count-enum-constant at)))
-
-#++
-(defmethod array-type-as-param ((at array-type-name))
-  (list :pointer (base-type at)))
-
-#++
-(defmethod array-type-comment ((at array-type-name))
-  (format nil "count = ~a (~a)"
-          (count-enum-constant at)
-          (count-value at)))
 
 (defun extract-array-size (str)
   (when (position #\[ str)
     (assert (= 1 (count #\[ str)))
     (subseq str (1+ (position #\[ str)) (position #\] str))))
-
-#++
-(defun translate-type-name (name &key len str allow-arrays)
-  (let ((type (%translate-type-name name))
-        (pointer (position #\* str))
-        (array (position #\[ str)))
-    (when (and (eql type :char) (search "null-terminated" len))
-      (setf type :string))
-    #++(when (gethash type *struct-types*)
-         (setf type (list :struct type)))
-    (when (and pointer array)
-      (error "todo: pointer + array str"))
-    (when pointer
-      (loop repeat (- (count #\* str)
-                      ;; :string implies 1 pointer, so subtract 1 in
-                      ;; that case
-                      (if (eql type :string) 1 0))
-            do (setf type (list :pointer type))))
-    (when array
-      (assert allow-arrays)
-      (multiple-value-bind (enum count) (extract-array-size str)
-        (setf type (make-instance 'array-type-name
-                                  :enum enum
-                                  :count count
-                                  :type type))))
-    type))
 
 (defun add-export (name)
   (setf (gethash name *exports*) t))
@@ -152,30 +95,9 @@
                     (format t "~&~a" (format-comment c :prefix prefix)))
              (comment x)))))
 
-#++(defun print-trailing-comment (x)
-  (when (and (typep x 'has-comment)
-             (slot-boundp x 'comment)
-             (comment x))
-    (assert (stringp (comment x)))
-    (format t "~&  ;; ~a~%"  (comment x))))
-
 (defun get-types (registry types)
   (remove-if-not (a:rcurry 'typep types)
                  (types registry)))
-
-#++(defun print-types (registry)
-  (loop for i across (get-types registry 'type/basetype)
-        do (print-comment i)
-           (let ((name (name i))
-                 (type (type i)))
-             (format t "~&~((defctype ~s ~s)~)~%~%" name type)))
-
-  (loop for i across (get-types registry 'type/handle)
-        do (print-comment i)
-           (let ((name (name i))
-                 (type (type i)))
-             (Assert (eql type :define-handle))
-             (format t "~&~((defctype ~s xr-handle)~)~%~%" name))))
 
 (defun print-define (d)
   (unless (and (gethash (name d) *defines-xmlval*)
@@ -290,15 +212,6 @@
     (add-export name)
     (format t "~&~((defctype ~s xr-handle)~)~%~%" name)))
 
-#++
-(defun print-types (registry)
-  (loop for i across (get-types registry 'type/basetype)
-        do (print-basetype i))
-
-  (loop for i across (get-types registry 'type/handle)
-        do (print-handle i)))
-
-
 (defun collect-enums (registry)
   (clrhash *enum-types*)
   (clrhash *bitmask-types*)
@@ -308,9 +221,7 @@
         do (setf (gethash (name e) *enum-types*) (list e))
            (when (slot-boundp e 'enum)
              (loop for i across (enum e)
-                   do (Assert (or (not (gethash (raw-name i) *enum-values*))
-                                  #++(equalp (value i)
-                                             (gethash (name i) *enum-values*))))
+                   do (Assert (not (gethash (raw-name i) *enum-values*)))
                       (setf (gethash (raw-name i) *enum-values*)
                             (value i))
                       (add-constant (raw-name i) (value i)))))
@@ -436,16 +347,8 @@
         (noautovalidity (maybe-slot m 'noautovalidity))
         (values (maybe-slot m 'values)))
     (add-export (name m))
-    #++(when enum
-         (format t "~&  ;; enum = ~s" enum))
     (when len
       (format t "~&  ;; length =~(~{ ~s~}~)" (coerce len 'list)))
-    #++
-    (when optional
-      (format t "~&  ;; optional = ~s" optional))
-    #++
-    (when noautovalidity
-      (format t "~&  ;; noautovalidity = ~s" noautovalidity))
     (when values
       ;; if this starts being used for more than 'type' field, make
       ;; sure it is still doing the right thing
@@ -488,8 +391,7 @@
                        (name m) v))
            (format t  "~&  ~((~a ~s :count ~a)~)" (name m) type
                    (or (get-constant v)
-                       (numeric-value v)))
-           #++(break "array ~s~%~s" m v)))
+                       (numeric-value v)))))
         (t
          (format t "~&  ~((~a ~s)~)" (name m) type)))
       (when (or optional noautovalidity)
@@ -503,15 +405,6 @@
           (assert (equalp noautovalidity "true"))
           (format t " noautovalidity"))
         (format t "~%")))))
-
-#++
-(progn
-  (setf (gethash "XR_FOVEATION_CENTER_SIZE_META" *constants*) 2)
-  (setf (gethash "XR_HAND_TRACKING_CAPSULE_POINT_COUNT_FB" *constants*) 2)
-  (setf (gethash "XR_HAND_TRACKING_CAPSULE_COUNT_FB" *constants*) 19)
-  (setf (gethash "XR_MAX_SPATIAL_ANCHOR_NAME_SIZE_MSFT" *constants*) 256)
-  (setf (gethash "XR_UUID_SIZE_EXT" *constants*) 16)
-  (setf (gethash "XR_MAX_EXTERNAL_CAMERA_NAME_SIZE_OCULUS" *constants*) 32))
 
 (defun print-struct (s &key override-name)
   (format *debug-io* "print ~s @ ~s (~s)~%" (name s) override-name
@@ -531,13 +424,9 @@
     (print-comment s)
     (add-export (name s))
     (if (slot-boundp s 'alias)
-        #++(break " todo alias~%" s)
         (progn
           (format t "~&;; alias struct ~s~%;;           -> ~s~%"
                   (name s) (alias s))
-          ;; not sure if this should make a duplicate struct def or just
-          ;; defctype?
-          #++(format t "~&~((defctype ~s (:struct ~s))~)~%~%" (name s) (alias s))
           ;; don't seem to be able to define an alias that works with
           ;; (:struct alias), which would be inconsistent when real
           ;; name needs (:struct ...), so just redefine the whole
@@ -547,9 +436,7 @@
             (unless a
               (break "couldn't find definition for aliased struct?~%~s -> ~s"
                      (name s) (alias s)))
-            (print-struct a :override-name (name s))
-            #++(break "alias ~s -> ~s (~s)~%" (name s) (alias s)
-                      (name a))))
+            (print-struct a :override-name (name s))))
         (let ((parent (when (slot-boundp s 'parentstruct) (parentstruct s)))
               (extends (when (slot-boundp s 'structextends) (structextends s)))
               (protect (when (slot-boundp s 'protect) (protect s)))
@@ -568,8 +455,7 @@
           (setf (gethash (name s) *struct-types*) s)
           (loop for i across (member s)
                 do (print-struct-member i))
-          (format t ")~%~%")
-          #++(break "~a" s)))))
+          (format t ")~%~%")))))
 
 (defun print-funcpointer (p)
   (print-comment p)
@@ -599,9 +485,6 @@
 
 (defun print-types (registry)
   (format t ";; globals without an enum")
-  #++
-  (loop for e in (reverse (cdr (gethash :globals *enum-types*)))
-        do (print-constant e))
   (format t "~%")
   (loop for d across (types registry)
         do (etypecase d
@@ -653,8 +536,6 @@
       (assert pointer))
     (when (gethash type *struct-types*)
       (setf type `(:struct ,type)))
-    #++(when (or enum len optional externsync)
-         (break "~s ~s ~s ~s ~s" p  enum len optional externsync))
     (cond
       ((and array pointer)
        (break "array + pointer"))
@@ -708,8 +589,6 @@
                          (:slink
                           (push (%translate-type-name name) slink)
                           (format t "~a object" (car slink))))))))
-    #++(break "~s~%~s: ~s ~s~%~s"
-              m pname flink slink text)
     (cl:values pname flink slink text)))
 
 (defun print-command (c &key override-name override-raw-name)
@@ -755,9 +634,7 @@
                (remhash (name p) implicit-extern-sync))
              (print-param p))
     (assert (zerop (hash-table-count implicit-extern-sync))))
-  (format t ")~%~%")
-  #++(when (slot-boundp c 'implicitexternsyncparams)
-       (break "~s ~s" (name c) c)))
+  (format t ")~%~%"))
 
 (defun print-commands (registry)
   (clrhash *known-commands*)
@@ -900,8 +777,6 @@
         (format t ")~%")
         (loop for m in (reverse fixed-strings)
               do (let* ((.size (extract-array-size (text m)))
-                        #++(size (or (get-constant .size)
-                                     (numeric-value .size)))
                         (size (format nil "%:~a"
                                       (if (get-constant .size)
                                           (make-const-symbol .size :add-++ t)
@@ -934,45 +809,10 @@
       (format t "       ,@(if %slots body nil))~%")
       (format t "     ,@(if %slots nil body)))~%"))
     w))
-(pprint-logical-block (*standard-output*
-                       '(with-swapchain-image-wait-info ((pointer &key %slots
-                                                          (next '(cffi:null-pointer))
-                                                          (timeout nil timeout-p))
-                                                         &body body))
-                       :prefix "(" :suffix ")
-")
-  (write (pprint-pop))
-  (write-char #\space)
-  (pprint-logical-block (nil (pprint-pop) :prefix "(" :suffix ")")
-    (pprint-logical-block (nil (pprint-pop) :prefix "(" :suffix ")")
-      (write (pprint-pop))
-      (write-char #\space)
-      (write (pprint-pop))
-      (pprint-indent :current -4)
-      (pprint-newline :fill)
-      (loop (pprint-exit-if-list-exhausted)
-            (write-char #\space)
-            (pprint-newline :fill)
-            (write (pprint-pop))))
-    (pprint-newline :fill)
-    (write (pprint-pop))
-    (write-char #\space)
-    (write (pprint-pop))))
 
-(format t "~&~%~(~@<(~;defmacro ~a ~:<~:<~a ~a~-4:i~@{ ~:_~a~}~:>~:_ ~a ~a~:>~:>~)"
-        'with-swapchain-image-wait-info '((pointer &key %slots
-                                           (next '(cffi:null-pointer))
-                                           (timeout nil timeout-p))
-                                          &body body))
-
-
-#++(print-with-struct (elt (get-types *spec* 'type/struct) 82))
-
-#++(print-with-struct (elt (get-types *spec* 'type/struct) 16))
 #++
-(loop for i from 0 for s across (get-types *spec* 'type/struct)
-      do (format t "~s~%" i) (print-with-struct s :name (name s)))
-
+(ql:quickload '3b-openxr-generator)
+;;;;; run this to regenerate bindings
 #++
 (progn
   (clrhash *exports*)
@@ -989,8 +829,7 @@
     (let ((*print-constants* nil))
       (print-comment *spec*)
       (print-types *spec*)
-      (print-commands *spec*))
-    #++(break ",,,"))
+      (print-commands *spec*)))
 
   (alexandria:with-output-to-file (*standard-output*
                                    (asdf:system-relative-pathname
@@ -1002,11 +841,9 @@
       (print-comment ac)
       (loop for e across (enum ac)
             do (print-comment e)
-            #++(add-export (format nil "+~(~a~)" (name e)))
                (when (cl:member (name e) '(:true :false))
                  (format t "~&(defconstant ~(~a~) ~a)" (name e) (value e)))
-               (print-constant e :mark "+")
-            #++(format t "~&(defconstant +~(~a~)+ ~a)" (name e) (value e))))
+               (print-constant e :mark "+")))
     (format t "~%~%;; #define")
     (loop for i in (reverse *constants-to-print*)
           do (print-define i))
@@ -1023,7 +860,6 @@
                                    :if-exists :supersede)
     (format t "(defpackage #:~a~%" *bindings-package-name*)
     (format t "  (:use :cl #:cffi)~%")
-    #++(format t "  (:shadow #:space #:time #:atom)~%")
     (format t "  (:shadow ~(~{#:~a~^~%           ~}~))~%"
             (sort (flet ((x (s)
                            (or (eql :external
@@ -1052,15 +888,13 @@
     (format t "(in-package #:~a)~%" *mid-level-package-name*)
     (format t ";; used by with-two-call~%")
     (format t "(defparameter %struct-types% (make-hash-table))~%")
-    #++(format t "  (defparameter %has-with% (make-hash-table))~%")
     (loop
       for i from 0
       for s across (get-types *spec* 'type/struct)
       ;; todo: generate for alias structs too
       for name = (name s)
       unless (gethash name *skip-struct*)
-        do #++(format t "~s~%" i)
-           (let ((w (print-with-struct s :name name)))
+        do (let ((w (print-with-struct s :name name)))
              (declare (ignorable w))
              (when w
                (loop
@@ -1068,8 +902,4 @@
                  when (and (eql (name m) 'type)
                            (slot-boundp m 'values))
                    do (format t "(setf (gethash '~(%:~a~) %struct-types%)~%      '~(:~a~))~%"
-                              name (make-enum-name (values m) nil)))
-               ;; not sure if has-with is actually useful
-               #++
-               (format t "(setf (gethash '~(~a~) %has-with%) '~(~a~))~%"
-                       name w))))))
+                              name (make-enum-name (values m) nil))))))))

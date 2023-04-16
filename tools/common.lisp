@@ -187,22 +187,6 @@
                                (fix-api-names (suffix-dashes name))
                                "\\1-\\2")))
 
-#++
-(mapcar 'add-dashes '( "XrGraphicsBindingOpenGLWin32KHR"
-                      "XrGraphicsBindingOpenGLESAndroidKHR"
-                      "XrGraphicsBindingD3D11KHR"
-                      "xrGetD3D11GraphicsRequirementsKHR"
-                      "boundingBox2DOutput"
-                      "xrConvertTimeToWin32PerformanceCounterKHR"))
-#++
-("Xr-Graphics-Binding-Opengl-Win32-KHR"
- "Xr-Graphics-Binding-Opengl-Es-Android-KHR"
- "Xr-Graphics-Binding-D3D11-KHR"
- "xr-Get-D3D11-Graphics-Requirements-KHR"
- "bounding-Box-2D-Output"
- "xr-Convert-Time-To-Win32-Performance-Counter-KHR")
-
-
 (defun %translate-type-name (name)
   (unless name
     (return-from %translate-type-name name))
@@ -241,34 +225,8 @@
     ((ignore-errors (parse-integer str)))
     ((and (alexandria:ends-with #\f str)
           (ignore-errors (parse-number:parse-number str :end (1- (length str))))))
-    #++((multiple-value-bind (m matches)
-            (ppcre:scan-to-strings "\\(~0U(LL)?(-1)?\\)" str)
-          (when m
-            ;; fixme: is this right on all platforms? (or any for that matter?)
-            (let ((off (if (aref matches 1) -2 -1)))
-              (if (aref matches 0)
-                  (ldb (byte 64 0) off)
-                  #-64-bit
-                  (ldb (byte 32 0) off)
-                  #+64-bit
-                  (ldb (byte 64 0) off))))))
     (t
      (error "~s" str))))
-
-#++
-(defun extract-array-size (str)
-  ;; things like <member><type>char</type>
-  ;; <name>layerName</name>[<enum>XR_MAX_API_LAYER_NAME_SIZE</enum>]</member>,
-  ;; probably should parse the <enum> etc at higher level, but just
-  ;; trying to extract from string for now
-  #++(when (position #\[ str)
-       (assert (= 1 (count #\[ str)))
-       (let* ((enum (subseq str (1+ (position #\[ str)) (position #\] str)))
-              (count (if (get-constant enum)
-                         (numeric-value (get-constant enum))
-                         (numeric-value enum))))
-         (assert (and enum count))
-         (values enum count))))
 
 (defun translate-var-name (name)
   (when (or (alexandria:starts-with-subseq "Xr" name)

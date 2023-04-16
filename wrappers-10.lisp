@@ -150,7 +150,6 @@
   (with-frame-wait-info (fwi)
     (with-frame-state (fs :%slots t)
       (check-result (%:wait-frame session fwi fs))
-      ;;(format t "wait -> ~s~%" (cffi:mem-ref fs '(:struct %:frame-state)))
       (values (not (zerop %:should-render))
               %:predicted-display-time %:predicted-display-period))))
 
@@ -159,11 +158,6 @@
 (defun begin-frame (session)
   (with-frame-begin-info (fbi)
     (check-result (%:begin-frame session fbi))))
-
-(defparameter *one* 3) ;; some debug junk
-(defmacro once (&body body)
-  `(when (and *one* (plusp *one*))
-     ,@body))
 
 (defun %translate-projection-view (l p)
   (cffi:with-foreign-slots ((%:type
@@ -220,36 +214,20 @@
       (loop for i below n
             for v = (aref views i)
             for p1 = (cffi:mem-aptr clpv '(:struct %:composition-layer-projection-view) i)
-            do (%translate-projection-view v p1)
-               (once
-                 (format t "translated -> ~s~% ~s~%" p1
-                         (Cffi:mem-ref p1 '(:struct %:composition-layer-projection-view)))))
-      (once
-        (loop for i below n
-              do (format t "~s = ~s = ~s~%"
-                         i (cffi:mem-aptr clpv '(:struct %:composition-layer-projection-view) i)
-                         (Cffi:mem-aref clpv '(:struct %:composition-layer-projection-view) i))))
+            do (%translate-projection-view v p1))
       (with-composition-layer-projection (clp
                                           :layer-flags ()
                                           :space space
                                           :view-count n
                                           :views clpv)
-        (once
-          (format t "clp = ~s~%"
-                  (cffi:mem-ref clp '(:struct %:composition-layer-projection))))
         (cffi:with-foreign-object (p :pointer)
           (setf (cffi:mem-ref p :pointer) clp)
           (with-frame-end-info (fei :display-time display-time
                                     :environment-blend-mode blend-mode
                                     :layer-count 1
                                     :layers p)
-            (once
-              (format t " blend ~s at time ~s~%" blend-mode display-time)
-              (format t "fei = ~s~%" (cffi:mem-ref fei '(:struct %:frame-end-info))))
             (float-features:with-float-traps-masked (:overflow)
-              (check-result (%:end-frame session fei))))))))
-  (once
-    (decf *one*)))
+              (check-result (%:end-frame session fei)))))))))
 
 (defmacro with-frame ((session space display-time layers-var) &body body)
   ;; todo: blend-mode, layers args

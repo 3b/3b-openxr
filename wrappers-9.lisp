@@ -82,10 +82,12 @@
 
 (defmacro with-session ((session system-id &rest r) &body body)
   `(let ((,session (create-session ,system-id ,@r)))
-     (format t "~&created session #x~x~%" ,session)
+     (when *create-verbose*
+       (format *debug-io* "~&created session #x~x~%" ,session))
      (unwind-protect
           (progn ,@body)
-       (format t "destroy session #x~x~%" ,session)
+       (when *create-verbose*
+         (format *debug-io* "destroy session #x~x~%" ,session))
        (%:destroy-session ,session))))
 
 ;; 9.3. Session Control

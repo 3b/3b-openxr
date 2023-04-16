@@ -1,6 +1,7 @@
 (in-package #:3b-openxr-wrappers)
 
 (defvar *instance* nil)
+(defvar *create-verbose* nil)
 
 ;;; mostly just for documentation, since defpackage should have
 ;;; corresponding import/export.

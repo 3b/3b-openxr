@@ -8,7 +8,8 @@
   (setf form (car form))
   `(cffi:with-foreign-object (,var ',type)
      (check-result ,form)
-     (format t "created ~s = #x~x~%" ',type (cffi:mem-ref ,var ',type))
+     (when *create-verbose*
+       (format *debug-io* "created ~s = #x~x~%" ',type (cffi:mem-ref ,var ',type)))
      (cffi:mem-ref ,var ',type)))
 
 (defmacro with-returned-atom ((var type) &body form)
@@ -47,7 +48,8 @@
      (unwind-protect
           (%::with-instance (*instance*)
             ,@body)
-       (format *debug-io* "~&destroy instance #x~x~%" *instance*)
+       (when *create-verbose*
+         (format *debug-io* "~&destroy instance #x~x~%" *instance*))
        (%:destroy-instance *instance*))))
 
 (defmacro with-debug-messsenger ((var &rest r
@@ -57,7 +59,8 @@
   (declare (ignore message-types message-severities user-callback user-data))
   `(let ((,var (create-debug-utils-messenger-ext *instance* ,@r)))
      (unwind-protect (progn ,@body)
-       (format t "~&destroy messenger #x~x~%" ,var)
+       (when *create-verbose*
+         (format *debug-io* "~&destroy messenger #x~x~%" ,var))
        (%:destroy-debug-utils-messenger-ext ,var))))
 
 

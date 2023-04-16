@@ -161,7 +161,8 @@
       (let ((r (%::create-debug-utils-messenger-ext instance p messenger)))
         (unless (unqualified-success r)
           (error "create debug utils messenger failed ~s?" r))
-        (format t "~&create debug utils messenger ~x~%" (cffi:mem-ref messenger '%::debug-utils-messenger-ext))
+        (when *create-verbose*
+          (format *debug-io* "~&create debug utils messenger ~x~%" (cffi:mem-ref messenger '%::debug-utils-messenger-ext)))
         (cffi:mem-ref messenger '%::debug-utils-messenger-ext)))))
 
 

@@ -37,10 +37,12 @@
 (defmacro with-reference-space ((space session reference-space-type &rest r)
                                 &body body)
   `(let ((,space (create-reference-space ,session ,reference-space-type ,@r)))
-     (format t "~&created space #x~x~%" ,space)
+     (when *create-verbose*
+       (format *debug-io* "~&created space #x~x~%" ,space))
      (unwind-protect
           (progn ,@body)
-       (format t "destroy space #x~x~%" ,space)
+       (when *create-verbose*
+         (format *debug-io* "destroy space #x~x~%" ,space))
        (%:destroy-space ,space))))
 
 (defun create-action-space (session action

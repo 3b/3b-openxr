@@ -77,7 +77,8 @@
               (let ((r (%::create-instance ici instance)))
                 (unless (unqualified-success r)
                   (error "create instance failed ~s?" r))
-                (format t "~&created instance ~x~%" (cffi:mem-ref instance '%::instance))
+                (when *create-verbose*
+                  (format *debug-io* "~&created instance ~x~%" (cffi:mem-ref instance '%::instance)))
                 (cffi:mem-ref instance '%::instance)))))))))
 
 

@@ -748,7 +748,7 @@
                   &body body))
       (format t "  `(cffi:with-foreign-object (,pointer '(:struct ~(%:~a~)))~%"
               name)
-      (format t "     (cffi:with-foreign-slots ~(~<(~;~-1i~@{~a~^~_ ~}~:>~)~%"
+      (format t "     (cffi:with-foreign-slots ~((~:<~-1i~@{~a~^~_ ~}~:>~)~%"
               (loop for i in slots collect (format nil "%:~a" i)))
       (format t "                               ,pointer (:struct ~(%:~a~)))~%"
               name)

@@ -5,7 +5,7 @@
 (defmacro with-vector-2f ((pointer &key %slots (x nil x-p) (y nil y-p))
                           &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:vector-2f))
-     (cffi:with-foreign-slots (%:x %:y
+     (cffi:with-foreign-slots ((%:x %:y)
                                ,pointer (:struct %:vector-2f))
        (setf ,@(when x-p `(%:x ,x))
              ,@(when y-p `(%:y ,y)))
@@ -16,7 +16,7 @@
                                      (z nil z-p))
                           &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:vector-3f))
-     (cffi:with-foreign-slots (%:x %:y %:z
+     (cffi:with-foreign-slots ((%:x %:y %:z)
                                ,pointer (:struct %:vector-3f))
        (setf ,@(when x-p `(%:x ,x))
              ,@(when y-p `(%:y ,y))
@@ -28,7 +28,7 @@
                                      (z nil z-p) (w nil w-p))
                           &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:vector-4f))
-     (cffi:with-foreign-slots (%:x %:y %:z %:w
+     (cffi:with-foreign-slots ((%:x %:y %:z %:w)
                                ,pointer (:struct %:vector-4f))
        (setf ,@(when x-p `(%:x ,x))
              ,@(when y-p `(%:y ,y))
@@ -41,7 +41,7 @@
                                     (b nil b-p) (a nil a-p))
                          &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:color-4f))
-     (cffi:with-foreign-slots (%:r %:g %:b %:a
+     (cffi:with-foreign-slots ((%:r %:g %:b %:a)
                                ,pointer (:struct %:color-4f))
        (setf ,@(when r-p `(%:r ,r))
              ,@(when g-p `(%:g ,g))
@@ -54,7 +54,7 @@
                                         (z nil z-p) (w nil w-p))
                              &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:quaternion-f))
-     (cffi:with-foreign-slots (%:x %:y %:z %:w
+     (cffi:with-foreign-slots ((%:x %:y %:z %:w)
                                ,pointer (:struct %:quaternion-f))
        (setf ,@(when x-p `(%:x ,x))
              ,@(when y-p `(%:y ,y))
@@ -67,7 +67,7 @@
                                   (position nil position-p))
                        &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:pose-f))
-     (cffi:with-foreign-slots (%:orientation %:position
+     (cffi:with-foreign-slots ((%:orientation %:position)
                                ,pointer (:struct %:pose-f))
        (setf ,@(when orientation-p `(%:orientation ,orientation))
              ,@(when position-p `(%:position ,position)))
@@ -77,7 +77,7 @@
 (defmacro with-offset-2d-f ((pointer &key %slots (x nil x-p) (y nil y-p))
                             &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:offset-2d-f))
-     (cffi:with-foreign-slots (%:x %:y
+     (cffi:with-foreign-slots ((%:x %:y)
                                ,pointer (:struct %:offset-2d-f))
        (setf ,@(when x-p `(%:x ,x))
              ,@(when y-p `(%:y ,y)))
@@ -88,7 +88,7 @@
                                        (height nil height-p))
                             &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:extent-2d-f))
-     (cffi:with-foreign-slots (%:width %:height
+     (cffi:with-foreign-slots ((%:width %:height)
                                ,pointer (:struct %:extent-2d-f))
        (setf ,@(when width-p `(%:width ,width))
              ,@(when height-p `(%:height ,height)))
@@ -99,7 +99,7 @@
                                      (extent nil extent-p))
                           &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:rect-2d-f))
-     (cffi:with-foreign-slots (%:offset %:extent
+     (cffi:with-foreign-slots ((%:offset %:extent)
                                ,pointer (:struct %:rect-2d-f))
        (setf ,@(when offset-p `(%:offset ,offset))
              ,@(when extent-p `(%:extent ,extent)))
@@ -109,7 +109,7 @@
 (defmacro with-offset-2d-i ((pointer &key %slots (x nil x-p) (y nil y-p))
                             &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:offset-2d-i))
-     (cffi:with-foreign-slots (%:x %:y
+     (cffi:with-foreign-slots ((%:x %:y)
                                ,pointer (:struct %:offset-2d-i))
        (setf ,@(when x-p `(%:x ,x))
              ,@(when y-p `(%:y ,y)))
@@ -120,7 +120,7 @@
                                        (height nil height-p))
                             &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:extent-2d-i))
-     (cffi:with-foreign-slots (%:width %:height
+     (cffi:with-foreign-slots ((%:width %:height)
                                ,pointer (:struct %:extent-2d-i))
        (setf ,@(when width-p `(%:width ,width))
              ,@(when height-p `(%:height ,height)))
@@ -131,7 +131,7 @@
                                      (extent nil extent-p))
                           &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:rect-2d-i))
-     (cffi:with-foreign-slots (%:offset %:extent
+     (cffi:with-foreign-slots ((%:offset %:extent)
                                ,pointer (:struct %:rect-2d-i))
        (setf ,@(when offset-p `(%:offset ,offset))
              ,@(when extent-p `(%:extent ,extent)))
@@ -148,12 +148,12 @@
                                                 (description nil description-p))
                                      &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:api-layer-properties))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:layer-name
-                               %:spec-version
-                               %:layer-version
-                               %:description
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:layer-name
+                                %:spec-version
+                                %:layer-version
+                                %:description)
                                ,pointer (:struct %:api-layer-properties))
        (setf %:type :type-api-layer-properties
              %:next ,next
@@ -184,10 +184,10 @@
                                                  extension-version-p))
                                      &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:extension-properties))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:extension-name
-                               %:extension-version
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:extension-name
+                                %:extension-version)
                                ,pointer (:struct %:extension-properties))
        (setf %:type :type-extension-properties
              %:next ,next
@@ -214,11 +214,11 @@
                                             (api-version nil api-version-p))
                                  &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:application-info))
-     (cffi:with-foreign-slots (%:application-name
-                               %:application-version
-                               %:engine-name
-                               %:engine-version
-                               %:api-version
+     (cffi:with-foreign-slots ((%:application-name
+                                %:application-version
+                                %:engine-name
+                                %:engine-version
+                                %:api-version)
                                ,pointer (:struct %:application-info))
        (setf ,@(when application-version-p `(%:application-version ,application-version))
              ,@(when engine-version-p `(%:engine-version ,engine-version))
@@ -254,14 +254,14 @@
                                                  enabled-extension-names-p))
                                      &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:instance-create-info))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:create-flags
-                               %:application-info
-                               %:enabled-api-layer-count
-                               %:enabled-api-layer-names
-                               %:enabled-extension-count
-                               %:enabled-extension-names
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:create-flags
+                                %:application-info
+                                %:enabled-api-layer-count
+                                %:enabled-api-layer-names
+                                %:enabled-extension-count
+                                %:enabled-extension-names)
                                ,pointer (:struct %:instance-create-info))
        (setf %:type :type-instance-create-info
              %:next ,next
@@ -284,7 +284,7 @@
                                                 runtime-name-p))
                                     &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:instance-properties))
-     (cffi:with-foreign-slots (%:type %:next %:runtime-version %:runtime-name
+     (cffi:with-foreign-slots ((%:type %:next %:runtime-version %:runtime-name)
                                ,pointer (:struct %:instance-properties))
        (setf %:type :type-instance-properties
              %:next ,next
@@ -305,7 +305,7 @@
                                            (form-factor nil form-factor-p))
                                 &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:system-get-info))
-     (cffi:with-foreign-slots (%:type %:next %:form-factor
+     (cffi:with-foreign-slots ((%:type %:next %:form-factor)
                                ,pointer (:struct %:system-get-info))
        (setf %:type :type-system-get-info
              %:next ,next
@@ -326,13 +326,13 @@
                                               tracking-properties-p))
                                   &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:system-properties))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:system-id
-                               %:vendor-id
-                               %:system-name
-                               %:graphics-properties
-                               %:tracking-properties
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:system-id
+                                %:vendor-id
+                                %:system-name
+                                %:graphics-properties
+                                %:tracking-properties)
                                ,pointer (:struct %:system-properties))
        (setf %:type :type-system-properties
              %:next ,next
@@ -362,9 +362,9 @@
                                                        max-layer-count-p))
                                            &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:system-graphics-properties))
-     (cffi:with-foreign-slots (%:max-swapchain-image-height
-                               %:max-swapchain-image-width
-                               %:max-layer-count
+     (cffi:with-foreign-slots ((%:max-swapchain-image-height
+                                %:max-swapchain-image-width
+                                %:max-layer-count)
                                ,pointer (:struct %:system-graphics-properties))
        (setf ,@(when max-swapchain-image-height-p `(%:max-swapchain-image-height ,max-swapchain-image-height))
              ,@(when max-swapchain-image-width-p `(%:max-swapchain-image-width ,max-swapchain-image-width))
@@ -379,7 +379,7 @@
                                                        position-tracking-p))
                                            &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:system-tracking-properties))
-     (cffi:with-foreign-slots (%:orientation-tracking %:position-tracking
+     (cffi:with-foreign-slots ((%:orientation-tracking %:position-tracking)
                                ,pointer (:struct %:system-tracking-properties))
        (setf ,@(when orientation-tracking-p `(%:orientation-tracking ,orientation-tracking))
              ,@(when position-tracking-p `(%:position-tracking ,position-tracking)))
@@ -394,7 +394,7 @@
                                                               hglrc-p))
                                                   &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:graphics-binding-opengl-win32-khr))
-     (cffi:with-foreign-slots (%:type %:next %:hdc %:hglrc
+     (cffi:with-foreign-slots ((%:type %:next %:hdc %:hglrc)
                                ,pointer (:struct %:graphics-binding-opengl-win32-khr))
        (setf %:type :type-graphics-binding-opengl-win32-khr
              %:next ,next
@@ -420,13 +420,13 @@
                                                              glx-context-p))
                                                  &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:graphics-binding-opengl-xlib-khr))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:x-display
-                               %:visualid
-                               %:glx-fbconfig
-                               %:glx-drawable
-                               %:glx-context
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:x-display
+                                %:visualid
+                                %:glx-fbconfig
+                                %:glx-drawable
+                                %:glx-context)
                                ,pointer (:struct %:graphics-binding-opengl-xlib-khr))
        (setf %:type :type-graphics-binding-opengl-xlib-khr
              %:next ,next
@@ -457,14 +457,14 @@
                                                             glx-context-p))
                                                 &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:graphics-binding-opengl-xcb-khr))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:connection
-                               %:screen-number
-                               %:fbconfigid
-                               %:visualid
-                               %:glx-drawable
-                               %:glx-context
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:connection
+                                %:screen-number
+                                %:fbconfigid
+                                %:visualid
+                                %:glx-drawable
+                                %:glx-context)
                                ,pointer (:struct %:graphics-binding-opengl-xcb-khr))
        (setf %:type :type-graphics-binding-opengl-xcb-khr
              %:next ,next
@@ -486,7 +486,7 @@
                                                                 display-p))
                                                     &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:graphics-binding-opengl-wayland-khr))
-     (cffi:with-foreign-slots (%:type %:next %:display
+     (cffi:with-foreign-slots ((%:type %:next %:display)
                                ,pointer (:struct %:graphics-binding-opengl-wayland-khr))
        (setf %:type :type-graphics-binding-opengl-wayland-khr
              %:next ,next
@@ -502,7 +502,7 @@
                                                       (device nil device-p))
                                            &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:graphics-binding-d3d11-khr))
-     (cffi:with-foreign-slots (%:type %:next %:device
+     (cffi:with-foreign-slots ((%:type %:next %:device)
                                ,pointer (:struct %:graphics-binding-d3d11-khr))
        (setf %:type :type-graphics-binding-d3d11-khr
              %:next ,next
@@ -519,7 +519,7 @@
                                                       (queue nil queue-p))
                                            &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:graphics-binding-d3d12-khr))
-     (cffi:with-foreign-slots (%:type %:next %:device %:queue
+     (cffi:with-foreign-slots ((%:type %:next %:device %:queue)
                                ,pointer (:struct %:graphics-binding-d3d12-khr))
        (setf %:type :type-graphics-binding-d3d12-khr
              %:next ,next
@@ -541,7 +541,7 @@
                                                                    context-p))
                                                        &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:graphics-binding-opengl-es-android-khr))
-     (cffi:with-foreign-slots (%:type %:next %:display %:config %:context
+     (cffi:with-foreign-slots ((%:type %:next %:display %:config %:context)
                                ,pointer (:struct %:graphics-binding-opengl-es-android-khr))
        (setf %:type :type-graphics-binding-opengl-es-android-khr
              %:next ,next
@@ -567,13 +567,13 @@
                                                         queue-index-p))
                                             &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:graphics-binding-vulkan-khr))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:instance
-                               %:physical-device
-                               %:device
-                               %:queue-family-index
-                               %:queue-index
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:instance
+                                %:physical-device
+                                %:device
+                                %:queue-family-index
+                                %:queue-index)
                                ,pointer (:struct %:graphics-binding-vulkan-khr))
        (setf %:type :type-graphics-binding-vulkan-khr
              %:next ,next
@@ -594,7 +594,7 @@
                                                (system-id nil system-id-p))
                                     &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:session-create-info))
-     (cffi:with-foreign-slots (%:type %:next %:create-flags %:system-id
+     (cffi:with-foreign-slots ((%:type %:next %:create-flags %:system-id)
                                ,pointer (:struct %:session-create-info))
        (setf %:type :type-session-create-info
              %:next ,next
@@ -612,7 +612,7 @@
                                                primary-view-configuration-type-p))
                                    &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:session-begin-info))
-     (cffi:with-foreign-slots (%:type %:next %:primary-view-configuration-type
+     (cffi:with-foreign-slots ((%:type %:next %:primary-view-configuration-type)
                                ,pointer (:struct %:session-begin-info))
        (setf %:type :type-session-begin-info
              %:next ,next
@@ -638,17 +638,17 @@
                                                  (mip-count nil mip-count-p))
                                       &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:swapchain-create-info))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:create-flags
-                               %:usage-flags
-                               %:format
-                               %:sample-count
-                               %:width
-                               %:height
-                               %:face-count
-                               %:array-size
-                               %:mip-count
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:create-flags
+                                %:usage-flags
+                                %:format
+                                %:sample-count
+                                %:width
+                                %:height
+                                %:face-count
+                                %:array-size
+                                %:mip-count)
                                ,pointer (:struct %:swapchain-create-info))
        (setf %:type :type-swapchain-create-info
              %:next ,next
@@ -672,7 +672,7 @@
                                                       (image nil image-p))
                                            &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:swapchain-image-opengl-khr))
-     (cffi:with-foreign-slots (%:type %:next %:image
+     (cffi:with-foreign-slots ((%:type %:next %:image)
                                ,pointer (:struct %:swapchain-image-opengl-khr))
        (setf %:type :type-swapchain-image-opengl-khr
              %:next ,next
@@ -688,7 +688,7 @@
                                                          (image nil image-p))
                                               &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:swapchain-image-opengl-es-khr))
-     (cffi:with-foreign-slots (%:type %:next %:image
+     (cffi:with-foreign-slots ((%:type %:next %:image)
                                ,pointer (:struct %:swapchain-image-opengl-es-khr))
        (setf %:type :type-swapchain-image-opengl-es-khr
              %:next ,next
@@ -704,7 +704,7 @@
                                                       (image nil image-p))
                                            &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:swapchain-image-vulkan-khr))
-     (cffi:with-foreign-slots (%:type %:next %:image
+     (cffi:with-foreign-slots ((%:type %:next %:image)
                                ,pointer (:struct %:swapchain-image-vulkan-khr))
        (setf %:type :type-swapchain-image-vulkan-khr
              %:next ,next
@@ -720,7 +720,7 @@
                                                      (texture nil texture-p))
                                           &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:swapchain-image-d3d11-khr))
-     (cffi:with-foreign-slots (%:type %:next %:texture
+     (cffi:with-foreign-slots ((%:type %:next %:texture)
                                ,pointer (:struct %:swapchain-image-d3d11-khr))
        (setf %:type :type-swapchain-image-d3d11-khr
              %:next ,next
@@ -736,7 +736,7 @@
                                                      (texture nil texture-p))
                                           &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:swapchain-image-d3d12-khr))
-     (cffi:with-foreign-slots (%:type %:next %:texture
+     (cffi:with-foreign-slots ((%:type %:next %:texture)
                                ,pointer (:struct %:swapchain-image-d3d12-khr))
        (setf %:type :type-swapchain-image-d3d12-khr
              %:next ,next
@@ -751,7 +751,7 @@
                                                          '(cffi:null-pointer)))
                                              &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:swapchain-image-acquire-info))
-     (cffi:with-foreign-slots (%:type %:next
+     (cffi:with-foreign-slots ((%:type %:next)
                                ,pointer (:struct %:swapchain-image-acquire-info))
        (setf %:type :type-swapchain-image-acquire-info
              %:next ,next)
@@ -766,7 +766,7 @@
                                                      (timeout nil timeout-p))
                                           &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:swapchain-image-wait-info))
-     (cffi:with-foreign-slots (%:type %:next %:timeout
+     (cffi:with-foreign-slots ((%:type %:next %:timeout)
                                ,pointer (:struct %:swapchain-image-wait-info))
        (setf %:type :type-swapchain-image-wait-info
              %:next ,next
@@ -781,7 +781,7 @@
                                                          '(cffi:null-pointer)))
                                              &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:swapchain-image-release-info))
-     (cffi:with-foreign-slots (%:type %:next
+     (cffi:with-foreign-slots ((%:type %:next)
                                ,pointer (:struct %:swapchain-image-release-info))
        (setf %:type :type-swapchain-image-release-info
              %:next ,next)
@@ -801,10 +801,10 @@
                                                         pose-in-reference-space-p))
                                             &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:reference-space-create-info))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:reference-space-type
-                               %:pose-in-reference-space
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:reference-space-type
+                                %:pose-in-reference-space)
                                ,pointer (:struct %:reference-space-create-info))
        (setf %:type :type-reference-space-create-info
              %:next ,next
@@ -824,11 +824,11 @@
                                                      pose-in-action-space-p))
                                          &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:action-space-create-info))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:action
-                               %:subaction-path
-                               %:pose-in-action-space
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:action
+                                %:subaction-path
+                                %:pose-in-action-space)
                                ,pointer (:struct %:action-space-create-info))
        (setf %:type :type-action-space-create-info
              %:next ,next
@@ -845,7 +845,7 @@
                                           (pose nil pose-p))
                                &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:space-location))
-     (cffi:with-foreign-slots (%:type %:next %:location-flags %:pose
+     (cffi:with-foreign-slots ((%:type %:next %:location-flags %:pose)
                                ,pointer (:struct %:space-location))
        (setf %:type :type-space-location
              %:next ,next
@@ -864,11 +864,11 @@
                                            angular-velocity-p))
                                &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:space-velocity))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:velocity-flags
-                               %:linear-velocity
-                               %:angular-velocity
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:velocity-flags
+                                %:linear-velocity
+                                %:angular-velocity)
                                ,pointer (:struct %:space-velocity))
        (setf %:type :type-space-velocity
              %:next ,next
@@ -886,10 +886,10 @@
                                  (angle-down nil angle-down-p))
                       &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:fov-f))
-     (cffi:with-foreign-slots (%:angle-left
-                               %:angle-right
-                               %:angle-up
-                               %:angle-down
+     (cffi:with-foreign-slots ((%:angle-left
+                                %:angle-right
+                                %:angle-up
+                                %:angle-down)
                                ,pointer (:struct %:fov-f))
        (setf ,@(when angle-left-p `(%:angle-left ,angle-left))
              ,@(when angle-right-p `(%:angle-right ,angle-right))
@@ -902,7 +902,7 @@
                                 (pose nil pose-p) (fov nil fov-p))
                      &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:view))
-     (cffi:with-foreign-slots (%:type %:next %:pose %:fov
+     (cffi:with-foreign-slots ((%:type %:next %:pose %:fov)
                                ,pointer (:struct %:view))
        (setf %:type :type-view
              %:next ,next
@@ -921,11 +921,11 @@
                                             (space nil space-p))
                                  &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:view-locate-info))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:view-configuration-type
-                               %:display-time
-                               %:space
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:view-configuration-type
+                                %:display-time
+                                %:space)
                                ,pointer (:struct %:view-locate-info))
        (setf %:type :type-view-locate-info
              %:next ,next
@@ -941,7 +941,7 @@
                                       (view-state-flags nil view-state-flags-p))
                            &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:view-state))
-     (cffi:with-foreign-slots (%:type %:next %:view-state-flags
+     (cffi:with-foreign-slots ((%:type %:next %:view-state-flags)
                                ,pointer (:struct %:view-state))
        (setf %:type :type-view-state
              %:next ,next
@@ -971,14 +971,14 @@
                                                     max-swapchain-sample-count-p))
                                         &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:view-configuration-view))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:recommended-image-rect-width
-                               %:max-image-rect-width
-                               %:recommended-image-rect-height
-                               %:max-image-rect-height
-                               %:recommended-swapchain-sample-count
-                               %:max-swapchain-sample-count
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:recommended-image-rect-width
+                                %:max-image-rect-width
+                                %:recommended-image-rect-height
+                                %:max-image-rect-height
+                                %:recommended-swapchain-sample-count
+                                %:max-swapchain-sample-count)
                                ,pointer (:struct %:view-configuration-view))
        (setf %:type :type-view-configuration-view
              %:next ,next
@@ -1000,7 +1000,7 @@
                                                 image-array-index-p))
                                     &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:swapchain-sub-image))
-     (cffi:with-foreign-slots (%:swapchain %:image-rect %:image-array-index
+     (cffi:with-foreign-slots ((%:swapchain %:image-rect %:image-array-index)
                                ,pointer (:struct %:swapchain-sub-image))
        (setf ,@(when swapchain-p `(%:swapchain ,swapchain))
              ,@(when image-rect-p `(%:image-rect ,image-rect))
@@ -1017,7 +1017,7 @@
                                                               sub-image-p))
                                                   &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:composition-layer-projection-view))
-     (cffi:with-foreign-slots (%:type %:next %:pose %:fov %:sub-image
+     (cffi:with-foreign-slots ((%:type %:next %:pose %:fov %:sub-image)
                                ,pointer (:struct %:composition-layer-projection-view))
        (setf %:type :type-composition-layer-projection-view
              %:next ,next
@@ -1040,12 +1040,12 @@
                                                         (views nil views-p))
                                              &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:composition-layer-projection))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:layer-flags
-                               %:space
-                               %:view-count
-                               %:views
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:layer-flags
+                                %:space
+                                %:view-count
+                                %:views)
                                ,pointer (:struct %:composition-layer-projection))
        (setf %:type :type-composition-layer-projection
              %:next ,next
@@ -1070,14 +1070,14 @@
                                                   (size nil size-p))
                                        &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:composition-layer-quad))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:layer-flags
-                               %:space
-                               %:eye-visibility
-                               %:sub-image
-                               %:pose
-                               %:size
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:layer-flags
+                                %:space
+                                %:eye-visibility
+                                %:sub-image
+                                %:pose
+                                %:size)
                                ,pointer (:struct %:composition-layer-quad))
        (setf %:type :type-composition-layer-quad
              %:next ,next
@@ -1110,16 +1110,16 @@
                                                            aspect-ratio-p))
                                                &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:composition-layer-cylinder-khr))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:layer-flags
-                               %:space
-                               %:eye-visibility
-                               %:sub-image
-                               %:pose
-                               %:radius
-                               %:central-angle
-                               %:aspect-ratio
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:layer-flags
+                                %:space
+                                %:eye-visibility
+                                %:sub-image
+                                %:pose
+                                %:radius
+                                %:central-angle
+                                %:aspect-ratio)
                                ,pointer (:struct %:composition-layer-cylinder-khr))
        (setf %:type :type-composition-layer-cylinder-khr
              %:next ,next
@@ -1152,14 +1152,14 @@
                                                        orientation-p))
                                            &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:composition-layer-cube-khr))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:layer-flags
-                               %:space
-                               %:eye-visibility
-                               %:swapchain
-                               %:image-array-index
-                               %:orientation
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:layer-flags
+                                %:space
+                                %:eye-visibility
+                                %:swapchain
+                                %:image-array-index
+                                %:orientation)
                                ,pointer (:struct %:composition-layer-cube-khr))
        (setf %:type :type-composition-layer-cube-khr
              %:next ,next
@@ -1190,16 +1190,16 @@
                                                           (bias nil bias-p))
                                                &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:composition-layer-equirect-khr))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:layer-flags
-                               %:space
-                               %:eye-visibility
-                               %:sub-image
-                               %:pose
-                               %:radius
-                               %:scale
-                               %:bias
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:layer-flags
+                                %:space
+                                %:eye-visibility
+                                %:sub-image
+                                %:pose
+                                %:radius
+                                %:scale
+                                %:bias)
                                ,pointer (:struct %:composition-layer-equirect-khr))
        (setf %:type :type-composition-layer-equirect-khr
              %:next ,next
@@ -1230,13 +1230,13 @@
                                                             (far-z nil far-z-p))
                                                  &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:composition-layer-depth-info-khr))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:sub-image
-                               %:min-depth
-                               %:max-depth
-                               %:near-z
-                               %:far-z
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:sub-image
+                                %:min-depth
+                                %:max-depth
+                                %:near-z
+                                %:far-z)
                                ,pointer (:struct %:composition-layer-depth-info-khr))
        (setf %:type :type-composition-layer-depth-info-khr
              %:next ,next
@@ -1254,7 +1254,7 @@
                                             (next '(cffi:null-pointer)))
                                  &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:frame-begin-info))
-     (cffi:with-foreign-slots (%:type %:next
+     (cffi:with-foreign-slots ((%:type %:next)
                                ,pointer (:struct %:frame-begin-info))
        (setf %:type :type-frame-begin-info
              %:next ,next)
@@ -1271,12 +1271,12 @@
                                           (layers nil layers-p))
                                &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:frame-end-info))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:display-time
-                               %:environment-blend-mode
-                               %:layer-count
-                               %:layers
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:display-time
+                                %:environment-blend-mode
+                                %:layer-count
+                                %:layers)
                                ,pointer (:struct %:frame-end-info))
        (setf %:type :type-frame-end-info
              %:next ,next
@@ -1293,7 +1293,7 @@
                                            (next '(cffi:null-pointer)))
                                 &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:frame-wait-info))
-     (cffi:with-foreign-slots (%:type %:next
+     (cffi:with-foreign-slots ((%:type %:next)
                                ,pointer (:struct %:frame-wait-info))
        (setf %:type :type-frame-wait-info
              %:next ,next)
@@ -1310,11 +1310,11 @@
                                        (should-render nil should-render-p))
                             &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:frame-state))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:predicted-display-time
-                               %:predicted-display-period
-                               %:should-render
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:predicted-display-time
+                                %:predicted-display-period
+                                %:should-render)
                                ,pointer (:struct %:frame-state))
        (setf %:type :type-frame-state
              %:next ,next
@@ -1333,7 +1333,11 @@
                                             (amplitude nil amplitude-p))
                                  &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:haptic-vibration))
-     (cffi:with-foreign-slots (%:type %:next %:duration %:frequency %:amplitude
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:duration
+                                %:frequency
+                                %:amplitude)
                                ,pointer (:struct %:haptic-vibration))
        (setf %:type :type-haptic-vibration
              %:next ,next
@@ -1350,7 +1354,7 @@
                                              (varying nil varying-p))
                                   &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:event-data-buffer))
-     (cffi:with-foreign-slots (%:type %:next %:varying
+     (cffi:with-foreign-slots ((%:type %:next %:varying)
                                ,pointer (:struct %:event-data-buffer))
        (setf %:type :type-event-data-buffer
              %:next ,next
@@ -1366,7 +1370,7 @@
                                                    lost-event-count-p))
                                        &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:event-data-events-lost))
-     (cffi:with-foreign-slots (%:type %:next %:lost-event-count
+     (cffi:with-foreign-slots ((%:type %:next %:lost-event-count)
                                ,pointer (:struct %:event-data-events-lost))
        (setf %:type :type-event-data-events-lost
              %:next ,next
@@ -1383,7 +1387,7 @@
                                                              loss-time-p))
                                                  &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:event-data-instance-loss-pending))
-     (cffi:with-foreign-slots (%:type %:next %:loss-time
+     (cffi:with-foreign-slots ((%:type %:next %:loss-time)
                                ,pointer (:struct %:event-data-instance-loss-pending))
        (setf %:type :type-event-data-instance-loss-pending
              %:next ,next
@@ -1402,7 +1406,7 @@
                                                             (time nil time-p))
                                                  &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:event-data-session-state-changed))
-     (cffi:with-foreign-slots (%:type %:next %:session %:state %:time
+     (cffi:with-foreign-slots ((%:type %:next %:session %:state %:time)
                                ,pointer (:struct %:event-data-session-state-changed))
        (setf %:type :type-event-data-session-state-changed
              %:next ,next
@@ -1434,13 +1438,13 @@
                                                                       pose-in-previous-space-p))
                                                           &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:event-data-reference-space-change-pending))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:session
-                               %:reference-space-type
-                               %:change-time
-                               %:pose-valid
-                               %:pose-in-previous-space
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:session
+                                %:reference-space-type
+                                %:change-time
+                                %:pose-valid
+                                %:pose-in-previous-space)
                                ,pointer (:struct %:event-data-reference-space-change-pending))
        (setf %:type :type-event-data-reference-space-change-pending
              %:next ,next
@@ -1466,12 +1470,12 @@
                                                          to-level-p))
                                              &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:event-data-perf-settings-ext))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:domain
-                               %:sub-domain
-                               %:from-level
-                               %:to-level
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:domain
+                                %:sub-domain
+                                %:from-level
+                                %:to-level)
                                ,pointer (:struct %:event-data-perf-settings-ext))
        (setf %:type :type-event-data-perf-settings-ext
              %:next ,next
@@ -1497,11 +1501,11 @@
                                                                    view-index-p))
                                                        &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:event-data-visibility-mask-changed-khr))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:session
-                               %:view-configuration-type
-                               %:view-index
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:session
+                                %:view-configuration-type
+                                %:view-index)
                                ,pointer (:struct %:event-data-visibility-mask-changed-khr))
        (setf %:type :type-event-data-visibility-mask-changed-khr
              %:next ,next
@@ -1523,10 +1527,10 @@
                                                           fov-mutable-p))
                                               &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:view-configuration-properties))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:view-configuration-type
-                               %:fov-mutable
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:view-configuration-type
+                                %:fov-mutable)
                                ,pointer (:struct %:view-configuration-properties))
        (setf %:type :type-view-configuration-properties
              %:next ,next
@@ -1548,12 +1552,12 @@
                                                 (is-active nil is-active-p))
                                      &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:action-state-boolean))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:current-state
-                               %:changed-since-last-sync
-                               %:last-change-time
-                               %:is-active
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:current-state
+                                %:changed-since-last-sync
+                                %:last-change-time
+                                %:is-active)
                                ,pointer (:struct %:action-state-boolean))
        (setf %:type :type-action-state-boolean
              %:next ,next
@@ -1577,12 +1581,12 @@
                                               (is-active nil is-active-p))
                                    &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:action-state-float))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:current-state
-                               %:changed-since-last-sync
-                               %:last-change-time
-                               %:is-active
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:current-state
+                                %:changed-since-last-sync
+                                %:last-change-time
+                                %:is-active)
                                ,pointer (:struct %:action-state-float))
        (setf %:type :type-action-state-float
              %:next ,next
@@ -1606,12 +1610,12 @@
                                                   (is-active nil is-active-p))
                                        &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:action-state-vector-2f))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:current-state
-                               %:changed-since-last-sync
-                               %:last-change-time
-                               %:is-active
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:current-state
+                                %:changed-since-last-sync
+                                %:last-change-time
+                                %:is-active)
                                ,pointer (:struct %:action-state-vector-2f))
        (setf %:type :type-action-state-vector2f
              %:next ,next
@@ -1629,7 +1633,7 @@
                                              (is-active nil is-active-p))
                                   &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:action-state-pose))
-     (cffi:with-foreign-slots (%:type %:next %:is-active
+     (cffi:with-foreign-slots ((%:type %:next %:is-active)
                                ,pointer (:struct %:action-state-pose))
        (setf %:type :type-action-state-pose
              %:next ,next
@@ -1645,7 +1649,7 @@
                                                  (subaction-path %:+null-path+))
                                       &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:action-state-get-info))
-     (cffi:with-foreign-slots (%:type %:next %:action %:subaction-path
+     (cffi:with-foreign-slots ((%:type %:next %:action %:subaction-path)
                                ,pointer (:struct %:action-state-get-info))
        (setf %:type :type-action-state-get-info
              %:next ,next
@@ -1662,7 +1666,7 @@
                                               (subaction-path %:+null-path+))
                                    &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:haptic-action-info))
-     (cffi:with-foreign-slots (%:type %:next %:action %:subaction-path
+     (cffi:with-foreign-slots ((%:type %:next %:action %:subaction-path)
                                ,pointer (:struct %:haptic-action-info))
        (setf %:type :type-haptic-action-info
              %:next ,next
@@ -1683,11 +1687,11 @@
                                                   (priority 0))
                                        &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:action-set-create-info))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:action-set-name
-                               %:localized-action-set-name
-                               %:priority
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:action-set-name
+                                %:localized-action-set-name
+                                %:priority)
                                ,pointer (:struct %:action-set-create-info))
        (setf %:type :type-action-set-create-info
              %:next ,next
@@ -1714,7 +1718,7 @@
                                                     (binding nil binding-p))
                                          &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:action-suggested-binding))
-     (cffi:with-foreign-slots (%:action %:binding
+     (cffi:with-foreign-slots ((%:action %:binding)
                                ,pointer (:struct %:action-suggested-binding))
        (setf ,@(when action-p `(%:action ,action))
              ,@(when binding-p `(%:binding ,binding)))
@@ -1735,11 +1739,11 @@
                                                                   suggested-bindings-p))
                                                       &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:interaction-profile-suggested-binding))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:interaction-profile
-                               %:count-suggested-bindings
-                               %:suggested-bindings
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:interaction-profile
+                                %:count-suggested-bindings
+                                %:suggested-bindings)
                                ,pointer (:struct %:interaction-profile-suggested-binding))
        (setf %:type :type-interaction-profile-suggested-binding
              %:next ,next
@@ -1756,7 +1760,7 @@
                                              (subaction-path %:+null-path+))
                                   &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:active-action-set))
-     (cffi:with-foreign-slots (%:action-set %:subaction-path
+     (cffi:with-foreign-slots ((%:action-set %:subaction-path)
                                ,pointer (:struct %:active-action-set))
        (setf ,@(when action-set-p `(%:action-set ,action-set))
              %:subaction-path ,subaction-path)
@@ -1773,7 +1777,7 @@
                                                             action-sets-p))
                                                 &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:session-action-sets-attach-info))
-     (cffi:with-foreign-slots (%:type %:next %:count-action-sets %:action-sets
+     (cffi:with-foreign-slots ((%:type %:next %:count-action-sets %:action-sets)
                                ,pointer (:struct %:session-action-sets-attach-info))
        (setf %:type :type-session-action-sets-attach-info
              %:next ,next
@@ -1792,10 +1796,10 @@
                                               active-action-sets-p))
                                   &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:actions-sync-info))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:count-active-action-sets
-                               %:active-action-sets
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:count-active-action-sets
+                                %:active-action-sets)
                                ,pointer (:struct %:actions-sync-info))
        (setf %:type :type-actions-sync-info
              %:next ,next
@@ -1813,7 +1817,7 @@
                                                                     action-p))
                                                         &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:bound-sources-for-action-enumerate-info))
-     (cffi:with-foreign-slots (%:type %:next %:action
+     (cffi:with-foreign-slots ((%:type %:next %:action)
                                ,pointer (:struct %:bound-sources-for-action-enumerate-info))
        (setf %:type :type-bound-sources-for-action-enumerate-info
              %:next ,next
@@ -1834,7 +1838,7 @@
                                                                  which-components-p))
                                                      &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:input-source-localized-name-get-info))
-     (cffi:with-foreign-slots (%:type %:next %:source-path %:which-components
+     (cffi:with-foreign-slots ((%:type %:next %:source-path %:which-components)
                                ,pointer (:struct %:input-source-localized-name-get-info))
        (setf %:type :type-input-source-localized-name-get-info
              %:next ,next
@@ -1852,7 +1856,7 @@
                                                                    session-p))
                                                        &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:event-data-interaction-profile-changed))
-     (cffi:with-foreign-slots (%:type %:next %:session
+     (cffi:with-foreign-slots ((%:type %:next %:session)
                                ,pointer (:struct %:event-data-interaction-profile-changed))
        (setf %:type :type-event-data-interaction-profile-changed
              %:next ,next
@@ -1869,7 +1873,7 @@
                                                                           interaction-profile-p))
                                           &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:interaction-profile-state))
-     (cffi:with-foreign-slots (%:type %:next %:interaction-profile
+     (cffi:with-foreign-slots ((%:type %:next %:interaction-profile)
                                ,pointer (:struct %:interaction-profile-state))
        (setf %:type :type-interaction-profile-state
              %:next ,next
@@ -1891,13 +1895,13 @@
                                                localized-action-name-p))
                                    &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:action-create-info))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:action-name
-                               %:action-type
-                               %:count-subaction-paths
-                               %:subaction-paths
-                               %:localized-action-name
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:action-name
+                                %:action-type
+                                %:count-subaction-paths
+                                %:subaction-paths
+                                %:localized-action-name)
                                ,pointer (:struct %:action-create-info))
        (setf %:type :type-action-create-info
              %:next ,next
@@ -1931,10 +1935,10 @@
                                                              application-activity-p))
                                                  &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:instance-create-info-android-khr))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:application-vm
-                               %:application-activity
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:application-vm
+                                %:application-activity)
                                ,pointer (:struct %:instance-create-info-android-khr))
        (setf %:type :type-instance-create-info-android-khr
              %:next ,next
@@ -1957,7 +1961,10 @@
                                                                          view-formats-p))
                                                              &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:vulkan-swapchain-format-list-create-info-khr))
-     (cffi:with-foreign-slots (%:type %:next %:view-format-count %:view-formats
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:view-format-count
+                                %:view-formats)
                                ,pointer (:struct %:vulkan-swapchain-format-list-create-info-khr))
        (setf %:type :type-vulkan-swapchain-format-list-create-info-khr
              %:next ,next
@@ -1979,11 +1986,11 @@
                                                              object-name-p))
                                                  &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:debug-utils-object-name-info-ext))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:object-type
-                               %:object-handle
-                               %:object-name
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:object-type
+                                %:object-handle
+                                %:object-name)
                                ,pointer (:struct %:debug-utils-object-name-info-ext))
        (setf %:type :type-debug-utils-object-name-info-ext
              %:next ,next
@@ -2000,7 +2007,7 @@
                                                  (label-name nil label-name-p))
                                       &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:debug-utils-label-ext))
-     (cffi:with-foreign-slots (%:type %:next %:label-name
+     (cffi:with-foreign-slots ((%:type %:next %:label-name)
                                ,pointer (:struct %:debug-utils-label-ext))
        (setf %:type :type-debug-utils-label-ext
              %:next ,next
@@ -2034,15 +2041,15 @@
                                                                     session-labels-p))
                                                         &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:debug-utils-messenger-callback-data-ext))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:message-id
-                               %:function-name
-                               %:message
-                               %:object-count
-                               %:objects
-                               %:session-label-count
-                               %:session-labels
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:message-id
+                                %:function-name
+                                %:message
+                                %:object-count
+                                %:objects
+                                %:session-label-count
+                                %:session-labels)
                                ,pointer (:struct %:debug-utils-messenger-callback-data-ext))
        (setf %:type :type-debug-utils-messenger-callback-data-ext
              %:next ,next
@@ -2070,12 +2077,12 @@
                                                                  (user-data 0))
                                                       &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:debug-utils-messenger-create-info-ext))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:message-severities
-                               %:message-types
-                               %:user-callback
-                               %:user-data
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:message-severities
+                                %:message-types
+                                %:user-callback
+                                %:user-data)
                                ,pointer (:struct %:debug-utils-messenger-create-info-ext))
        (setf %:type :type-debug-utils-messenger-create-info-ext
              %:next ,next
@@ -2102,14 +2109,14 @@
                                                (indices nil indices-p))
                                     &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:visibility-mask-khr))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:vertex-capacity-input
-                               %:vertex-count-output
-                               %:vertices
-                               %:index-capacity-input
-                               %:index-count-output
-                               %:indices
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:vertex-capacity-input
+                                %:vertex-count-output
+                                %:vertices
+                                %:index-capacity-input
+                                %:index-count-output
+                                %:indices)
                                ,pointer (:struct %:visibility-mask-khr))
        (setf %:type :type-visibility-mask-khr
              %:next ,next
@@ -2135,10 +2142,10 @@
                                                              max-api-version-supported-p))
                                                  &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:graphics-requirements-opengl-khr))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:min-api-version-supported
-                               %:max-api-version-supported
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:min-api-version-supported
+                                %:max-api-version-supported)
                                ,pointer (:struct %:graphics-requirements-opengl-khr))
        (setf %:type :type-graphics-requirements-opengl-khr
              %:next ,next
@@ -2160,10 +2167,10 @@
                                                                 max-api-version-supported-p))
                                                     &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:graphics-requirements-opengl-es-khr))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:min-api-version-supported
-                               %:max-api-version-supported
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:min-api-version-supported
+                                %:max-api-version-supported)
                                ,pointer (:struct %:graphics-requirements-opengl-es-khr))
        (setf %:type :type-graphics-requirements-opengl-es-khr
              %:next ,next
@@ -2185,10 +2192,10 @@
                                                              max-api-version-supported-p))
                                                  &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:graphics-requirements-vulkan-khr))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:min-api-version-supported
-                               %:max-api-version-supported
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:min-api-version-supported
+                                %:max-api-version-supported)
                                ,pointer (:struct %:graphics-requirements-vulkan-khr))
        (setf %:type :type-graphics-requirements-vulkan-khr
              %:next ,next
@@ -2209,7 +2216,10 @@
                                                             min-feature-level-p))
                                                 &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:graphics-requirements-d3d11-khr))
-     (cffi:with-foreign-slots (%:type %:next %:adapter-luid %:min-feature-level
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:adapter-luid
+                                %:min-feature-level)
                                ,pointer (:struct %:graphics-requirements-d3d11-khr))
        (setf %:type :type-graphics-requirements-d3d11-khr
              %:next ,next
@@ -2230,7 +2240,10 @@
                                                             min-feature-level-p))
                                                 &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:graphics-requirements-d3d12-khr))
-     (cffi:with-foreign-slots (%:type %:next %:adapter-luid %:min-feature-level
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:adapter-luid
+                                %:min-feature-level)
                                ,pointer (:struct %:graphics-requirements-d3d12-khr))
        (setf %:type :type-graphics-requirements-d3d12-khr
              %:next ,next
@@ -2259,13 +2272,13 @@
                                                             vulkan-allocator-p))
                                                 &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:vulkan-instance-create-info-khr))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:system-id
-                               %:create-flags
-                               %:pfn-get-instance-proc-addr
-                               %:vulkan-create-info
-                               %:vulkan-allocator
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:system-id
+                                %:create-flags
+                                %:pfn-get-instance-proc-addr
+                                %:vulkan-create-info
+                                %:vulkan-allocator)
                                ,pointer (:struct %:vulkan-instance-create-info-khr))
        (setf %:type :type-vulkan-instance-create-info-khr
              %:next ,next
@@ -2299,14 +2312,14 @@
                                                           vulkan-allocator-p))
                                               &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:vulkan-device-create-info-khr))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:system-id
-                               %:create-flags
-                               %:pfn-get-instance-proc-addr
-                               %:vulkan-physical-device
-                               %:vulkan-create-info
-                               %:vulkan-allocator
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:system-id
+                                %:create-flags
+                                %:pfn-get-instance-proc-addr
+                                %:vulkan-physical-device
+                                %:vulkan-create-info
+                                %:vulkan-allocator)
                                ,pointer (:struct %:vulkan-device-create-info-khr))
        (setf %:type :type-vulkan-device-create-info-khr
              %:next ,next
@@ -2331,7 +2344,7 @@
                                                                 vulkan-instance-p))
                                                     &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:vulkan-graphics-device-get-info-khr))
-     (cffi:with-foreign-slots (%:type %:next %:system-id %:vulkan-instance
+     (cffi:with-foreign-slots ((%:type %:next %:system-id %:vulkan-instance)
                                ,pointer (:struct %:vulkan-graphics-device-get-info-khr))
        (setf %:type :type-vulkan-graphics-device-get-info-khr
              %:next ,next
@@ -2353,10 +2366,10 @@
                                                               additional-usage-flags-p))
                                                   &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:vulkan-swapchain-create-info-meta))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:additional-create-flags
-                               %:additional-usage-flags
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:additional-create-flags
+                                %:additional-usage-flags)
                                ,pointer (:struct %:vulkan-swapchain-create-info-meta))
        (setf %:type :type-vulkan-swapchain-create-info-meta
              %:next ,next
@@ -2377,10 +2390,10 @@
                                                              session-layers-placement-p))
                                                  &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:session-create-info-overlay-extx))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:create-flags
-                               %:session-layers-placement
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:create-flags
+                                %:session-layers-placement)
                                ,pointer (:struct %:session-create-info-overlay-extx))
        (setf %:type :type-session-create-info-overlay-extx
              %:next ,next
@@ -2403,7 +2416,7 @@
                                                                             flags-p))
                                                                 &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:event-data-main-session-visibility-changed-extx))
-     (cffi:with-foreign-slots (%:type %:next %:visible %:flags
+     (cffi:with-foreign-slots ((%:type %:next %:visible %:flags)
                                ,pointer (:struct %:event-data-main-session-visibility-changed-extx))
        (setf %:type :type-event-data-main-session-visibility-changed-extx
              %:next ,next
@@ -2425,10 +2438,10 @@
                                                                        to-display-refresh-rate-p))
                                                            &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:event-data-display-refresh-rate-changed-fb))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:from-display-refresh-rate
-                               %:to-display-refresh-rate
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:from-display-refresh-rate
+                                %:to-display-refresh-rate)
                                ,pointer (:struct %:event-data-display-refresh-rate-changed-fb))
        (setf %:type :type-event-data-display-refresh-rate-changed-fb
              %:next ,next
@@ -2454,12 +2467,12 @@
                                                                max-far-z-p))
                                                    &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:view-configuration-depth-range-ext))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:recommended-near-z
-                               %:min-near-z
-                               %:recommended-far-z
-                               %:max-far-z
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:recommended-near-z
+                                %:min-near-z
+                                %:recommended-far-z
+                                %:max-far-z)
                                ,pointer (:struct %:view-configuration-depth-range-ext))
        (setf %:type :type-view-configuration-depth-range-ext
              %:next ,next
@@ -2483,7 +2496,10 @@
                                                              max-mutable-fov-p))
                                                  &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:view-configuration-view-fov-epic))
-     (cffi:with-foreign-slots (%:type %:next %:recommended-fov %:max-mutable-fov
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:recommended-fov
+                                %:max-mutable-fov)
                                ,pointer (:struct %:view-configuration-view-fov-epic))
        (setf %:type :type-view-configuration-view-fov-epic
              %:next ,next
@@ -2521,17 +2537,17 @@
                                                                  off-haptic-p))
                                                      &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:interaction-profile-dpad-binding-ext))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:binding
-                               %:action-set
-                               %:force-threshold
-                               %:force-threshold-released
-                               %:center-region
-                               %:wedge-angle
-                               %:is-sticky
-                               %:on-haptic
-                               %:off-haptic
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:binding
+                                %:action-set
+                                %:force-threshold
+                                %:force-threshold-released
+                                %:center-region
+                                %:wedge-angle
+                                %:is-sticky
+                                %:on-haptic
+                                %:off-haptic)
                                ,pointer (:struct %:interaction-profile-dpad-binding-ext))
        (setf %:type :type-interaction-profile-dpad-binding-ext
              %:next ,next
@@ -2572,14 +2588,14 @@
                                                                        off-haptic-p))
                                                            &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:interaction-profile-analog-threshold-valve))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:action
-                               %:binding
-                               %:on-threshold
-                               %:off-threshold
-                               %:on-haptic
-                               %:off-haptic
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:action
+                                %:binding
+                                %:on-threshold
+                                %:off-threshold
+                                %:on-haptic
+                                %:off-haptic)
                                ,pointer (:struct %:interaction-profile-analog-threshold-valve))
        (setf %:type :type-interaction-profile-analog-threshold-valve
              %:next ,next
@@ -2604,10 +2620,10 @@
                                                       binding-modifications-p))
                                           &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:binding-modifications-khr))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:binding-modification-count
-                               %:binding-modifications
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:binding-modification-count
+                                %:binding-modifications)
                                ,pointer (:struct %:binding-modifications-khr))
        (setf %:type :type-binding-modifications-khr
              %:next ,next
@@ -2626,7 +2642,7 @@
                                                                        supports-eye-gaze-interaction-p))
                                                            &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:system-eye-gaze-interaction-properties-ext))
-     (cffi:with-foreign-slots (%:type %:next %:supports-eye-gaze-interaction
+     (cffi:with-foreign-slots ((%:type %:next %:supports-eye-gaze-interaction)
                                ,pointer (:struct %:system-eye-gaze-interaction-properties-ext))
        (setf %:type :type-system-eye-gaze-interaction-properties-ext
              %:next ,next
@@ -2641,7 +2657,7 @@
                                                     (time nil time-p))
                                          &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:eye-gaze-sample-time-ext))
-     (cffi:with-foreign-slots (%:type %:next %:time
+     (cffi:with-foreign-slots ((%:type %:next %:time)
                                ,pointer (:struct %:eye-gaze-sample-time-ext))
        (setf %:type :type-eye-gaze-sample-time-ext
              %:next ,next
@@ -2659,7 +2675,7 @@
                                                            (time nil time-p))
                                                 &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:spatial-anchor-create-info-msft))
-     (cffi:with-foreign-slots (%:type %:next %:space %:pose %:time
+     (cffi:with-foreign-slots ((%:type %:next %:space %:pose %:time)
                                ,pointer (:struct %:spatial-anchor-create-info-msft))
        (setf %:type :type-spatial-anchor-create-info-msft
              %:next ,next
@@ -2681,7 +2697,7 @@
                                                                   pose-in-anchor-space-p))
                                                       &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:spatial-anchor-space-create-info-msft))
-     (cffi:with-foreign-slots (%:type %:next %:anchor %:pose-in-anchor-space
+     (cffi:with-foreign-slots ((%:type %:next %:anchor %:pose-in-anchor-space)
                                ,pointer (:struct %:spatial-anchor-space-create-info-msft))
        (setf %:type :type-spatial-anchor-space-create-info-msft
              %:next ,next
@@ -2699,7 +2715,7 @@
                                                               flags-p))
                                                   &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:composition-layer-image-layout-fb))
-     (cffi:with-foreign-slots (%:type %:next %:flags
+     (cffi:with-foreign-slots ((%:type %:next %:flags)
                                ,pointer (:struct %:composition-layer-image-layout-fb))
        (setf %:type :type-composition-layer-image-layout-fb
              %:next ,next
@@ -2726,12 +2742,12 @@
                                                              dst-factor-alpha-p))
                                                  &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:composition-layer-alpha-blend-fb))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:src-factor-color
-                               %:dst-factor-color
-                               %:src-factor-alpha
-                               %:dst-factor-alpha
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:src-factor-color
+                                %:dst-factor-color
+                                %:src-factor-alpha
+                                %:dst-factor-alpha)
                                ,pointer (:struct %:composition-layer-alpha-blend-fb))
        (setf %:type :type-composition-layer-alpha-blend-fb
              %:next ,next
@@ -2753,12 +2769,12 @@
                                                     (context nil context-p))
                                          &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:graphics-binding-eglmndx))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:get-proc-address
-                               %:display
-                               %:config
-                               %:context
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:get-proc-address
+                                %:display
+                                %:config
+                                %:context)
                                ,pointer (:struct %:graphics-binding-eglmndx))
        (setf %:type :type-graphics-binding-egl-mndx
              %:next ,next
@@ -2784,7 +2800,7 @@
                                                                       pose-p))
                                                           &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:spatial-graph-node-space-create-info-msft))
-     (cffi:with-foreign-slots (%:type %:next %:node-type %:node-id %:pose
+     (cffi:with-foreign-slots ((%:type %:next %:node-type %:node-id %:pose)
                                ,pointer (:struct %:spatial-graph-node-space-create-info-msft))
        (setf %:type :type-spatial-graph-node-space-create-info-msft
              %:next ,next
@@ -2811,7 +2827,7 @@
                                                                                time-p))
                                                                    &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:spatial-graph-static-node-binding-create-info-msft))
-     (cffi:with-foreign-slots (%:type %:next %:space %:pose-in-space %:time
+     (cffi:with-foreign-slots ((%:type %:next %:space %:pose-in-space %:time)
                                ,pointer (:struct %:spatial-graph-static-node-binding-create-info-msft))
        (setf %:type :type-spatial-graph-static-node-binding-create-info-msft
              %:next ,next
@@ -2829,7 +2845,7 @@
                                                                                 '(cffi:null-pointer)))
                                                                     &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:spatial-graph-node-binding-properties-get-info-msft))
-     (cffi:with-foreign-slots (%:type %:next
+     (cffi:with-foreign-slots ((%:type %:next)
                                ,pointer (:struct %:spatial-graph-node-binding-properties-get-info-msft))
        (setf %:type :type-spatial-graph-node-binding-properties-get-info-msft
              %:next ,next)
@@ -2849,7 +2865,7 @@
                                                                        pose-in-node-space-p))
                                                            &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:spatial-graph-node-binding-properties-msft))
-     (cffi:with-foreign-slots (%:type %:next %:node-id %:pose-in-node-space
+     (cffi:with-foreign-slots ((%:type %:next %:node-id %:pose-in-node-space)
                                ,pointer (:struct %:spatial-graph-node-binding-properties-msft))
        (setf %:type :type-spatial-graph-node-binding-properties-msft
              %:next ,next
@@ -2868,7 +2884,7 @@
                                                                 supports-hand-tracking-p))
                                                     &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:system-hand-tracking-properties-ext))
-     (cffi:with-foreign-slots (%:type %:next %:supports-hand-tracking
+     (cffi:with-foreign-slots ((%:type %:next %:supports-hand-tracking)
                                ,pointer (:struct %:system-hand-tracking-properties-ext))
        (setf %:type :type-system-hand-tracking-properties-ext
              %:next ,next
@@ -2886,7 +2902,7 @@
                                                          hand-joint-set-p))
                                              &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:hand-tracker-create-info-ext))
-     (cffi:with-foreign-slots (%:type %:next %:hand %:hand-joint-set
+     (cffi:with-foreign-slots ((%:type %:next %:hand %:hand-joint-set)
                                ,pointer (:struct %:hand-tracker-create-info-ext))
        (setf %:type :type-hand-tracker-create-info-ext
              %:next ,next
@@ -2905,7 +2921,7 @@
                                                        (time nil time-p))
                                             &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:hand-joints-locate-info-ext))
-     (cffi:with-foreign-slots (%:type %:next %:base-space %:time
+     (cffi:with-foreign-slots ((%:type %:next %:base-space %:time)
                                ,pointer (:struct %:hand-joints-locate-info-ext))
        (setf %:type :type-hand-joints-locate-info-ext
              %:next ,next
@@ -2923,7 +2939,7 @@
                                                    (radius nil radius-p))
                                         &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:hand-joint-location-ext))
-     (cffi:with-foreign-slots (%:location-flags %:pose %:radius
+     (cffi:with-foreign-slots ((%:location-flags %:pose %:radius)
                                ,pointer (:struct %:hand-joint-location-ext))
        (setf ,@(when location-flags-p `(%:location-flags ,location-flags))
              ,@(when pose-p `(%:pose ,pose))
@@ -2940,9 +2956,9 @@
                                                     angular-velocity-p))
                                         &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:hand-joint-velocity-ext))
-     (cffi:with-foreign-slots (%:velocity-flags
-                               %:linear-velocity
-                               %:angular-velocity
+     (cffi:with-foreign-slots ((%:velocity-flags
+                                %:linear-velocity
+                                %:angular-velocity)
                                ,pointer (:struct %:hand-joint-velocity-ext))
        (setf ,@(when velocity-flags-p `(%:velocity-flags ,velocity-flags))
              ,@(when linear-velocity-p `(%:linear-velocity ,linear-velocity))
@@ -2959,11 +2975,11 @@
                                                      joint-locations-p))
                                          &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:hand-joint-locations-ext))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:is-active
-                               %:joint-count
-                               %:joint-locations
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:is-active
+                                %:joint-count
+                                %:joint-locations)
                                ,pointer (:struct %:hand-joint-locations-ext))
        (setf %:type :type-hand-joint-locations-ext
              %:next ,next
@@ -2984,7 +3000,7 @@
                                                       joint-velocities-p))
                                           &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:hand-joint-velocities-ext))
-     (cffi:with-foreign-slots (%:type %:next %:joint-count %:joint-velocities
+     (cffi:with-foreign-slots ((%:type %:next %:joint-count %:joint-velocities)
                                ,pointer (:struct %:hand-joint-velocities-ext))
        (setf %:type :type-hand-joint-velocities-ext
              %:next ,next
@@ -3003,7 +3019,7 @@
                                                                supports-face-tracking-p))
                                                    &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:system-face-tracking-properties-fb))
-     (cffi:with-foreign-slots (%:type %:next %:supports-face-tracking
+     (cffi:with-foreign-slots ((%:type %:next %:supports-face-tracking)
                                ,pointer (:struct %:system-face-tracking-properties-fb))
        (setf %:type :type-system-face-tracking-properties-fb
              %:next ,next
@@ -3020,7 +3036,7 @@
                                                         face-expression-set-p))
                                             &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:face-tracker-create-info-fb))
-     (cffi:with-foreign-slots (%:type %:next %:face-expression-set
+     (cffi:with-foreign-slots ((%:type %:next %:face-expression-set)
                                ,pointer (:struct %:face-tracker-create-info-fb))
        (setf %:type :type-face-tracker-create-info-fb
              %:next ,next
@@ -3035,7 +3051,7 @@
                                                    (time nil time-p))
                                         &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:face-expression-info-fb))
-     (cffi:with-foreign-slots (%:type %:next %:time
+     (cffi:with-foreign-slots ((%:type %:next %:time)
                                ,pointer (:struct %:face-expression-info-fb))
        (setf %:type :type-face-expression-info-fb
              %:next ,next
@@ -3052,7 +3068,7 @@
                                                       is-eye-following-blendshapes-valid-p))
                                           &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:face-expression-status-fb))
-     (cffi:with-foreign-slots (%:is-valid %:is-eye-following-blendshapes-valid
+     (cffi:with-foreign-slots ((%:is-valid %:is-eye-following-blendshapes-valid)
                                ,pointer (:struct %:face-expression-status-fb))
        (setf ,@(when is-valid-p `(%:is-valid ,is-valid))
              ,@(when is-eye-following-blendshapes-valid-p `(%:is-eye-following-blendshapes-valid ,is-eye-following-blendshapes-valid)))
@@ -3073,14 +3089,14 @@
                                                       (time nil time-p))
                                            &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:face-expression-weights-fb))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:weight-count
-                               %:weights
-                               %:confidence-count
-                               %:confidences
-                               %:status
-                               %:time
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:weight-count
+                                %:weights
+                                %:confidence-count
+                                %:confidences
+                                %:status
+                                %:time)
                                ,pointer (:struct %:face-expression-weights-fb))
        (setf %:type :type-face-expression-weights-fb
              %:next ,next
@@ -3103,7 +3119,7 @@
                                                                supports-body-tracking-p))
                                                    &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:system-body-tracking-properties-fb))
-     (cffi:with-foreign-slots (%:type %:next %:supports-body-tracking
+     (cffi:with-foreign-slots ((%:type %:next %:supports-body-tracking)
                                ,pointer (:struct %:system-body-tracking-properties-fb))
        (setf %:type :type-system-body-tracking-properties-fb
              %:next ,next
@@ -3120,7 +3136,7 @@
                                                         body-joint-set-p))
                                             &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:body-tracker-create-info-fb))
-     (cffi:with-foreign-slots (%:type %:next %:body-joint-set
+     (cffi:with-foreign-slots ((%:type %:next %:body-joint-set)
                                ,pointer (:struct %:body-tracker-create-info-fb))
        (setf %:type :type-body-tracker-create-info-fb
              %:next ,next
@@ -3136,7 +3152,7 @@
                                                   (pose nil pose-p))
                                        &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:body-skeleton-joint-fb))
-     (cffi:with-foreign-slots (%:joint %:parent-joint %:pose
+     (cffi:with-foreign-slots ((%:joint %:parent-joint %:pose)
                                ,pointer (:struct %:body-skeleton-joint-fb))
        (setf ,@(when joint-p `(%:joint ,joint))
              ,@(when parent-joint-p `(%:parent-joint ,parent-joint))
@@ -3150,7 +3166,7 @@
                                             (joints nil joints-p))
                                  &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:body-skeleton-fb))
-     (cffi:with-foreign-slots (%:type %:next %:joint-count %:joints
+     (cffi:with-foreign-slots ((%:type %:next %:joint-count %:joints)
                                ,pointer (:struct %:body-skeleton-fb))
        (setf %:type :type-body-skeleton-fb
              %:next ,next
@@ -3169,7 +3185,7 @@
                                                       (time nil time-p))
                                            &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:body-joints-locate-info-fb))
-     (cffi:with-foreign-slots (%:type %:next %:base-space %:time
+     (cffi:with-foreign-slots ((%:type %:next %:base-space %:time)
                                ,pointer (:struct %:body-joints-locate-info-fb))
        (setf %:type :type-body-joints-locate-info-fb
              %:next ,next
@@ -3186,7 +3202,7 @@
                                                   (pose nil pose-p))
                                        &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:body-joint-location-fb))
-     (cffi:with-foreign-slots (%:location-flags %:pose
+     (cffi:with-foreign-slots ((%:location-flags %:pose)
                                ,pointer (:struct %:body-joint-location-fb))
        (setf ,@(when location-flags-p `(%:location-flags ,location-flags))
              ,@(when pose-p `(%:pose ,pose)))
@@ -3207,14 +3223,14 @@
                                                    (time nil time-p))
                                         &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:body-joint-locations-fb))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:is-active
-                               %:confidence
-                               %:joint-count
-                               %:joint-locations
-                               %:skeleton-changed-count
-                               %:time
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:is-active
+                                %:confidence
+                                %:joint-count
+                                %:joint-locations
+                                %:skeleton-changed-count
+                                %:time)
                                ,pointer (:struct %:body-joint-locations-fb))
        (setf %:type :type-body-joint-locations-fb
              %:next ,next
@@ -3237,7 +3253,7 @@
                                                               supports-eye-tracking-p))
                                                   &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:system-eye-tracking-properties-fb))
-     (cffi:with-foreign-slots (%:type %:next %:supports-eye-tracking
+     (cffi:with-foreign-slots ((%:type %:next %:supports-eye-tracking)
                                ,pointer (:struct %:system-eye-tracking-properties-fb))
        (setf %:type :type-system-eye-tracking-properties-fb
              %:next ,next
@@ -3252,7 +3268,7 @@
                                                        '(cffi:null-pointer)))
                                            &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:eye-tracker-create-info-fb))
-     (cffi:with-foreign-slots (%:type %:next
+     (cffi:with-foreign-slots ((%:type %:next)
                                ,pointer (:struct %:eye-tracker-create-info-fb))
        (setf %:type :type-eye-tracker-create-info-fb
              %:next ,next)
@@ -3267,7 +3283,7 @@
                                              (time nil time-p))
                                   &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:eye-gazes-info-fb))
-     (cffi:with-foreign-slots (%:type %:next %:base-space %:time
+     (cffi:with-foreign-slots ((%:type %:next %:base-space %:time)
                                ,pointer (:struct %:eye-gazes-info-fb))
        (setf %:type :type-eye-gazes-info-fb
              %:next ,next
@@ -3283,7 +3299,7 @@
                                        (gaze-confidence nil gaze-confidence-p))
                             &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:eye-gaze-fb))
-     (cffi:with-foreign-slots (%:is-valid %:gaze-pose %:gaze-confidence
+     (cffi:with-foreign-slots ((%:is-valid %:gaze-pose %:gaze-confidence)
                                ,pointer (:struct %:eye-gaze-fb))
        (setf ,@(when is-valid-p `(%:is-valid ,is-valid))
              ,@(when gaze-pose-p `(%:gaze-pose ,gaze-pose))
@@ -3295,7 +3311,7 @@
                                         (gaze nil gaze-p) (time nil time-p))
                              &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:eye-gazes-fb))
-     (cffi:with-foreign-slots (%:type %:next %:gaze %:time
+     (cffi:with-foreign-slots ((%:type %:next %:gaze %:time)
                                ,pointer (:struct %:eye-gazes-fb))
        (setf %:type :type-eye-gazes-fb
              %:next ,next
@@ -3314,7 +3330,7 @@
                                                               hand-joints-motion-range-p))
                                                   &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:hand-joints-motion-range-info-ext))
-     (cffi:with-foreign-slots (%:type %:next %:hand-joints-motion-range
+     (cffi:with-foreign-slots ((%:type %:next %:hand-joints-motion-range)
                                ,pointer (:struct %:hand-joints-motion-range-info-ext))
        (setf %:type :type-hand-joints-motion-range-info-ext
              %:next ,next
@@ -3334,10 +3350,10 @@
                                                              pose-in-hand-mesh-space-p))
                                                  &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:hand-mesh-space-create-info-msft))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:hand-pose-type
-                               %:pose-in-hand-mesh-space
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:hand-pose-type
+                                %:pose-in-hand-mesh-space)
                                ,pointer (:struct %:hand-mesh-space-create-info-msft))
        (setf %:type :type-hand-mesh-space-create-info-msft
              %:next ,next
@@ -3356,7 +3372,7 @@
                                                        hand-pose-type-p))
                                            &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:hand-mesh-update-info-msft))
-     (cffi:with-foreign-slots (%:type %:next %:time %:hand-pose-type
+     (cffi:with-foreign-slots ((%:type %:next %:time %:hand-pose-type)
                                ,pointer (:struct %:hand-mesh-update-info-msft))
        (setf %:type :type-hand-mesh-update-info-msft
              %:next ,next
@@ -3377,13 +3393,13 @@
                                           (vertex-buffer nil vertex-buffer-p))
                                &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:hand-mesh-msft))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:is-active
-                               %:index-buffer-changed
-                               %:vertex-buffer-changed
-                               %:index-buffer
-                               %:vertex-buffer
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:is-active
+                                %:index-buffer-changed
+                                %:vertex-buffer-changed
+                                %:index-buffer
+                                %:vertex-buffer)
                                ,pointer (:struct %:hand-mesh-msft))
        (setf %:type :type-hand-mesh-msft
              %:next ,next
@@ -3408,10 +3424,10 @@
                                                        (indices nil indices-p))
                                             &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:hand-mesh-index-buffer-msft))
-     (cffi:with-foreign-slots (%:index-buffer-key
-                               %:index-capacity-input
-                               %:index-count-output
-                               %:indices
+     (cffi:with-foreign-slots ((%:index-buffer-key
+                                %:index-capacity-input
+                                %:index-count-output
+                                %:indices)
                                ,pointer (:struct %:hand-mesh-index-buffer-msft))
        (setf ,@(when index-buffer-key-p `(%:index-buffer-key ,index-buffer-key))
              ,@(when index-capacity-input-p `(%:index-capacity-input ,index-capacity-input))
@@ -3433,10 +3449,10 @@
                                                          vertices-p))
                                              &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:hand-mesh-vertex-buffer-msft))
-     (cffi:with-foreign-slots (%:vertex-update-time
-                               %:vertex-capacity-input
-                               %:vertex-count-output
-                               %:vertices
+     (cffi:with-foreign-slots ((%:vertex-update-time
+                                %:vertex-capacity-input
+                                %:vertex-count-output
+                                %:vertices)
                                ,pointer (:struct %:hand-mesh-vertex-buffer-msft))
        (setf ,@(when vertex-update-time-p `(%:vertex-update-time ,vertex-update-time))
              ,@(when vertex-capacity-input-p `(%:vertex-capacity-input ,vertex-capacity-input))
@@ -3450,7 +3466,7 @@
                                                  (normal nil normal-p))
                                       &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:hand-mesh-vertex-msft))
-     (cffi:with-foreign-slots (%:position %:normal
+     (cffi:with-foreign-slots ((%:position %:normal)
                                ,pointer (:struct %:hand-mesh-vertex-msft))
        (setf ,@(when position-p `(%:position ,position))
              ,@(when normal-p `(%:normal ,normal)))
@@ -3471,11 +3487,11 @@
                                                                       max-hand-mesh-vertex-count-p))
                                                           &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:system-hand-tracking-mesh-properties-msft))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:supports-hand-tracking-mesh
-                               %:max-hand-mesh-index-count
-                               %:max-hand-mesh-vertex-count
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:supports-hand-tracking-mesh
+                                %:max-hand-mesh-index-count
+                                %:max-hand-mesh-vertex-count)
                                ,pointer (:struct %:system-hand-tracking-mesh-properties-msft))
        (setf %:type :type-system-hand-tracking-mesh-properties-msft
              %:next ,next
@@ -3493,7 +3509,7 @@
                                                      hand-pose-type-p))
                                          &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:hand-pose-type-info-msft))
-     (cffi:with-foreign-slots (%:type %:next %:hand-pose-type
+     (cffi:with-foreign-slots ((%:type %:next %:hand-pose-type)
                                ,pointer (:struct %:hand-pose-type-info-msft))
        (setf %:type :type-hand-pose-type-info-msft
              %:next ,next
@@ -3515,10 +3531,10 @@
                                                                                  enabled-view-configuration-types-p))
                                                                      &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:secondary-view-configuration-session-begin-info-msft))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:view-configuration-count
-                               %:enabled-view-configuration-types
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:view-configuration-count
+                                %:enabled-view-configuration-types)
                                ,pointer (:struct %:secondary-view-configuration-session-begin-info-msft))
        (setf %:type :type-secondary-view-configuration-session-begin-info-msft
              %:next ,next
@@ -3539,7 +3555,10 @@
                                                                     active-p))
                                                         &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:secondary-view-configuration-state-msft))
-     (cffi:with-foreign-slots (%:type %:next %:view-configuration-type %:active
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:view-configuration-type
+                                %:active)
                                ,pointer (:struct %:secondary-view-configuration-state-msft))
        (setf %:type :type-secondary-view-configuration-state-msft
              %:next ,next
@@ -3562,10 +3581,10 @@
                                                                           view-configuration-states-p))
                                                               &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:secondary-view-configuration-frame-state-msft))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:view-configuration-count
-                               %:view-configuration-states
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:view-configuration-count
+                                %:view-configuration-states)
                                ,pointer (:struct %:secondary-view-configuration-frame-state-msft))
        (setf %:type :type-secondary-view-configuration-frame-state-msft
              %:next ,next
@@ -3588,10 +3607,10 @@
                                                                              view-configuration-layers-info-p))
                                                                  &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:secondary-view-configuration-frame-end-info-msft))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:view-configuration-count
-                               %:view-configuration-layers-info
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:view-configuration-count
+                                %:view-configuration-layers-info)
                                ,pointer (:struct %:secondary-view-configuration-frame-end-info-msft))
        (setf %:type :type-secondary-view-configuration-frame-end-info-msft
              %:next ,next
@@ -3620,12 +3639,12 @@
                                                                          layers-p))
                                                              &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:secondary-view-configuration-layer-info-msft))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:view-configuration-type
-                               %:environment-blend-mode
-                               %:layer-count
-                               %:layers
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:view-configuration-type
+                                %:environment-blend-mode
+                                %:layer-count
+                                %:layers)
                                ,pointer (:struct %:secondary-view-configuration-layer-info-msft))
        (setf %:type :type-secondary-view-configuration-layer-info-msft
              %:next ,next
@@ -3647,7 +3666,7 @@
                                                                                     view-configuration-type-p))
                                                                         &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:secondary-view-configuration-swapchain-create-info-msft))
-     (cffi:with-foreign-slots (%:type %:next %:view-configuration-type
+     (cffi:with-foreign-slots ((%:type %:next %:view-configuration-type)
                                ,pointer (:struct %:secondary-view-configuration-swapchain-create-info-msft))
        (setf %:type :type-secondary-view-configuration-swapchain-create-info-msft
              %:next ,next
@@ -3667,7 +3686,7 @@
                                                                core-window-p))
                                                    &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:holographic-window-attachment-msft))
-     (cffi:with-foreign-slots (%:type %:next %:holographic-space %:core-window
+     (cffi:with-foreign-slots ((%:type %:next %:holographic-space %:core-window)
                                ,pointer (:struct %:holographic-window-attachment-msft))
        (setf %:type :type-holographic-window-attachment-msft
              %:next ,next
@@ -3686,7 +3705,7 @@
                                                                      create-flags-p))
                                                          &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:android-surface-swapchain-create-info-fb))
-     (cffi:with-foreign-slots (%:type %:next %:create-flags
+     (cffi:with-foreign-slots ((%:type %:next %:create-flags)
                                ,pointer (:struct %:android-surface-swapchain-create-info-fb))
        (setf %:type :type-android-surface-swapchain-create-info-fb
              %:next ,next
@@ -3708,7 +3727,7 @@
                                                                           height-p))
                                                               &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:swapchain-state-android-surface-dimensions-fb))
-     (cffi:with-foreign-slots (%:type %:next %:width %:height
+     (cffi:with-foreign-slots ((%:type %:next %:width %:height)
                                ,pointer (:struct %:swapchain-state-android-surface-dimensions-fb))
        (setf %:type :type-swapchain-state-android-surface-dimensions-fb
              %:next ,next
@@ -3752,18 +3771,18 @@
                                                                  border-color-p))
                                                      &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:swapchain-state-sampler-opengl-es-fb))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:min-filter
-                               %:mag-filter
-                               %:wrap-mode-s
-                               %:wrap-mode-t
-                               %:swizzle-red
-                               %:swizzle-green
-                               %:swizzle-blue
-                               %:swizzle-alpha
-                               %:max-anisotropy
-                               %:border-color
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:min-filter
+                                %:mag-filter
+                                %:wrap-mode-s
+                                %:wrap-mode-t
+                                %:swizzle-red
+                                %:swizzle-green
+                                %:swizzle-blue
+                                %:swizzle-alpha
+                                %:max-anisotropy
+                                %:border-color)
                                ,pointer (:struct %:swapchain-state-sampler-opengl-es-fb))
        (setf %:type :type-swapchain-state-sampler-opengl-es-fb
              %:next ,next
@@ -3810,19 +3829,19 @@
                                                               border-color-p))
                                                   &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:swapchain-state-sampler-vulkan-fb))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:min-filter
-                               %:mag-filter
-                               %:mipmap-mode
-                               %:wrap-mode-s
-                               %:wrap-mode-t
-                               %:swizzle-red
-                               %:swizzle-green
-                               %:swizzle-blue
-                               %:swizzle-alpha
-                               %:max-anisotropy
-                               %:border-color
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:min-filter
+                                %:mag-filter
+                                %:mipmap-mode
+                                %:wrap-mode-s
+                                %:wrap-mode-t
+                                %:swizzle-red
+                                %:swizzle-green
+                                %:swizzle-blue
+                                %:swizzle-alpha
+                                %:max-anisotropy
+                                %:border-color)
                                ,pointer (:struct %:swapchain-state-sampler-vulkan-fb))
        (setf %:type :type-swapchain-state-sampler-vulkan-fb
              %:next ,next
@@ -3849,7 +3868,7 @@
                                                                 flags-p))
                                                     &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:composition-layer-secure-content-fb))
-     (cffi:with-foreign-slots (%:type %:next %:flags
+     (cffi:with-foreign-slots ((%:type %:next %:flags)
                                ,pointer (:struct %:composition-layer-secure-content-fb))
        (setf %:type :type-composition-layer-secure-content-fb
              %:next ,next
@@ -3869,10 +3888,10 @@
                                                          application-context-p))
                                              &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:loader-init-info-android-khr))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:application-vm
-                               %:application-context
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:application-vm
+                                %:application-context)
                                ,pointer (:struct %:loader-init-info-android-khr))
        (setf %:type :type-loader-init-info-android-khr
              %:next ,next
@@ -3907,17 +3926,17 @@
                                                              lower-vertical-angle-p))
                                                  &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:composition-layer-equirect-2-khr))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:layer-flags
-                               %:space
-                               %:eye-visibility
-                               %:sub-image
-                               %:pose
-                               %:radius
-                               %:central-horizontal-angle
-                               %:upper-vertical-angle
-                               %:lower-vertical-angle
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:layer-flags
+                                %:space
+                                %:eye-visibility
+                                %:sub-image
+                                %:pose
+                                %:radius
+                                %:central-horizontal-angle
+                                %:upper-vertical-angle
+                                %:lower-vertical-angle)
                                ,pointer (:struct %:composition-layer-equirect-2-khr))
        (setf %:type :type-composition-layer-equirect2-khr
              %:next ,next
@@ -3946,7 +3965,7 @@
                                                                    color-bias-p))
                                                        &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:composition-layer-color-scale-bias-khr))
-     (cffi:with-foreign-slots (%:type %:next %:color-scale %:color-bias
+     (cffi:with-foreign-slots ((%:type %:next %:color-scale %:color-bias)
                                ,pointer (:struct %:composition-layer-color-scale-bias-khr))
        (setf %:type :type-composition-layer-color-scale-bias-khr
              %:next ,next
@@ -3964,7 +3983,7 @@
                                                             model-key-p))
                                                 &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:controller-model-key-state-msft))
-     (cffi:with-foreign-slots (%:type %:next %:model-key
+     (cffi:with-foreign-slots ((%:type %:next %:model-key)
                                ,pointer (:struct %:controller-model-key-state-msft))
        (setf %:type :type-controller-model-key-state-msft
              %:next ,next
@@ -3984,7 +4003,7 @@
                                                                   node-name-p))
                                                       &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:controller-model-node-properties-msft))
-     (cffi:with-foreign-slots (%:type %:next %:parent-node-name %:node-name
+     (cffi:with-foreign-slots ((%:type %:next %:parent-node-name %:node-name)
                                ,pointer (:struct %:controller-model-node-properties-msft))
        (setf %:type :type-controller-model-node-properties-msft
              %:next ,next)
@@ -4020,11 +4039,11 @@
                                                              node-properties-p))
                                                  &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:controller-model-properties-msft))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:node-capacity-input
-                               %:node-count-output
-                               %:node-properties
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:node-capacity-input
+                                %:node-count-output
+                                %:node-properties)
                                ,pointer (:struct %:controller-model-properties-msft))
        (setf %:type :type-controller-model-properties-msft
              %:next ,next
@@ -4043,7 +4062,7 @@
                                                              node-pose-p))
                                                  &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:controller-model-node-state-msft))
-     (cffi:with-foreign-slots (%:type %:next %:node-pose
+     (cffi:with-foreign-slots ((%:type %:next %:node-pose)
                                ,pointer (:struct %:controller-model-node-state-msft))
        (setf %:type :type-controller-model-node-state-msft
              %:next ,next
@@ -4064,11 +4083,11 @@
                                                         node-states-p))
                                             &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:controller-model-state-msft))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:node-capacity-input
-                               %:node-count-output
-                               %:node-states
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:node-capacity-input
+                                %:node-count-output
+                                %:node-states)
                                ,pointer (:struct %:controller-model-state-msft))
        (setf %:type :type-controller-model-state-msft
              %:next ,next
@@ -4082,7 +4101,7 @@
 
 (defmacro with-uuid-msft ((pointer &key %slots (bytes nil bytes-p)) &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:uuid-msft))
-     (cffi:with-foreign-slots (%:bytes
+     (cffi:with-foreign-slots ((%:bytes)
                                ,pointer (:struct %:uuid-msft))
        (setf ,@(when bytes-p `(%:bytes ,bytes)))
        ,@(if %slots body nil))
@@ -4093,7 +4112,7 @@
                                                             '(cffi:null-pointer)))
                                                 &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:scene-observer-create-info-msft))
-     (cffi:with-foreign-slots (%:type %:next
+     (cffi:with-foreign-slots ((%:type %:next)
                                ,pointer (:struct %:scene-observer-create-info-msft))
        (setf %:type :type-scene-observer-create-info-msft
              %:next ,next)
@@ -4106,7 +4125,7 @@
                                                   (next '(cffi:null-pointer)))
                                        &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:scene-create-info-msft))
-     (cffi:with-foreign-slots (%:type %:next
+     (cffi:with-foreign-slots ((%:type %:next)
                                ,pointer (:struct %:scene-create-info-msft))
        (setf %:type :type-scene-create-info-msft
              %:next ,next)
@@ -4128,12 +4147,12 @@
                                                        (bounds nil bounds-p))
                                             &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:new-scene-compute-info-msft))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:requested-feature-count
-                               %:requested-features
-                               %:consistency
-                               %:bounds
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:requested-feature-count
+                                %:requested-features
+                                %:consistency
+                                %:bounds)
                                ,pointer (:struct %:new-scene-compute-info-msft))
        (setf %:type :type-new-scene-compute-info-msft
              %:next ,next
@@ -4152,7 +4171,7 @@
                                                              (lod nil lod-p))
                                                   &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:visual-mesh-compute-lod-info-msft))
-     (cffi:with-foreign-slots (%:type %:next %:lod
+     (cffi:with-foreign-slots ((%:type %:next %:lod)
                                ,pointer (:struct %:visual-mesh-compute-lod-info-msft))
        (setf %:type :type-visual-mesh-compute-lod-info-msft
              %:next ,next
@@ -4167,7 +4186,7 @@
                                                    (radius nil radius-p))
                                         &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:scene-sphere-bound-msft))
-     (cffi:with-foreign-slots (%:center %:radius
+     (cffi:with-foreign-slots ((%:center %:radius)
                                ,pointer (:struct %:scene-sphere-bound-msft))
        (setf ,@(when center-p `(%:center ,center))
              ,@(when radius-p `(%:radius ,radius)))
@@ -4180,7 +4199,7 @@
                                                           extents-p))
                                               &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:scene-oriented-box-bound-msft))
-     (cffi:with-foreign-slots (%:pose %:extents
+     (cffi:with-foreign-slots ((%:pose %:extents)
                                ,pointer (:struct %:scene-oriented-box-bound-msft))
        (setf ,@(when pose-p `(%:pose ,pose))
              ,@(when extents-p `(%:extents ,extents)))
@@ -4193,7 +4212,7 @@
                                                      far-distance-p))
                                          &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:scene-frustum-bound-msft))
-     (cffi:with-foreign-slots (%:pose %:fov %:far-distance
+     (cffi:with-foreign-slots ((%:pose %:fov %:far-distance)
                                ,pointer (:struct %:scene-frustum-bound-msft))
        (setf ,@(when pose-p `(%:pose ,pose))
              ,@(when fov-p `(%:fov ,fov))
@@ -4212,14 +4231,14 @@
                                              (frustums nil frustums-p))
                                   &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:scene-bounds-msft))
-     (cffi:with-foreign-slots (%:space
-                               %:time
-                               %:sphere-count
-                               %:spheres
-                               %:box-count
-                               %:boxes
-                               %:frustum-count
-                               %:frustums
+     (cffi:with-foreign-slots ((%:space
+                                %:time
+                                %:sphere-count
+                                %:spheres
+                                %:box-count
+                                %:boxes
+                                %:frustum-count
+                                %:frustums)
                                ,pointer (:struct %:scene-bounds-msft))
        (setf ,@(when space-p `(%:space ,space))
              ,@(when time-p `(%:time ,time))
@@ -4240,7 +4259,7 @@
                                                 (update-time nil update-time-p))
                                      &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:scene-component-msft))
-     (cffi:with-foreign-slots (%:component-type %:id %:parent-id %:update-time
+     (cffi:with-foreign-slots ((%:component-type %:id %:parent-id %:update-time)
                                ,pointer (:struct %:scene-component-msft))
        (setf ,@(when component-type-p `(%:component-type ,component-type))
              ,@(when id-p `(%:id ,id))
@@ -4258,11 +4277,11 @@
                                                  (components nil components-p))
                                       &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:scene-components-msft))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:component-capacity-input
-                               %:component-count-output
-                               %:components
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:component-capacity-input
+                                %:component-count-output
+                                %:components)
                                ,pointer (:struct %:scene-components-msft))
        (setf %:type :type-scene-components-msft
              %:next ,next
@@ -4281,7 +4300,7 @@
                                                            component-type-p))
                                                &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:scene-components-get-info-msft))
-     (cffi:with-foreign-slots (%:type %:next %:component-type
+     (cffi:with-foreign-slots ((%:type %:next %:component-type)
                                ,pointer (:struct %:scene-components-get-info-msft))
        (setf %:type :type-scene-components-get-info-msft
              %:next ,next
@@ -4296,7 +4315,7 @@
                                                          (pose nil pose-p))
                                               &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:scene-component-location-msft))
-     (cffi:with-foreign-slots (%:flags %:pose
+     (cffi:with-foreign-slots ((%:flags %:pose)
                                ,pointer (:struct %:scene-component-location-msft))
        (setf ,@(when flags-p `(%:flags ,flags))
              ,@(when pose-p `(%:pose ,pose)))
@@ -4312,7 +4331,7 @@
                                                            locations-p))
                                                &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:scene-component-locations-msft))
-     (cffi:with-foreign-slots (%:type %:next %:location-count %:locations
+     (cffi:with-foreign-slots ((%:type %:next %:location-count %:locations)
                                ,pointer (:struct %:scene-component-locations-msft))
        (setf %:type :type-scene-component-locations-msft
              %:next ,next
@@ -4336,12 +4355,12 @@
                                                               component-ids-p))
                                                   &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:scene-components-locate-info-msft))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:base-space
-                               %:time
-                               %:component-id-count
-                               %:component-ids
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:base-space
+                                %:time
+                                %:component-id-count
+                                %:component-ids)
                                ,pointer (:struct %:scene-components-locate-info-msft))
        (setf %:type :type-scene-components-locate-info-msft
              %:next ,next
@@ -4358,7 +4377,7 @@
                                              (object-type nil object-type-p))
                                   &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:scene-object-msft))
-     (cffi:with-foreign-slots (%:object-type
+     (cffi:with-foreign-slots ((%:object-type)
                                ,pointer (:struct %:scene-object-msft))
        (setf ,@(when object-type-p `(%:object-type ,object-type)))
        ,@(if %slots body nil))
@@ -4372,10 +4391,10 @@
                                                scene-objects-p))
                                    &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:scene-objects-msft))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:scene-object-count
-                               %:scene-objects
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:scene-object-count
+                                %:scene-objects)
                                ,pointer (:struct %:scene-objects-msft))
        (setf %:type :type-scene-objects-msft
              %:next ,next
@@ -4394,7 +4413,7 @@
                                                                     parent-id-p))
                                                         &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:scene-component-parent-filter-info-msft))
-     (cffi:with-foreign-slots (%:type %:next %:parent-id
+     (cffi:with-foreign-slots ((%:type %:next %:parent-id)
                                ,pointer (:struct %:scene-component-parent-filter-info-msft))
        (setf %:type :type-scene-component-parent-filter-info-msft
              %:next ,next
@@ -4415,7 +4434,10 @@
                                                                 object-types-p))
                                                     &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:scene-object-types-filter-info-msft))
-     (cffi:with-foreign-slots (%:type %:next %:object-type-count %:object-types
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:object-type-count
+                                %:object-types)
                                ,pointer (:struct %:scene-object-types-filter-info-msft))
        (setf %:type :type-scene-object-types-filter-info-msft
              %:next ,next
@@ -4435,10 +4457,10 @@
                                              supports-indices-uint-16-p))
                                  &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:scene-plane-msft))
-     (cffi:with-foreign-slots (%:alignment
-                               %:size
-                               %:mesh-buffer-id
-                               %:supports-indices-uint-16
+     (cffi:with-foreign-slots ((%:alignment
+                                %:size
+                                %:mesh-buffer-id
+                                %:supports-indices-uint-16)
                                ,pointer (:struct %:scene-plane-msft))
        (setf ,@(when alignment-p `(%:alignment ,alignment))
              ,@(when size-p `(%:size ,size))
@@ -4454,7 +4476,10 @@
                                              (scene-planes nil scene-planes-p))
                                   &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:scene-planes-msft))
-     (cffi:with-foreign-slots (%:type %:next %:scene-plane-count %:scene-planes
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:scene-plane-count
+                                %:scene-planes)
                                ,pointer (:struct %:scene-planes-msft))
        (setf %:type :type-scene-planes-msft
              %:next ,next
@@ -4476,7 +4501,7 @@
                                                                    alignments-p))
                                                        &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:scene-plane-alignment-filter-info-msft))
-     (cffi:with-foreign-slots (%:type %:next %:alignment-count %:alignments
+     (cffi:with-foreign-slots ((%:type %:next %:alignment-count %:alignments)
                                ,pointer (:struct %:scene-plane-alignment-filter-info-msft))
        (setf %:type :type-scene-plane-alignment-filter-info-msft
              %:next ,next
@@ -4494,7 +4519,7 @@
                                             supports-indices-uint-16-p))
                                 &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:scene-mesh-msft))
-     (cffi:with-foreign-slots (%:mesh-buffer-id %:supports-indices-uint-16
+     (cffi:with-foreign-slots ((%:mesh-buffer-id %:supports-indices-uint-16)
                                ,pointer (:struct %:scene-mesh-msft))
        (setf ,@(when mesh-buffer-id-p `(%:mesh-buffer-id ,mesh-buffer-id))
              ,@(when supports-indices-uint-16-p `(%:supports-indices-uint-16 ,supports-indices-uint-16)))
@@ -4508,7 +4533,7 @@
                                              (scene-meshes nil scene-meshes-p))
                                   &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:scene-meshes-msft))
-     (cffi:with-foreign-slots (%:type %:next %:scene-mesh-count %:scene-meshes
+     (cffi:with-foreign-slots ((%:type %:next %:scene-mesh-count %:scene-meshes)
                                ,pointer (:struct %:scene-meshes-msft))
        (setf %:type :type-scene-meshes-msft
              %:next ,next
@@ -4526,7 +4551,7 @@
                                                              mesh-buffer-id-p))
                                                  &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:scene-mesh-buffers-get-info-msft))
-     (cffi:with-foreign-slots (%:type %:next %:mesh-buffer-id
+     (cffi:with-foreign-slots ((%:type %:next %:mesh-buffer-id)
                                ,pointer (:struct %:scene-mesh-buffers-get-info-msft))
        (setf %:type :type-scene-mesh-buffers-get-info-msft
              %:next ,next
@@ -4540,7 +4565,7 @@
                                                    (next '(cffi:null-pointer)))
                                         &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:scene-mesh-buffers-msft))
-     (cffi:with-foreign-slots (%:type %:next
+     (cffi:with-foreign-slots ((%:type %:next)
                                ,pointer (:struct %:scene-mesh-buffers-msft))
        (setf %:type :type-scene-mesh-buffers-msft
              %:next ,next)
@@ -4562,11 +4587,11 @@
                                                           vertices-p))
                                               &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:scene-mesh-vertex-buffer-msft))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:vertex-capacity-input
-                               %:vertex-count-output
-                               %:vertices
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:vertex-capacity-input
+                                %:vertex-count-output
+                                %:vertices)
                                ,pointer (:struct %:scene-mesh-vertex-buffer-msft))
        (setf %:type :type-scene-mesh-vertex-buffer-msft
              %:next ,next
@@ -4591,11 +4616,11 @@
                                                             indices-p))
                                                 &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:scene-mesh-indices-uint-32-msft))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:index-capacity-input
-                               %:index-count-output
-                               %:indices
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:index-capacity-input
+                                %:index-count-output
+                                %:indices)
                                ,pointer (:struct %:scene-mesh-indices-uint-32-msft))
        (setf %:type :type-scene-mesh-indices-uint32-msft
              %:next ,next
@@ -4620,11 +4645,11 @@
                                                             indices-p))
                                                 &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:scene-mesh-indices-uint-16-msft))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:index-capacity-input
-                               %:index-count-output
-                               %:indices
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:index-capacity-input
+                                %:index-count-output
+                                %:indices)
                                ,pointer (:struct %:scene-mesh-indices-uint-16-msft))
        (setf %:type :type-scene-mesh-indices-uint16-msft
              %:next ,next
@@ -4645,7 +4670,7 @@
                                                                          scene-fragment-id-p))
                                                              &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:serialized-scene-fragment-data-get-info-msft))
-     (cffi:with-foreign-slots (%:type %:next %:scene-fragment-id
+     (cffi:with-foreign-slots ((%:type %:next %:scene-fragment-id)
                                ,pointer (:struct %:serialized-scene-fragment-data-get-info-msft))
        (setf %:type :type-serialized-scene-fragment-data-get-info-msft
              %:next ,next
@@ -4662,7 +4687,7 @@
                                                             buffer-p))
                                                 &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:deserialize-scene-fragment-msft))
-     (cffi:with-foreign-slots (%:buffer-size %:buffer
+     (cffi:with-foreign-slots ((%:buffer-size %:buffer)
                                ,pointer (:struct %:deserialize-scene-fragment-msft))
        (setf ,@(when buffer-size-p `(%:buffer-size ,buffer-size))
              ,@(when buffer-p `(%:buffer ,buffer)))
@@ -4678,7 +4703,7 @@
                                                         fragments-p))
                                             &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:scene-deserialize-info-msft))
-     (cffi:with-foreign-slots (%:type %:next %:fragment-count %:fragments
+     (cffi:with-foreign-slots ((%:type %:next %:fragment-count %:fragments)
                                ,pointer (:struct %:scene-deserialize-info-msft))
        (setf %:type :type-scene-deserialize-info-msft
              %:next ,next
@@ -4696,7 +4721,7 @@
                                                              color-space-p))
                                                  &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:system-color-space-properties-fb))
-     (cffi:with-foreign-slots (%:type %:next %:color-space
+     (cffi:with-foreign-slots ((%:type %:next %:color-space)
                                ,pointer (:struct %:system-color-space-properties-fb))
        (setf %:type :type-system-color-space-properties-fb
              %:next ,next
@@ -4714,7 +4739,7 @@
                                                                 supports-spatial-entity-p))
                                                     &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:system-spatial-entity-properties-fb))
-     (cffi:with-foreign-slots (%:type %:next %:supports-spatial-entity
+     (cffi:with-foreign-slots ((%:type %:next %:supports-spatial-entity)
                                ,pointer (:struct %:system-spatial-entity-properties-fb))
        (setf %:type :type-system-spatial-entity-properties-fb
              %:next ,next
@@ -4733,7 +4758,7 @@
                                                          (time nil time-p))
                                               &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:spatial-anchor-create-info-fb))
-     (cffi:with-foreign-slots (%:type %:next %:space %:pose-in-space %:time
+     (cffi:with-foreign-slots ((%:type %:next %:space %:pose-in-space %:time)
                                ,pointer (:struct %:spatial-anchor-create-info-fb))
        (setf %:type :type-spatial-anchor-create-info-fb
              %:next ,next
@@ -4757,11 +4782,11 @@
                                                                timeout-p))
                                                    &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:space-component-status-set-info-fb))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:component-type
-                               %:enabled
-                               %:timeout
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:component-type
+                                %:enabled
+                                %:timeout)
                                ,pointer (:struct %:space-component-status-set-info-fb))
        (setf %:type :type-space-component-status-set-info-fb
              %:next ,next
@@ -4781,7 +4806,7 @@
                                                       change-pending-p))
                                           &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:space-component-status-fb))
-     (cffi:with-foreign-slots (%:type %:next %:enabled %:change-pending
+     (cffi:with-foreign-slots ((%:type %:next %:enabled %:change-pending)
                                ,pointer (:struct %:space-component-status-fb))
        (setf %:type :type-space-component-status-fb
              %:next ,next
@@ -4810,12 +4835,12 @@
                                                                          uuid-p))
                                                              &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:event-data-spatial-anchor-create-complete-fb))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:request-id
-                               %:result
-                               %:space
-                               %:uuid
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:request-id
+                                %:result
+                                %:space
+                                %:uuid)
                                ,pointer (:struct %:event-data-spatial-anchor-create-complete-fb))
        (setf %:type :type-event-data-spatial-anchor-create-complete-fb
              %:next ,next
@@ -4847,14 +4872,14 @@
                                                                     enabled-p))
                                                         &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:event-data-space-set-status-complete-fb))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:request-id
-                               %:result
-                               %:space
-                               %:uuid
-                               %:component-type
-                               %:enabled
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:request-id
+                                %:result
+                                %:space
+                                %:uuid
+                                %:component-type
+                                %:enabled)
                                ,pointer (:struct %:event-data-space-set-status-complete-fb))
        (setf %:type :type-event-data-space-set-status-complete-fb
              %:next ,next
@@ -4874,7 +4899,7 @@
                                                              '(cffi:null-pointer)))
                                                  &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:foveation-profile-create-info-fb))
-     (cffi:with-foreign-slots (%:type %:next
+     (cffi:with-foreign-slots ((%:type %:next)
                                ,pointer (:struct %:foveation-profile-create-info-fb))
        (setf %:type :type-foveation-profile-create-info-fb
              %:next ,next)
@@ -4890,7 +4915,7 @@
                                                                flags-p))
                                                    &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:swapchain-create-info-foveation-fb))
-     (cffi:with-foreign-slots (%:type %:next %:flags
+     (cffi:with-foreign-slots ((%:type %:next %:flags)
                                ,pointer (:struct %:swapchain-create-info-foveation-fb))
        (setf %:type :type-swapchain-create-info-foveation-fb
              %:next ,next
@@ -4907,7 +4932,7 @@
                                                         (profile nil profile-p))
                                              &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:swapchain-state-foveation-fb))
-     (cffi:with-foreign-slots (%:type %:next %:flags %:profile
+     (cffi:with-foreign-slots ((%:type %:next %:flags %:profile)
                                ,pointer (:struct %:swapchain-state-foveation-fb))
        (setf %:type :type-swapchain-state-foveation-fb
              %:next ,next
@@ -4929,7 +4954,7 @@
                                                                 height-p))
                                                     &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:swapchain-image-foveation-vulkan-fb))
-     (cffi:with-foreign-slots (%:type %:next %:image %:width %:height
+     (cffi:with-foreign-slots ((%:type %:next %:image %:width %:height)
                                ,pointer (:struct %:swapchain-image-foveation-vulkan-fb))
        (setf %:type :type-swapchain-image-foveation-vulkan-fb
              %:next ,next
@@ -4953,7 +4978,11 @@
                                                                    dynamic-p))
                                                        &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:foveation-level-profile-create-info-fb))
-     (cffi:with-foreign-slots (%:type %:next %:level %:vertical-offset %:dynamic
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:level
+                                %:vertical-offset
+                                %:dynamic)
                                ,pointer (:struct %:foveation-level-profile-create-info-fb))
        (setf %:type :type-foveation-level-profile-create-info-fb
              %:next ,next
@@ -4974,7 +5003,7 @@
                                                                            flags-p))
                                                                &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:foveation-eye-tracked-profile-create-info-meta))
-     (cffi:with-foreign-slots (%:type %:next %:flags
+     (cffi:with-foreign-slots ((%:type %:next %:flags)
                                ,pointer (:struct %:foveation-eye-tracked-profile-create-info-meta))
        (setf %:type :type-foveation-eye-tracked-profile-create-info-meta
              %:next ,next
@@ -4993,7 +5022,7 @@
                                                             (flags nil flags-p))
                                                  &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:foveation-eye-tracked-state-meta))
-     (cffi:with-foreign-slots (%:type %:next %:foveation-center %:flags
+     (cffi:with-foreign-slots ((%:type %:next %:foveation-center %:flags)
                                ,pointer (:struct %:foveation-eye-tracked-state-meta))
        (setf %:type :type-foveation-eye-tracked-state-meta
              %:next ,next
@@ -5013,7 +5042,7 @@
                                                                          supports-foveation-eye-tracked-p))
                                                              &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:system-foveation-eye-tracked-properties-meta))
-     (cffi:with-foreign-slots (%:type %:next %:supports-foveation-eye-tracked
+     (cffi:with-foreign-slots ((%:type %:next %:supports-foveation-eye-tracked)
                                ,pointer (:struct %:system-foveation-eye-tracked-properties-meta))
        (setf %:type :type-system-foveation-eye-tracked-properties-meta
              %:next ,next
@@ -5027,7 +5056,7 @@
                                         (z nil z-p) (w nil w-p))
                              &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:vector-4s-fb))
-     (cffi:with-foreign-slots (%:x %:y %:z %:w
+     (cffi:with-foreign-slots ((%:x %:y %:z %:w)
                                ,pointer (:struct %:vector-4s-fb))
        (setf ,@(when x-p `(%:x ,x))
              ,@(when y-p `(%:y ,y))
@@ -5068,23 +5097,23 @@
                                                  (indices nil indices-p))
                                       &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:hand-tracking-mesh-fb))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:joint-capacity-input
-                               %:joint-count-output
-                               %:joint-bind-poses
-                               %:joint-radi-i
-                               %:joint-parents
-                               %:vertex-capacity-input
-                               %:vertex-count-output
-                               %:vertex-positions
-                               %:vertex-normals
-                               %:vertex-uvs
-                               %:vertex-blend-indices
-                               %:vertex-blend-weights
-                               %:index-capacity-input
-                               %:index-count-output
-                               %:indices
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:joint-capacity-input
+                                %:joint-count-output
+                                %:joint-bind-poses
+                                %:joint-radi-i
+                                %:joint-parents
+                                %:vertex-capacity-input
+                                %:vertex-count-output
+                                %:vertex-positions
+                                %:vertex-normals
+                                %:vertex-uvs
+                                %:vertex-blend-indices
+                                %:vertex-blend-weights
+                                %:index-capacity-input
+                                %:index-count-output
+                                %:indices)
                                ,pointer (:struct %:hand-tracking-mesh-fb))
        (setf %:type :type-hand-tracking-mesh-fb
              %:next ,next
@@ -5120,12 +5149,12 @@
                                                    override-value-input-p))
                                        &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:hand-tracking-scale-fb))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:sensor-output
-                               %:current-output
-                               %:override-hand-scale
-                               %:override-value-input
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:sensor-output
+                                %:current-output
+                                %:override-hand-scale
+                                %:override-value-input)
                                ,pointer (:struct %:hand-tracking-scale-fb))
        (setf %:type :type-hand-tracking-scale-fb
              %:next ,next
@@ -5155,14 +5184,14 @@
                                                        pinch-strength-little-p))
                                            &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:hand-tracking-aim-state-fb))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:status
-                               %:aim-pose
-                               %:pinch-strength-index
-                               %:pinch-strength-middle
-                               %:pinch-strength-ring
-                               %:pinch-strength-little
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:status
+                                %:aim-pose
+                                %:pinch-strength-index
+                                %:pinch-strength-middle
+                                %:pinch-strength-ring
+                                %:pinch-strength-little)
                                ,pointer (:struct %:hand-tracking-aim-state-fb))
        (setf %:type :type-hand-tracking-aim-state-fb
              %:next ,next
@@ -5182,7 +5211,7 @@
                                            (joint nil joint-p))
                                 &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:hand-capsule-fb))
-     (cffi:with-foreign-slots (%:points %:radius %:joint
+     (cffi:with-foreign-slots ((%:points %:radius %:joint)
                                ,pointer (:struct %:hand-capsule-fb))
        (setf ,@(when points-p `(%:points ,points))
              ,@(when radius-p `(%:radius ,radius))
@@ -5197,7 +5226,7 @@
                                                             capsules-p))
                                                 &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:hand-tracking-capsules-state-fb))
-     (cffi:with-foreign-slots (%:type %:next %:capsules
+     (cffi:with-foreign-slots ((%:type %:next %:capsules)
                                ,pointer (:struct %:hand-tracking-capsules-state-fb))
        (setf %:type :type-hand-tracking-capsules-state-fb
              %:next ,next
@@ -5213,7 +5242,7 @@
                                                      (path nil path-p))
                                           &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:render-model-path-info-fb))
-     (cffi:with-foreign-slots (%:type %:next %:path
+     (cffi:with-foreign-slots ((%:type %:next %:path)
                                ,pointer (:struct %:render-model-path-info-fb))
        (setf %:type :type-render-model-path-info-fb
              %:next ,next
@@ -5237,13 +5266,13 @@
                                                       (flags nil flags-p))
                                            &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:render-model-properties-fb))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:vendor-id
-                               %:model-name
-                               %:model-key
-                               %:model-version
-                               %:flags
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:vendor-id
+                                %:model-name
+                                %:model-key
+                                %:model-version
+                                %:flags)
                                ,pointer (:struct %:render-model-properties-fb))
        (setf %:type :type-render-model-properties-fb
              %:next ,next
@@ -5271,11 +5300,11 @@
                                                   (buffer nil buffer-p))
                                        &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:render-model-buffer-fb))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:buffer-capacity-input
-                               %:buffer-count-output
-                               %:buffer
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:buffer-capacity-input
+                                %:buffer-count-output
+                                %:buffer)
                                ,pointer (:struct %:render-model-buffer-fb))
        (setf %:type :type-render-model-buffer-fb
              %:next ,next
@@ -5294,7 +5323,7 @@
                                                       model-key-p))
                                           &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:render-model-load-info-fb))
-     (cffi:with-foreign-slots (%:type %:next %:model-key
+     (cffi:with-foreign-slots ((%:type %:next %:model-key)
                                ,pointer (:struct %:render-model-load-info-fb))
        (setf %:type :type-render-model-load-info-fb
              %:next ,next
@@ -5312,7 +5341,7 @@
                                                               supports-render-model-loading-p))
                                                   &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:system-render-model-properties-fb))
-     (cffi:with-foreign-slots (%:type %:next %:supports-render-model-loading
+     (cffi:with-foreign-slots ((%:type %:next %:supports-render-model-loading)
                                ,pointer (:struct %:system-render-model-properties-fb))
        (setf %:type :type-system-render-model-properties-fb
              %:next ,next
@@ -5329,7 +5358,7 @@
                                                                  flags-p))
                                                      &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:render-model-capabilities-request-fb))
-     (cffi:with-foreign-slots (%:type %:next %:flags
+     (cffi:with-foreign-slots ((%:type %:next %:flags)
                                ,pointer (:struct %:render-model-capabilities-request-fb))
        (setf %:type :type-render-model-capabilities-request-fb
              %:next ,next
@@ -5351,13 +5380,13 @@
                                                 exclude-filter-p))
                                     &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:space-query-info-fb))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:query-action
-                               %:max-result-count
-                               %:timeout
-                               %:filter
-                               %:exclude-filter
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:query-action
+                                %:max-result-count
+                                %:timeout
+                                %:filter
+                                %:exclude-filter)
                                ,pointer (:struct %:space-query-info-fb))
        (setf %:type :type-space-query-info-fb
              %:next ,next
@@ -5378,7 +5407,7 @@
                                                                   location-p))
                                                       &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:space-storage-location-filter-info-fb))
-     (cffi:with-foreign-slots (%:type %:next %:location
+     (cffi:with-foreign-slots ((%:type %:next %:location)
                                ,pointer (:struct %:space-storage-location-filter-info-fb))
        (setf %:type :type-space-storage-location-filter-info-fb
              %:next ,next
@@ -5396,7 +5425,7 @@
                                                      (uuids nil uuids-p))
                                           &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:space-uuid-filter-info-fb))
-     (cffi:with-foreign-slots (%:type %:next %:uuid-count %:uuids
+     (cffi:with-foreign-slots ((%:type %:next %:uuid-count %:uuids)
                                ,pointer (:struct %:space-uuid-filter-info-fb))
        (setf %:type :type-space-uuid-filter-info-fb
              %:next ,next
@@ -5414,7 +5443,7 @@
                                                            component-type-p))
                                                &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:space-component-filter-info-fb))
-     (cffi:with-foreign-slots (%:type %:next %:component-type
+     (cffi:with-foreign-slots ((%:type %:next %:component-type)
                                ,pointer (:struct %:space-component-filter-info-fb))
        (setf %:type :type-space-component-filter-info-fb
              %:next ,next
@@ -5428,7 +5457,7 @@
                                                  (uuid nil uuid-p))
                                       &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:space-query-result-fb))
-     (cffi:with-foreign-slots (%:space %:uuid
+     (cffi:with-foreign-slots ((%:space %:uuid)
                                ,pointer (:struct %:space-query-result-fb))
        (setf ,@(when space-p `(%:space ,space))
              ,@(when uuid-p `(%:uuid ,uuid)))
@@ -5444,11 +5473,11 @@
                                                   (results nil results-p))
                                        &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:space-query-results-fb))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:result-capacity-input
-                               %:result-count-output
-                               %:results
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:result-capacity-input
+                                %:result-count-output
+                                %:results)
                                ,pointer (:struct %:space-query-results-fb))
        (setf %:type :type-space-query-results-fb
              %:next ,next
@@ -5469,7 +5498,7 @@
                                                                         request-id-p))
                                                             &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:event-data-space-query-results-available-fb))
-     (cffi:with-foreign-slots (%:type %:next %:request-id
+     (cffi:with-foreign-slots ((%:type %:next %:request-id)
                                ,pointer (:struct %:event-data-space-query-results-available-fb))
        (setf %:type :type-event-data-space-query-results-available-fb
              %:next ,next
@@ -5488,7 +5517,7 @@
                                                                result-p))
                                                    &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:event-data-space-query-complete-fb))
-     (cffi:with-foreign-slots (%:type %:next %:request-id %:result
+     (cffi:with-foreign-slots ((%:type %:next %:request-id %:result)
                                ,pointer (:struct %:event-data-space-query-complete-fb))
        (setf %:type :type-event-data-space-query-complete-fb
              %:next ,next
@@ -5507,11 +5536,11 @@
                                                persistence-mode-p))
                                    &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:space-save-info-fb))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:space
-                               %:location
-                               %:persistence-mode
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:space
+                                %:location
+                                %:persistence-mode)
                                ,pointer (:struct %:space-save-info-fb))
        (setf %:type :type-space-save-info-fb
              %:next ,next
@@ -5529,7 +5558,7 @@
                                                (location nil location-p))
                                     &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:space-erase-info-fb))
-     (cffi:with-foreign-slots (%:type %:next %:space %:location
+     (cffi:with-foreign-slots ((%:type %:next %:space %:location)
                                ,pointer (:struct %:space-erase-info-fb))
        (setf %:type :type-space-erase-info-fb
              %:next ,next
@@ -5554,13 +5583,13 @@
                                                               location-p))
                                                   &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:event-data-space-save-complete-fb))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:request-id
-                               %:result
-                               %:space
-                               %:uuid
-                               %:location
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:request-id
+                                %:result
+                                %:space
+                                %:uuid
+                                %:location)
                                ,pointer (:struct %:event-data-space-save-complete-fb))
        (setf %:type :type-event-data-space-save-complete-fb
              %:next ,next
@@ -5588,13 +5617,13 @@
                                                                location-p))
                                                    &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:event-data-space-erase-complete-fb))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:request-id
-                               %:result
-                               %:space
-                               %:uuid
-                               %:location
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:request-id
+                                %:result
+                                %:space
+                                %:uuid
+                                %:location)
                                ,pointer (:struct %:event-data-space-erase-complete-fb))
        (setf %:type :type-event-data-space-erase-complete-fb
              %:next ,next
@@ -5616,12 +5645,12 @@
                                                (users nil users-p))
                                     &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:space-share-info-fb))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:space-count
-                               %:spaces
-                               %:user-count
-                               %:users
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:space-count
+                                %:spaces
+                                %:user-count
+                                %:users)
                                ,pointer (:struct %:space-share-info-fb))
        (setf %:type :type-space-share-info-fb
              %:next ,next
@@ -5643,7 +5672,7 @@
                                                                result-p))
                                                    &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:event-data-space-share-complete-fb))
-     (cffi:with-foreign-slots (%:type %:next %:request-id %:result
+     (cffi:with-foreign-slots ((%:type %:next %:request-id %:result)
                                ,pointer (:struct %:event-data-space-share-complete-fb))
        (setf %:type :type-event-data-space-share-complete-fb
              %:next ,next
@@ -5662,7 +5691,7 @@
                                                    (location nil location-p))
                                         &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:space-list-save-info-fb))
-     (cffi:with-foreign-slots (%:type %:next %:space-count %:spaces %:location
+     (cffi:with-foreign-slots ((%:type %:next %:space-count %:spaces %:location)
                                ,pointer (:struct %:space-list-save-info-fb))
        (setf %:type :type-space-list-save-info-fb
              %:next ,next
@@ -5684,7 +5713,7 @@
                                                                    result-p))
                                                        &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:event-data-space-list-save-complete-fb))
-     (cffi:with-foreign-slots (%:type %:next %:request-id %:result
+     (cffi:with-foreign-slots ((%:type %:next %:request-id %:result)
                                ,pointer (:struct %:event-data-space-list-save-complete-fb))
        (setf %:type :type-event-data-space-list-save-complete-fb
              %:next ,next
@@ -5704,11 +5733,11 @@
                                               (uuids nil uuids-p))
                                    &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:space-container-fb))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:uuid-capacity-input
-                               %:uuid-count-output
-                               %:uuids
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:uuid-capacity-input
+                                %:uuid-count-output
+                                %:uuids)
                                ,pointer (:struct %:space-container-fb))
        (setf %:type :type-space-container-fb
              %:next ,next
@@ -5725,7 +5754,7 @@
                                           (depth nil depth-p))
                                &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:extent-3d-f-fb))
-     (cffi:with-foreign-slots (%:width %:height %:depth
+     (cffi:with-foreign-slots ((%:width %:height %:depth)
                                ,pointer (:struct %:extent-3d-f-fb))
        (setf ,@(when width-p `(%:width ,width))
              ,@(when height-p `(%:height ,height))
@@ -5737,7 +5766,7 @@
                                           (z nil z-p))
                                &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:offset-3d-f-fb))
-     (cffi:with-foreign-slots (%:x %:y %:z
+     (cffi:with-foreign-slots ((%:x %:y %:z)
                                ,pointer (:struct %:offset-3d-f-fb))
        (setf ,@(when x-p `(%:x ,x))
              ,@(when y-p `(%:y ,y))
@@ -5749,7 +5778,7 @@
                                         (extent nil extent-p))
                              &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:rect-3d-f-fb))
-     (cffi:with-foreign-slots (%:offset %:extent
+     (cffi:with-foreign-slots ((%:offset %:extent)
                                ,pointer (:struct %:rect-3d-f-fb))
        (setf ,@(when offset-p `(%:offset ,offset))
              ,@(when extent-p `(%:extent ,extent)))
@@ -5765,11 +5794,11 @@
                                               (buffer nil buffer-p))
                                    &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:semantic-labels-fb))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:buffer-capacity-input
-                               %:buffer-count-output
-                               %:buffer
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:buffer-capacity-input
+                                %:buffer-count-output
+                                %:buffer)
                                ,pointer (:struct %:semantic-labels-fb))
        (setf %:type :type-semantic-labels-fb
              %:next ,next
@@ -5791,13 +5820,13 @@
                                           (wall-uuids nil wall-uuids-p))
                                &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:room-layout-fb))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:floor-uuid
-                               %:ceiling-uuid
-                               %:wall-uuid-capacity-input
-                               %:wall-uuid-count-output
-                               %:wall-uuids
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:floor-uuid
+                                %:ceiling-uuid
+                                %:wall-uuid-capacity-input
+                                %:wall-uuid-count-output
+                                %:wall-uuids)
                                ,pointer (:struct %:room-layout-fb))
        (setf %:type :type-room-layout-fb
              %:next ,next
@@ -5819,11 +5848,11 @@
                                           (vertices nil vertices-p))
                                &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:boundary-2d-fb))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:vertex-capacity-input
-                               %:vertex-count-output
-                               %:vertices
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:vertex-capacity-input
+                                %:vertex-count-output
+                                %:vertices)
                                ,pointer (:struct %:boundary-2d-fb))
        (setf %:type :type-boundary-2d-fb
              %:next ,next
@@ -5845,7 +5874,7 @@
                                                           request-p))
                                               &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:scene-capture-request-info-fb))
-     (cffi:with-foreign-slots (%:type %:next %:request-byte-count %:request
+     (cffi:with-foreign-slots ((%:type %:next %:request-byte-count %:request)
                                ,pointer (:struct %:scene-capture-request-info-fb))
        (setf %:type :type-scene-capture-request-info-fb
              %:next ,next
@@ -5865,7 +5894,7 @@
                                                                  result-p))
                                                      &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:event-data-scene-capture-complete-fb))
-     (cffi:with-foreign-slots (%:type %:next %:request-id %:result
+     (cffi:with-foreign-slots ((%:type %:next %:request-id %:result)
                                ,pointer (:struct %:event-data-scene-capture-complete-fb))
        (setf %:type :type-event-data-scene-capture-complete-fb
              %:next ,next
@@ -5884,7 +5913,7 @@
                                                                    supports-keyboard-tracking-p))
                                                        &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:system-keyboard-tracking-properties-fb))
-     (cffi:with-foreign-slots (%:type %:next %:supports-keyboard-tracking
+     (cffi:with-foreign-slots ((%:type %:next %:supports-keyboard-tracking)
                                ,pointer (:struct %:system-keyboard-tracking-properties-fb))
        (setf %:type :type-system-keyboard-tracking-properties-fb
              %:next ,next
@@ -5903,7 +5932,7 @@
                                                             (name nil name-p))
                                                  &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:keyboard-tracking-description-fb))
-     (cffi:with-foreign-slots (%:tracked-keyboard-id %:size %:flags %:name
+     (cffi:with-foreign-slots ((%:tracked-keyboard-id %:size %:flags %:name)
                                ,pointer (:struct %:keyboard-tracking-description-fb))
        (setf ,@(when tracked-keyboard-id-p `(%:tracked-keyboard-id ,tracked-keyboard-id))
              ,@(when size-p `(%:size ,size))
@@ -5925,7 +5954,7 @@
                                                           tracked-keyboard-id-p))
                                               &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:keyboard-space-create-info-fb))
-     (cffi:with-foreign-slots (%:type %:next %:tracked-keyboard-id
+     (cffi:with-foreign-slots ((%:type %:next %:tracked-keyboard-id)
                                ,pointer (:struct %:keyboard-space-create-info-fb))
        (setf %:type :type-keyboard-space-create-info-fb
              %:next ,next
@@ -5941,7 +5970,7 @@
                                                       (flags nil flags-p))
                                            &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:keyboard-tracking-query-fb))
-     (cffi:with-foreign-slots (%:type %:next %:flags
+     (cffi:with-foreign-slots ((%:type %:next %:flags)
                                ,pointer (:struct %:keyboard-tracking-query-fb))
        (setf %:type :type-keyboard-tracking-query-fb
              %:next ,next
@@ -5962,10 +5991,10 @@
                                                                depth-test-range-far-z-p))
                                                    &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:composition-layer-depth-test-varjo))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:depth-test-range-near-z
-                               %:depth-test-range-far-z
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:depth-test-range-near-z
+                                %:depth-test-range-far-z)
                                ,pointer (:struct %:composition-layer-depth-test-varjo))
        (setf %:type :type-composition-layer-depth-test-varjo
              %:next ,next
@@ -5984,7 +6013,7 @@
                                                                  foveated-rendering-active-p))
                                                      &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:view-locate-foveated-rendering-varjo))
-     (cffi:with-foreign-slots (%:type %:next %:foveated-rendering-active
+     (cffi:with-foreign-slots ((%:type %:next %:foveated-rendering-active)
                                ,pointer (:struct %:view-locate-foveated-rendering-varjo))
        (setf %:type :type-view-locate-foveated-rendering-varjo
              %:next ,next
@@ -6002,7 +6031,7 @@
                                                                    foveated-rendering-active-p))
                                                        &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:foveated-view-configuration-view-varjo))
-     (cffi:with-foreign-slots (%:type %:next %:foveated-rendering-active
+     (cffi:with-foreign-slots ((%:type %:next %:foveated-rendering-active)
                                ,pointer (:struct %:foveated-view-configuration-view-varjo))
        (setf %:type :type-foveated-view-configuration-view-varjo
              %:next ,next
@@ -6020,7 +6049,7 @@
                                                                        supports-foveated-rendering-p))
                                                            &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:system-foveated-rendering-properties-varjo))
-     (cffi:with-foreign-slots (%:type %:next %:supports-foveated-rendering
+     (cffi:with-foreign-slots ((%:type %:next %:supports-foveated-rendering)
                                ,pointer (:struct %:system-foveated-rendering-properties-varjo))
        (setf %:type :type-system-foveated-rendering-properties-varjo
              %:next ,next
@@ -6038,7 +6067,7 @@
                                                                      reprojection-mode-p))
                                                          &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:composition-layer-reprojection-info-msft))
-     (cffi:with-foreign-slots (%:type %:next %:reprojection-mode
+     (cffi:with-foreign-slots ((%:type %:next %:reprojection-mode)
                                ,pointer (:struct %:composition-layer-reprojection-info-msft))
        (setf %:type :type-composition-layer-reprojection-info-msft
              %:next ,next
@@ -6063,7 +6092,7 @@
                                                                                velocity-p))
                                                                    &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:composition-layer-reprojection-plane-override-msft))
-     (cffi:with-foreign-slots (%:type %:next %:position %:normal %:velocity
+     (cffi:with-foreign-slots ((%:type %:next %:position %:normal %:velocity)
                                ,pointer (:struct %:composition-layer-reprojection-plane-override-msft))
        (setf %:type :type-composition-layer-reprojection-plane-override-msft
              %:next ,next
@@ -6091,14 +6120,14 @@
                                                          index-buffer-p))
                                              &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:triangle-mesh-create-info-fb))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:flags
-                               %:winding-order
-                               %:vertex-count
-                               %:vertex-buffer
-                               %:triangle-count
-                               %:index-buffer
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:flags
+                                %:winding-order
+                                %:vertex-count
+                                %:vertex-buffer
+                                %:triangle-count
+                                %:index-buffer)
                                ,pointer (:struct %:triangle-mesh-create-info-fb))
        (setf %:type :type-triangle-mesh-create-info-fb
              %:next ,next
@@ -6121,7 +6150,7 @@
                                                              supports-passthrough-p))
                                                  &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:system-passthrough-properties-fb))
-     (cffi:with-foreign-slots (%:type %:next %:supports-passthrough
+     (cffi:with-foreign-slots ((%:type %:next %:supports-passthrough)
                                ,pointer (:struct %:system-passthrough-properties-fb))
        (setf %:type :type-system-passthrough-properties-fb
              %:next ,next
@@ -6138,7 +6167,7 @@
                                                                capabilities-p))
                                                    &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:system-passthrough-properties-2-fb))
-     (cffi:with-foreign-slots (%:type %:next %:capabilities
+     (cffi:with-foreign-slots ((%:type %:next %:capabilities)
                                ,pointer (:struct %:system-passthrough-properties-2-fb))
        (setf %:type :type-system-passthrough-properties2-fb
              %:next ,next
@@ -6154,7 +6183,7 @@
                                                       (flags nil flags-p))
                                            &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:passthrough-create-info-fb))
-     (cffi:with-foreign-slots (%:type %:next %:flags
+     (cffi:with-foreign-slots ((%:type %:next %:flags)
                                ,pointer (:struct %:passthrough-create-info-fb))
        (setf %:type :type-passthrough-create-info-fb
              %:next ,next
@@ -6174,7 +6203,7 @@
                                                              purpose-p))
                                                  &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:passthrough-layer-create-info-fb))
-     (cffi:with-foreign-slots (%:type %:next %:passthrough %:flags %:purpose
+     (cffi:with-foreign-slots ((%:type %:next %:passthrough %:flags %:purpose)
                                ,pointer (:struct %:passthrough-layer-create-info-fb))
        (setf %:type :type-passthrough-layer-create-info-fb
              %:next ,next
@@ -6195,7 +6224,7 @@
                                                              layer-handle-p))
                                                  &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:composition-layer-passthrough-fb))
-     (cffi:with-foreign-slots (%:type %:next %:flags %:space %:layer-handle
+     (cffi:with-foreign-slots ((%:type %:next %:flags %:space %:layer-handle)
                                ,pointer (:struct %:composition-layer-passthrough-fb))
        (setf %:type :type-composition-layer-passthrough-fb
              %:next ,next
@@ -6218,13 +6247,13 @@
                                                             (scale nil scale-p))
                                                  &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:geometry-instance-create-info-fb))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:layer
-                               %:mesh
-                               %:base-space
-                               %:pose
-                               %:scale
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:layer
+                                %:mesh
+                                %:base-space
+                                %:pose
+                                %:scale)
                                ,pointer (:struct %:geometry-instance-create-info-fb))
        (setf %:type :type-geometry-instance-create-info-fb
              %:next ,next
@@ -6248,7 +6277,12 @@
                                                           (scale nil scale-p))
                                                &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:geometry-instance-transform-fb))
-     (cffi:with-foreign-slots (%:type %:next %:base-space %:time %:pose %:scale
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:base-space
+                                %:time
+                                %:pose
+                                %:scale)
                                ,pointer (:struct %:geometry-instance-transform-fb))
        (setf %:type :type-geometry-instance-transform-fb
              %:next ,next
@@ -6268,10 +6302,10 @@
                                                 (edge-color nil edge-color-p))
                                      &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:passthrough-style-fb))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:texture-opacity-factor
-                               %:edge-color
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:texture-opacity-factor
+                                %:edge-color)
                                ,pointer (:struct %:passthrough-style-fb))
        (setf %:type :type-passthrough-style-fb
              %:next ,next
@@ -6290,7 +6324,7 @@
                                                                   texture-color-map-p))
                                                       &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:passthrough-color-map-mono-to-rgba-fb))
-     (cffi:with-foreign-slots (%:type %:next %:texture-color-map
+     (cffi:with-foreign-slots ((%:type %:next %:texture-color-map)
                                ,pointer (:struct %:passthrough-color-map-mono-to-rgba-fb))
        (setf %:type :type-passthrough-color-map-mono-to-rgba-fb
              %:next ,next
@@ -6308,7 +6342,7 @@
                                                                   texture-color-map-p))
                                                       &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:passthrough-color-map-mono-to-mono-fb))
-     (cffi:with-foreign-slots (%:type %:next %:texture-color-map
+     (cffi:with-foreign-slots ((%:type %:next %:texture-color-map)
                                ,pointer (:struct %:passthrough-color-map-mono-to-mono-fb))
        (setf %:type :type-passthrough-color-map-mono-to-mono-fb
              %:next ,next
@@ -6333,11 +6367,11 @@
                                                                           saturation-p))
                                                               &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:passthrough-brightness-contrast-saturation-fb))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:brightness
-                               %:contrast
-                               %:saturation
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:brightness
+                                %:contrast
+                                %:saturation)
                                ,pointer (:struct %:passthrough-brightness-contrast-saturation-fb))
        (setf %:type :type-passthrough-brightness-contrast-saturation-fb
              %:next ,next
@@ -6356,7 +6390,7 @@
                                                                     flags-p))
                                                         &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:event-data-passthrough-state-changed-fb))
-     (cffi:with-foreign-slots (%:type %:next %:flags
+     (cffi:with-foreign-slots ((%:type %:next %:flags)
                                ,pointer (:struct %:event-data-passthrough-state-changed-fb))
        (setf %:type :type-event-data-passthrough-state-changed-fb
              %:next ,next
@@ -6377,10 +6411,10 @@
                                                                     right-hand-intensity-p))
                                                         &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:passthrough-keyboard-hands-intensity-fb))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:left-hand-intensity
-                               %:right-hand-intensity
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:left-hand-intensity
+                                %:right-hand-intensity)
                                ,pointer (:struct %:passthrough-keyboard-hands-intensity-fb))
        (setf %:type :type-passthrough-keyboard-hands-intensity-fb
              %:next ,next
@@ -6399,7 +6433,7 @@
                                                               local-dimming-mode-p))
                                                   &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:local-dimming-frame-end-info-meta))
-     (cffi:with-foreign-slots (%:type %:next %:local-dimming-mode
+     (cffi:with-foreign-slots ((%:type %:next %:local-dimming-mode)
                                ,pointer (:struct %:local-dimming-frame-end-info-meta))
        (setf %:type :type-local-dimming-frame-end-info-meta
              %:next ,next
@@ -6414,7 +6448,7 @@
                                                                       name-p))
                                                      &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:spatial-anchor-persistence-name-msft))
-     (cffi:with-foreign-slots (%:name
+     (cffi:with-foreign-slots ((%:name)
                                ,pointer (:struct %:spatial-anchor-persistence-name-msft))
        (setf )
        (if (and ,name-p (not ,name))
@@ -6437,10 +6471,10 @@
                                                                  spatial-anchor-p))
                                                      &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:spatial-anchor-persistence-info-msft))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:spatial-anchor-persistence-name
-                               %:spatial-anchor
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:spatial-anchor-persistence-name
+                                %:spatial-anchor)
                                ,pointer (:struct %:spatial-anchor-persistence-info-msft))
        (setf %:type :type-spatial-anchor-persistence-info-msft
              %:next ,next
@@ -6463,10 +6497,10 @@
                                                                                   spatial-anchor-persistence-name-p))
                                                                       &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:spatial-anchor-from-persisted-anchor-create-info-msft))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:spatial-anchor-store
-                               %:spatial-anchor-persistence-name
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:spatial-anchor-store
+                                %:spatial-anchor-persistence-name)
                                ,pointer (:struct %:spatial-anchor-from-persisted-anchor-create-info-msft))
        (setf %:type :type-spatial-anchor-from-persisted-anchor-create-info-msft
              %:next ,next
@@ -6485,7 +6519,7 @@
                                                            facial-tracking-type-p))
                                                &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:facial-tracker-create-info-htc))
-     (cffi:with-foreign-slots (%:type %:next %:facial-tracking-type
+     (cffi:with-foreign-slots ((%:type %:next %:facial-tracking-type)
                                ,pointer (:struct %:facial-tracker-create-info-htc))
        (setf %:type :type-facial-tracker-create-info-htc
              %:next ,next
@@ -6506,10 +6540,10 @@
                                                                   support-lip-facial-tracking-p))
                                                       &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:system-facial-tracking-properties-htc))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:support-eye-facial-tracking
-                               %:support-lip-facial-tracking
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:support-eye-facial-tracking
+                                %:support-lip-facial-tracking)
                                ,pointer (:struct %:system-facial-tracking-properties-htc))
        (setf %:type :type-system-facial-tracking-properties-htc
              %:next ,next
@@ -6531,12 +6565,12 @@
                                                    expression-weightings-p))
                                        &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:facial-expressions-htc))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:is-active
-                               %:sample-time
-                               %:expression-count
-                               %:expression-weightings
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:is-active
+                                %:sample-time
+                                %:expression-count
+                                %:expression-weightings)
                                ,pointer (:struct %:facial-expressions-htc))
        (setf %:type :type-facial-expressions-htc
              %:next ,next
@@ -6555,7 +6589,7 @@
                                                        (form nil form-p))
                                             &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:passthrough-create-info-htc))
-     (cffi:with-foreign-slots (%:type %:next %:form
+     (cffi:with-foreign-slots ((%:type %:next %:form)
                                ,pointer (:struct %:passthrough-create-info-htc))
        (setf %:type :type-passthrough-create-info-htc
              %:next ,next
@@ -6570,7 +6604,7 @@
                                                  (alpha nil alpha-p))
                                       &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:passthrough-color-htc))
-     (cffi:with-foreign-slots (%:type %:next %:alpha
+     (cffi:with-foreign-slots ((%:type %:next %:alpha)
                                ,pointer (:struct %:passthrough-color-htc))
        (setf %:type :type-passthrough-color-htc
              %:next ,next
@@ -6603,16 +6637,16 @@
                                                                 scale-p))
                                                     &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:passthrough-mesh-transform-info-htc))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:vertex-count
-                               %:vertices
-                               %:index-count
-                               %:indices
-                               %:base-space
-                               %:time
-                               %:pose
-                               %:scale
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:vertex-count
+                                %:vertices
+                                %:index-count
+                                %:indices
+                                %:base-space
+                                %:time
+                                %:pose
+                                %:scale)
                                ,pointer (:struct %:passthrough-mesh-transform-info-htc))
        (setf %:type :type-passthrough-mesh-transform-info-htc
              %:next ,next
@@ -6642,12 +6676,12 @@
                                                               color-p))
                                                   &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:composition-layer-passthrough-htc))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:layer-flags
-                               %:space
-                               %:passthrough
-                               %:color
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:layer-flags
+                                %:space
+                                %:passthrough
+                                %:color)
                                ,pointer (:struct %:composition-layer-passthrough-htc))
        (setf %:type :type-composition-layer-passthrough-htc
              %:next ,next
@@ -6667,7 +6701,7 @@
                                                    (role-path nil role-path-p))
                                         &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:vive-tracker-paths-htcx))
-     (cffi:with-foreign-slots (%:type %:next %:persistent-path %:role-path
+     (cffi:with-foreign-slots ((%:type %:next %:persistent-path %:role-path)
                                ,pointer (:struct %:vive-tracker-paths-htcx))
        (setf %:type :type-vive-tracker-paths-htcx
              %:next ,next
@@ -6685,7 +6719,7 @@
                                                                    paths-p))
                                                        &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:event-data-vive-tracker-connected-htcx))
-     (cffi:with-foreign-slots (%:type %:next %:paths
+     (cffi:with-foreign-slots ((%:type %:next %:paths)
                                ,pointer (:struct %:event-data-vive-tracker-connected-htcx))
        (setf %:type :type-event-data-vive-tracker-connected-htcx
              %:next ,next
@@ -6720,16 +6754,16 @@
                                                                  far-z-p))
                                                      &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:composition-layer-space-warp-info-fb))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:layer-flags
-                               %:motion-vector-sub-image
-                               %:app-space-delta-pose
-                               %:depth-sub-image
-                               %:min-depth
-                               %:max-depth
-                               %:near-z
-                               %:far-z
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:layer-flags
+                                %:motion-vector-sub-image
+                                %:app-space-delta-pose
+                                %:depth-sub-image
+                                %:min-depth
+                                %:max-depth
+                                %:near-z
+                                %:far-z)
                                ,pointer (:struct %:composition-layer-space-warp-info-fb))
        (setf %:type :type-composition-layer-space-warp-info-fb
              %:next ,next
@@ -6757,10 +6791,10 @@
                                                             recommended-motion-vector-image-rect-height-p))
                                                 &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:system-space-warp-properties-fb))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:recommended-motion-vector-image-rect-width
-                               %:recommended-motion-vector-image-rect-height
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:recommended-motion-vector-image-rect-width
+                                %:recommended-motion-vector-image-rect-height)
                                ,pointer (:struct %:system-space-warp-properties-fb))
        (setf %:type :type-system-space-warp-properties-fb
              %:next ,next
@@ -6779,7 +6813,7 @@
                                                                     supports-marker-tracking-p))
                                                         &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:system-marker-tracking-properties-varjo))
-     (cffi:with-foreign-slots (%:type %:next %:supports-marker-tracking
+     (cffi:with-foreign-slots ((%:type %:next %:supports-marker-tracking)
                                ,pointer (:struct %:system-marker-tracking-properties-varjo))
        (setf %:type :type-system-marker-tracking-properties-varjo
              %:next ,next
@@ -6806,12 +6840,12 @@
                                                                     time-p))
                                                         &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:event-data-marker-tracking-update-varjo))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:marker-id
-                               %:is-active
-                               %:is-predicted
-                               %:time
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:marker-id
+                                %:is-active
+                                %:is-predicted
+                                %:time)
                                ,pointer (:struct %:event-data-marker-tracking-update-varjo))
        (setf %:type :type-event-data-marker-tracking-update-varjo
              %:next ,next
@@ -6834,7 +6868,10 @@
                                                            pose-in-marker-space-p))
                                                &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:marker-space-create-info-varjo))
-     (cffi:with-foreign-slots (%:type %:next %:marker-id %:pose-in-marker-space
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:marker-id
+                                %:pose-in-marker-space)
                                ,pointer (:struct %:marker-space-create-info-varjo))
        (setf %:type :type-marker-space-create-info-varjo
              %:next ,next
@@ -6847,7 +6884,7 @@
 
 (defmacro with-uuid-ext ((pointer &key %slots (data nil data-p)) &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:uuid-ext))
-     (cffi:with-foreign-slots (%:data
+     (cffi:with-foreign-slots ((%:data)
                                ,pointer (:struct %:uuid-ext))
        (setf ,@(when data-p `(%:data ,data)))
        ,@(if %slots body nil))
@@ -6861,7 +6898,7 @@
                                                            (flags nil flags-p))
                                                 &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:global-dimmer-frame-end-info-ml))
-     (cffi:with-foreign-slots (%:type %:next %:dimmer-value %:flags
+     (cffi:with-foreign-slots ((%:type %:next %:dimmer-value %:flags)
                                ,pointer (:struct %:global-dimmer-frame-end-info-ml))
        (setf %:type :type-global-dimmer-frame-end-info-ml
              %:next ,next
@@ -6878,7 +6915,7 @@
                                                           (flags nil flags-p))
                                                &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:digital-lens-control-almalence))
-     (cffi:with-foreign-slots (%:type %:next %:flags
+     (cffi:with-foreign-slots ((%:type %:next %:flags)
                                ,pointer (:struct %:digital-lens-control-almalence))
        (setf %:type :type-digital-lens-control-almalence
              %:next ,next
@@ -6895,7 +6932,7 @@
                                                           layer-flags-p))
                                               &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:composition-layer-settings-fb))
-     (cffi:with-foreign-slots (%:type %:next %:layer-flags
+     (cffi:with-foreign-slots ((%:type %:next %:layer-flags)
                                ,pointer (:struct %:composition-layer-settings-fb))
        (setf %:type :type-composition-layer-settings-fb
              %:next ,next
@@ -6921,11 +6958,11 @@
                                                               image-sensor-pixel-resolution-p))
                                                   &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:external-camera-intrinsics-oculus))
-     (cffi:with-foreign-slots (%:last-change-time
-                               %:fov
-                               %:virtual-near-plane-distance
-                               %:virtual-far-plane-distance
-                               %:image-sensor-pixel-resolution
+     (cffi:with-foreign-slots ((%:last-change-time
+                                %:fov
+                                %:virtual-near-plane-distance
+                                %:virtual-far-plane-distance
+                                %:image-sensor-pixel-resolution)
                                ,pointer (:struct %:external-camera-intrinsics-oculus))
        (setf ,@(when last-change-time-p `(%:last-change-time ,last-change-time))
              ,@(when fov-p `(%:fov ,fov))
@@ -6949,10 +6986,10 @@
                                                               relative-pose-p))
                                                   &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:external-camera-extrinsics-oculus))
-     (cffi:with-foreign-slots (%:last-change-time
-                               %:camera-status-flags
-                               %:attached-to-device
-                               %:relative-pose
+     (cffi:with-foreign-slots ((%:last-change-time
+                                %:camera-status-flags
+                                %:attached-to-device
+                                %:relative-pose)
                                ,pointer (:struct %:external-camera-extrinsics-oculus))
        (setf ,@(when last-change-time-p `(%:last-change-time ,last-change-time))
              ,@(when camera-status-flags-p `(%:camera-status-flags ,camera-status-flags))
@@ -6968,7 +7005,7 @@
                                                   (extrinsics nil extrinsics-p))
                                        &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:external-camera-oculus))
-     (cffi:with-foreign-slots (%:type %:next %:name %:intrinsics %:extrinsics
+     (cffi:with-foreign-slots ((%:type %:next %:name %:intrinsics %:extrinsics)
                                ,pointer (:struct %:external-camera-oculus))
        (setf %:type :type-external-camera-oculus
              %:next ,next
@@ -6992,7 +7029,7 @@
                                                            enabled-p))
                                                &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:performance-metrics-state-meta))
-     (cffi:with-foreign-slots (%:type %:next %:enabled
+     (cffi:with-foreign-slots ((%:type %:next %:enabled)
                                ,pointer (:struct %:performance-metrics-state-meta))
        (setf %:type :type-performance-metrics-state-meta
              %:next ,next
@@ -7015,12 +7052,12 @@
                                                              float-value-p))
                                                  &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:performance-metrics-counter-meta))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:counter-flags
-                               %:counter-unit
-                               %:uint-value
-                               %:float-value
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:counter-flags
+                                %:counter-unit
+                                %:uint-value
+                                %:float-value)
                                ,pointer (:struct %:performance-metrics-counter-meta))
        (setf %:type :type-performance-metrics-counter-meta
              %:next ,next
@@ -7039,7 +7076,7 @@
                                                              (id nil id-p))
                                                   &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:system-headset-id-properties-meta))
-     (cffi:with-foreign-slots (%:type %:next %:id
+     (cffi:with-foreign-slots ((%:type %:next %:id)
                                ,pointer (:struct %:system-headset-id-properties-meta))
        (setf %:type :type-system-headset-id-properties-meta
              %:next ,next
@@ -7058,11 +7095,11 @@
                                                      sub-images-p))
                                          &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:foveation-apply-info-htc))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:mode
-                               %:sub-image-count
-                               %:sub-images
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:mode
+                                %:sub-image-count
+                                %:sub-images)
                                ,pointer (:struct %:foveation-apply-info-htc))
        (setf %:type :type-foveation-apply-info-htc
              %:next ,next
@@ -7082,7 +7119,9 @@
                                                         focal-center-offset-p))
                                             &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:foveation-configuration-htc))
-     (cffi:with-foreign-slots (%:level %:clear-fov-degree %:focal-center-offset
+     (cffi:with-foreign-slots ((%:level
+                                %:clear-fov-degree
+                                %:focal-center-offset)
                                ,pointer (:struct %:foveation-configuration-htc))
        (setf ,@(when level-p `(%:level ,level))
              ,@(when clear-fov-degree-p `(%:clear-fov-degree ,clear-fov-degree))
@@ -7097,7 +7136,7 @@
                                                             dynamic-flags-p))
                                                 &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:foveation-dynamic-mode-info-htc))
-     (cffi:with-foreign-slots (%:type %:next %:dynamic-flags
+     (cffi:with-foreign-slots ((%:type %:next %:dynamic-flags)
                                ,pointer (:struct %:foveation-dynamic-mode-info-htc))
        (setf %:type :type-foveation-dynamic-mode-info-htc
              %:next ,next
@@ -7116,7 +7155,7 @@
                                                            configs-p))
                                                &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:foveation-custom-mode-info-htc))
-     (cffi:with-foreign-slots (%:type %:next %:config-count %:configs
+     (cffi:with-foreign-slots ((%:type %:next %:config-count %:configs)
                                ,pointer (:struct %:foveation-custom-mode-info-htc))
        (setf %:type :type-foveation-custom-mode-info-htc
              %:next ,next
@@ -7138,10 +7177,10 @@
                                                              action-set-priorities-p))
                                                  &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:active-action-set-priorities-ext))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:action-set-priority-count
-                               %:action-set-priorities
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:action-set-priority-count
+                                %:action-set-priorities)
                                ,pointer (:struct %:active-action-set-priorities-ext))
        (setf %:type :type-active-action-set-priorities-ext
              %:next ,next
@@ -7160,7 +7199,7 @@
                                                            priority-override-p))
                                                &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:active-action-set-priority-ext))
-     (cffi:with-foreign-slots (%:action-set %:priority-override
+     (cffi:with-foreign-slots ((%:action-set %:priority-override)
                                ,pointer (:struct %:active-action-set-priority-ext))
        (setf ,@(when action-set-p `(%:action-set ,action-set))
              ,@(when priority-override-p `(%:priority-override ,priority-override)))
@@ -7176,7 +7215,7 @@
                                                             compare-op-p))
                                                 &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:composition-layer-depth-test-fb))
-     (cffi:with-foreign-slots (%:type %:next %:depth-mask %:compare-op
+     (cffi:with-foreign-slots ((%:type %:next %:depth-mask %:compare-op)
                                ,pointer (:struct %:composition-layer-depth-test-fb))
        (setf %:type :type-composition-layer-depth-test-fb
              %:next ,next
@@ -7196,7 +7235,10 @@
                                                             pose-in-coordinate-space-p))
                                                 &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:coordinate-space-create-info-ml))
-     (cffi:with-foreign-slots (%:type %:next %:cfuid %:pose-in-coordinate-space
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:cfuid
+                                %:pose-in-coordinate-space)
                                ,pointer (:struct %:coordinate-space-create-info-ml))
        (setf %:type :type-coordinate-space-create-info-ml
              %:next ,next
@@ -7214,7 +7256,7 @@
                                              (flags nil flags-p))
                                   &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:frame-end-info-ml))
-     (cffi:with-foreign-slots (%:type %:next %:focus-distance %:flags
+     (cffi:with-foreign-slots ((%:type %:next %:focus-distance %:flags)
                                ,pointer (:struct %:frame-end-info-ml))
        (setf %:type :type-frame-end-info-ml
              %:next ,next
@@ -7238,11 +7280,11 @@
                                                                    amplitudes-p))
                                                        &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:haptic-amplitude-envelope-vibration-fb))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:duration
-                               %:amplitude-count
-                               %:amplitudes
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:duration
+                                %:amplitude-count
+                                %:amplitudes)
                                ,pointer (:struct %:haptic-amplitude-envelope-vibration-fb))
        (setf %:type :type-haptic-amplitude-envelope-vibration-fb
              %:next ,next
@@ -7266,13 +7308,13 @@
                                                     samples-consumed-p))
                                         &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:haptic-pcm-vibration-fb))
-     (cffi:with-foreign-slots (%:type
-                               %:next
-                               %:buffer-size
-                               %:buffer
-                               %:sample-rate
-                               %:append
-                               %:samples-consumed
+     (cffi:with-foreign-slots ((%:type
+                                %:next
+                                %:buffer-size
+                                %:buffer
+                                %:sample-rate
+                                %:append
+                                %:samples-consumed)
                                ,pointer (:struct %:haptic-pcm-vibration-fb))
        (setf %:type :type-haptic-pcm-vibration-fb
              %:next ,next
@@ -7293,7 +7335,7 @@
                                                             sample-rate-p))
                                                 &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:device-pcm-sample-rate-state-fb))
-     (cffi:with-foreign-slots (%:type %:next %:sample-rate
+     (cffi:with-foreign-slots ((%:type %:next %:sample-rate)
                                ,pointer (:struct %:device-pcm-sample-rate-state-fb))
        (setf %:type :type-device-pcm-sample-rate-state-fb
              %:next ,next
@@ -7309,7 +7351,7 @@
                                                      (user-id nil user-id-p))
                                           &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:space-user-create-info-fb))
-     (cffi:with-foreign-slots (%:type %:next %:user-id
+     (cffi:with-foreign-slots ((%:type %:next %:user-id)
                                ,pointer (:struct %:space-user-create-info-fb))
        (setf %:type :type-space-user-create-info-fb
              %:next ,next
@@ -7327,7 +7369,7 @@
                                                                        supports-force-feedback-curl-p))
                                                            &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:system-force-feedback-curl-properties-mndx))
-     (cffi:with-foreign-slots (%:type %:next %:supports-force-feedback-curl
+     (cffi:with-foreign-slots ((%:type %:next %:supports-force-feedback-curl)
                                ,pointer (:struct %:system-force-feedback-curl-properties-mndx))
        (setf %:type :type-system-force-feedback-curl-properties-mndx
              %:next ,next
@@ -7348,7 +7390,7 @@
                                                                      locations-p))
                                                          &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:force-feedback-curl-apply-locations-mndx))
-     (cffi:with-foreign-slots (%:type %:next %:location-count %:locations
+     (cffi:with-foreign-slots ((%:type %:next %:location-count %:locations)
                                ,pointer (:struct %:force-feedback-curl-apply-locations-mndx))
        (setf %:type :type-force-feedback-curl-apply-locations-mndx
              %:next ,next
@@ -7367,7 +7409,7 @@
                                                                           value-p))
                                                         &body body)
   `(cffi:with-foreign-object (,pointer '(:struct %:force-feedback-curl-apply-location-mndx))
-     (cffi:with-foreign-slots (%:location %:value
+     (cffi:with-foreign-slots ((%:location %:value)
                                ,pointer (:struct %:force-feedback-curl-apply-location-mndx))
        (setf ,@(when location-p `(%:location ,location))
              ,@(when value-p `(%:value ,value)))

@@ -50,10 +50,45 @@
     (assert (eql %::type :type-debug-utils-messenger-callback-data-ext))
     ;; todo: dispatch to user callbacks? (by ID in user data or something?)
     user-data
-    (format *debug-io* "~@[<~a:>~]~s:~s:~s:~s:~s~%"
-            (unless (cffi:null-pointer-p user-data)
-              (cffi:pointer-address user-data))
-            severity types
-            %::message-id %::function-name %::message)
-    ;; todo: handle objects and labels
+    (flet ((ss (s) (if (and (symbolp s)
+                            (a:ends-with-subseq "-EXT" (symbol-name s)))
+                       (subseq (symbol-name s) 0 (- (length (symbol-name s)) 4))
+                       s)))
+      (format *debug-io* "~@[<~a> : ~]~(~{~a~^,~} : ~{~a~^,~} : ~)~a~%  ~
+  ~a : ~a~%"
+              (unless (cffi:null-pointer-p user-data)
+                (cffi:pointer-address user-data))
+              (mapcar #'ss (cffi:foreign-bitfield-symbols
+                            '%::debug-utils-message-severity-flags-ext
+                            severity))
+              (mapcar #'ss (cffi:foreign-bitfield-symbols
+                            '%::debug-utils-message-type-flags-ext
+                            types))
+              %::message-id %:function-name
+              %::message)
+      (when (plusp %:session-label-count)
+        (format t " @")
+        (loop for i below %:session-label-count
+              for info = (cffi:mem-aref
+                          %:session-labels
+                          '(:struct %:debug-utils-label-ext)
+                          i)
+              do (format t " > ~a" (getf info '%:label-name)))
+        (format t "~%"))
+
+      (when (plusp %:object-count)
+        (if (= 1 %:object-count)
+            (format t "  object: ")
+            (format t "  ~s objects:~%" %:object-count))
+        (loop for i below %:object-count
+              for info = (cffi:mem-aref
+                          %:objects
+                          '(:struct %:debug-utils-object-name-info-ext)
+                          i)
+              do (when (> %:object-count 1)
+                   (format t "   "))
+                 (format t "~x (~a), type ~(~a~)~%"
+                         (getf info '%:object-handle)
+                         (getf info '%:object-name)
+                         (getf info '%:object-type)))))
     0))

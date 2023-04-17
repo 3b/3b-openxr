@@ -55,7 +55,7 @@ isn't in *CHECK-VERBOSE-QUIET*")
               nil
               ;; todo: add option to WARN instead? (*check-verbose* = :warn ?)
               (format *debug-io* "~&Qualified Success ~s (~s) from ~a~%  ~s~%"
-                      (cffi:foreign-enum-keyword '%::%result ,ret)
+                      (cffi:foreign-enum-keyword '%::%result ,ret :errorp nil)
                       ,ret
                       ',(car form)
                       ',form)))
@@ -68,7 +68,7 @@ isn't in *CHECK-VERBOSE-QUIET*")
          ((failed ,ret)
           (with-simple-restart (continue "continue")
             (error "~a failed ~s (~s)?~%~s" ',(car form)
-                   (cffi:foreign-enum-keyword '%::%result ,ret)
+                   (cffi:foreign-enum-keyword '%::%result ,ret :errorp nil)
                    ,ret
                    ',form))))
        ,ret)))

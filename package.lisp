@@ -489,7 +489,8 @@
            #:failed
            #:succeeded
            #:unqualified-success
-           #:qualified-success))
+           #:qualified-success
+           #:with-debug-utils-label))
 
 
 (defpackage #:3b-openxr
@@ -712,4 +713,5 @@
            #:locate-hand-joints-ext
            #:enumerate-display-refresh-rates-fb
            #:get-display-refresh-rate-fb
-           #:request-display-refresh-rate-fb))
+           #:request-display-refresh-rate-fb
+           #:with-debug-utils-label))

@@ -139,12 +139,12 @@
 ;;; 12.25. XR_EXT_conformance_automation
 
 ;;; 12.26. XR_EXT_debug_utils
-(defun set-debug-utils-object-name-ext (instance handle type name)
+(defun set-debug-utils-object-name-ext (handle type name)
   (with-debug-utils-object-name-info-ext (duonie
                                           :object-type type
                                           :object-handle handle
                                           :object-name name)
-    (check-result (%:set-debug-utils-object-name-ext instance duonie))))
+    (check-result (%:set-debug-utils-object-name-ext *instance* duonie))))
 
 
 ;; todo: decide on a user API for translating the C callback to lisp
@@ -160,7 +160,8 @@
     (cffi:with-foreign-object (messenger '%::debug-utils-messenger-ext)
       (let ((r (%::create-debug-utils-messenger-ext instance p messenger)))
         (unless (unqualified-success r)
-          (error "create debug utils messenger failed ~s?" r))
+          (error "create debug utils messenger failed ~s?"
+                 (cffi:foreign-enum-keyword '%::%result r :errorp nil)))
         (when *create-verbose*
           (format *debug-io* "~&create debug utils messenger ~x~%" (cffi:mem-ref messenger '%::debug-utils-messenger-ext)))
         (cffi:mem-ref messenger '%::debug-utils-messenger-ext)))))
@@ -173,8 +174,8 @@
                                        &key
                                          ;; todo: objects, labels
                                          message-id function-name
-                                         (severity :verbose)
-                                         (type :general))
+                                         (severity :verbose-ext)
+                                         (type :general-ext))
   (with-debug-utils-messenger-callback-data-ext
       (d :message-id (or message-id (cffi:null-pointer))
          :function-name (or function-name (cffi:null-pointer))
@@ -191,6 +192,14 @@
     (%:session-begin-debug-utils-label-region-ext session d)))
 
 (import-export %:session-end-debug-utils-label-region-ext)
+
+(defmacro with-debug-utils-label ((session label) &body body)
+  (a:once-only (session label)
+    `(unwind-protect
+          (progn
+            (session-begin-debug-utils-label-region-ext ,session ,label)
+            ,@body)
+       (session-end-debug-utils-label-region-ext ,session))))
 
 (defun session-insert-debug-utils-label-ext (session label)
   (with-debug-utils-label-ext (d :label-name label)

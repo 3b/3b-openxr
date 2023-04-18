@@ -423,6 +423,25 @@
            #:+null-path+
            #:+null-system-id+
            #:get-system-properties
+           #:get-system-hand-tracking-properties-ext
+           #:get-system-eye-gaze-interaction-properties-ext
+           #:get-system-face-tracking-properties-fb
+           #:get-system-body-tracking-properties-fb
+           #:get-system-eye-tracking-properties-fb
+           #:get-system-hand-tracking-mesh-properties-msft
+           #:get-system-color-space-properties-fb
+           #:get-system-spatial-entity-properties-fb
+           #:get-system-foveation-eye-tracked-properties-meta
+           #:get-system-render-model-properties-fb
+           #:get-system-keyboard-tracking-properties-fb
+           #:get-system-foveated-rendering-properties-varjo
+           #:get-system-passthrough-properties-fb
+           #:get-system-passthrough-properties-2-fb
+           #:get-system-facial-tracking-properties-htc
+           #:get-system-space-warp-properties-fb
+           #:get-system-marker-tracking-properties-varjo
+           #:get-system-headset-id-properties-meta
+           #:get-system-force-feedback-curl-properties-mndx
            #:path-to-string
            #:get-reference-space-bounds-rect
            #:width
@@ -681,6 +700,25 @@
            #:result-to-string
            #:structure-type-to-string
            #:get-system-properties
+           #:get-system-hand-tracking-properties-ext
+           #:get-system-eye-gaze-interaction-properties-ext
+           #:get-system-face-tracking-properties-fb
+           #:get-system-body-tracking-properties-fb
+           #:get-system-eye-tracking-properties-fb
+           #:get-system-hand-tracking-mesh-properties-msft
+           #:get-system-color-space-properties-fb
+           #:get-system-spatial-entity-properties-fb
+           #:get-system-foveation-eye-tracked-properties-meta
+           #:get-system-render-model-properties-fb
+           #:get-system-keyboard-tracking-properties-fb
+           #:get-system-foveated-rendering-properties-varjo
+           #:get-system-passthrough-properties-fb
+           #:get-system-passthrough-properties-2-fb
+           #:get-system-facial-tracking-properties-htc
+           #:get-system-space-warp-properties-fb
+           #:get-system-marker-tracking-properties-varjo
+           #:get-system-headset-id-properties-meta
+           #:get-system-force-feedback-curl-properties-mndx
            #:path-to-string
            #:get-reference-space-bounds-rect
            #:create-action-space

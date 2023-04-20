@@ -140,6 +140,18 @@
 
 ;;; 12.26. XR_EXT_debug_utils
 (defun set-debug-utils-object-name-ext (handle type name)
+  ;; fixme: possibly should wrap all handles and include TYPE in
+  ;; wrapper? (with common base struct or generic function protocol so
+  ;; no type dispatch is needed)
+  (etypecase handle
+    (unsigned-byte
+     ;; not wrapped, do nothing
+     )
+    (hand-tracker
+     (setf handle (hand-tracker-handle handle)))
+    (cons ;; plist for swapchain
+     (assert (member :handle handle))
+     (setf handle (getf handle :handle))))
   (with-debug-utils-object-name-info-ext (duonie
                                           :object-type type
                                           :object-handle handle

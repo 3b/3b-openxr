@@ -348,6 +348,7 @@
                 #:height
                 #:destroy-space
                 #:pose
+                #:destroy-session
                 #:end-session
                 #:request-exit-session
                 #:destroy-swapchain
@@ -368,6 +369,7 @@
            #:enumerate-environment-blend-modes
            #:get-opengl-graphics-requirements-khr
            #:create-session
+           #:destroy-session
            #:enumerate-reference-spaces
            #:create-reference-space
            #:enumerate-view-configuration-views
@@ -509,7 +511,97 @@
            #:succeeded
            #:unqualified-success
            #:qualified-success
-           #:with-debug-utils-label))
+           #:with-debug-utils-label
+           #:extension-present-p
+           #:extension-available-p
+           #:layer-available-p
+           #:error-validation-failure
+           #:error-runtime-failure
+           #:error-out-of-memory
+           #:error-api-version-unsupported
+           #:error-initialization-failed
+           #:error-function-unsupported
+           #:error-feature-unsupported
+           #:error-extension-not-present
+           #:error-limit-reached
+           #:error-size-insufficient
+           #:error-handle-invalid
+           #:error-instance-lost
+           #:error-session-running
+           #:error-session-not-running
+           #:error-session-lost
+           #:error-system-invalid
+           #:error-path-invalid
+           #:error-path-count-exceeded
+           #:error-path-format-invalid
+           #:error-path-unsupported
+           #:error-layer-invalid
+           #:error-layer-limit-exceeded
+           #:error-swapchain-rect-invalid
+           #:error-swapchain-format-unsupported
+           #:error-action-type-mismatch
+           #:error-session-not-ready
+           #:error-session-not-stopping
+           #:error-time-invalid
+           #:error-reference-space-unsupported
+           #:error-file-access-error
+           #:error-file-contents-invalid
+           #:error-form-factor-unsupported
+           #:error-form-factor-unavailable
+           #:error-api-layer-not-present
+           #:error-call-order-invalid
+           #:error-graphics-device-invalid
+           #:error-pose-invalid
+           #:error-index-out-of-range
+           #:error-view-configuration-type-unsupported
+           #:error-environment-blend-mode-unsupported
+           #:error-name-duplicated
+           #:error-name-invalid
+           #:error-actionset-not-attached
+           #:error-actionsets-already-attached
+           #:error-localized-name-duplicated
+           #:error-localized-name-invalid
+           #:error-graphics-requirements-call-missing
+           #:error-runtime-unavailable
+           #:error-android-thread-settings-id-invalid-khr
+           #:error-android-thread-settings-failure-khr
+           #:error-create-spatial-anchor-failed-msft
+           #:error-secondary-view-configuration-type-not-enabled-msft
+           #:error-controller-model-key-invalid-msft
+           #:error-reprojection-mode-unsupported-msft
+           #:error-compute-new-scene-not-completed-msft
+           #:error-scene-component-id-invalid-msft
+           #:error-scene-component-type-mismatch-msft
+           #:error-scene-mesh-buffer-id-invalid-msft
+           #:error-scene-compute-feature-incompatible-msft
+           #:error-scene-compute-consistency-mismatch-msft
+           #:error-display-refresh-rate-unsupported-fb
+           #:error-color-space-unsupported-fb
+           #:error-space-component-not-supported-fb
+           #:error-space-component-not-enabled-fb
+           #:error-space-component-status-pending-fb
+           #:error-space-component-status-already-set-fb
+           #:error-unexpected-state-passthrough-fb
+           #:error-feature-already-created-passthrough-fb
+           #:error-feature-required-passthrough-fb
+           #:error-not-permitted-passthrough-fb
+           #:error-insufficient-resources-passthrough-fb
+           #:error-unknown-passthrough-fb
+           #:error-render-model-key-invalid-fb
+           #:error-marker-not-tracked-varjo
+           #:error-marker-id-invalid-varjo
+           #:error-spatial-anchor-name-not-found-msft
+           #:error-spatial-anchor-name-invalid-msft
+           #:error-space-mapping-insufficient-fb
+           #:error-space-localization-failed-fb
+           #:error-space-network-timeout-fb
+           #:error-space-network-request-failed-fb
+           #:error-space-cloud-storage-disabled-fb
+           #:error-hint-already-set-qcom
+           #:ignore-xr-error
+           #:hand-tracker-handle
+           #:hand-tracker-joint-count
+           #:*check-verbose*))
 
 
 (defpackage #:3b-openxr
@@ -592,6 +684,8 @@
            #:copy-pose
            #:pose-orientation
            #:pose-position
+           #:pose-orientation-tracked
+           #:pose-position-tracked
            #:offset-2d-f
            #:offset-2d-i
            #:width
@@ -752,4 +846,95 @@
            #:enumerate-display-refresh-rates-fb
            #:get-display-refresh-rate-fb
            #:request-display-refresh-rate-fb
-           #:with-debug-utils-label))
+           #:with-debug-utils-label
+           #:extension-available-p
+           #:layer-available-p
+           #:error-validation-failure
+           #:error-runtime-failure
+           #:error-out-of-memory
+           #:error-api-version-unsupported
+           #:error-initialization-failed
+           #:error-function-unsupported
+           #:error-feature-unsupported
+           #:error-extension-not-present
+           #:error-limit-reached
+           #:error-size-insufficient
+           #:error-handle-invalid
+           #:error-instance-lost
+           #:error-session-running
+           #:error-session-not-running
+           #:error-session-lost
+           #:error-system-invalid
+           #:error-path-invalid
+           #:error-path-count-exceeded
+           #:error-path-format-invalid
+           #:error-path-unsupported
+           #:error-layer-invalid
+           #:error-layer-limit-exceeded
+           #:error-swapchain-rect-invalid
+           #:error-swapchain-format-unsupported
+           #:error-action-type-mismatch
+           #:error-session-not-ready
+           #:error-session-not-stopping
+           #:error-time-invalid
+           #:error-reference-space-unsupported
+           #:error-file-access-error
+           #:error-file-contents-invalid
+           #:error-form-factor-unsupported
+           #:error-form-factor-unavailable
+           #:error-api-layer-not-present
+           #:error-call-order-invalid
+           #:error-graphics-device-invalid
+           #:error-pose-invalid
+           #:error-index-out-of-range
+           #:error-view-configuration-type-unsupported
+           #:error-environment-blend-mode-unsupported
+           #:error-name-duplicated
+           #:error-name-invalid
+           #:error-actionset-not-attached
+           #:error-actionsets-already-attached
+           #:error-localized-name-duplicated
+           #:error-localized-name-invalid
+           #:error-graphics-requirements-call-missing
+           #:error-runtime-unavailable
+           #:error-android-thread-settings-id-invalid-khr
+           #:error-android-thread-settings-failure-khr
+           #:error-create-spatial-anchor-failed-msft
+           #:error-secondary-view-configuration-type-not-enabled-msft
+           #:error-controller-model-key-invalid-msft
+           #:error-reprojection-mode-unsupported-msft
+           #:error-compute-new-scene-not-completed-msft
+           #:error-scene-component-id-invalid-msft
+           #:error-scene-component-type-mismatch-msft
+           #:error-scene-mesh-buffer-id-invalid-msft
+           #:error-scene-compute-feature-incompatible-msft
+           #:error-scene-compute-consistency-mismatch-msft
+           #:error-display-refresh-rate-unsupported-fb
+           #:error-color-space-unsupported-fb
+           #:error-space-component-not-supported-fb
+           #:error-space-component-not-enabled-fb
+           #:error-space-component-status-pending-fb
+           #:error-space-component-status-already-set-fb
+           #:error-unexpected-state-passthrough-fb
+           #:error-feature-already-created-passthrough-fb
+           #:error-feature-required-passthrough-fb
+           #:error-not-permitted-passthrough-fb
+           #:error-insufficient-resources-passthrough-fb
+           #:error-unknown-passthrough-fb
+           #:error-render-model-key-invalid-fb
+           #:error-marker-not-tracked-varjo
+           #:error-marker-id-invalid-varjo
+           #:error-spatial-anchor-name-not-found-msft
+           #:error-spatial-anchor-name-invalid-msft
+           #:error-space-mapping-insufficient-fb
+           #:error-space-localization-failed-fb
+           #:error-space-network-timeout-fb
+           #:error-space-network-request-failed-fb
+           #:error-space-cloud-storage-disabled-fb
+           #:error-hint-already-set-qcom
+           #:ignore-xr-error
+           #:create-session
+           #:destroy-session
+           #:hand-tracker-handle
+           #:hand-tracker-joint-count
+           #:*check-verbose*))

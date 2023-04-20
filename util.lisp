@@ -12,6 +12,15 @@
                                  (find-package '#:3b-openxr))
                     sym)))))
 
+(defun xr-error (result format &rest args)
+  (let ((e (gethash result *error-conditions* 'simple-error)))
+    (error e :format-control format :format-arguments args)))
+
+(defmacro ignore-xr-error ((&rest error-types) &body body)
+  "like IGNORE-ERRORS, but only ignore specific error types."
+  `(handler-case (progn ,@body)
+     ,@ (loop for e in error-types
+              collect `(,e (condition) (values nil condition)))))
 
 (defmacro with-foreign-string-array ((pointer strings) &body body)
   (a:with-gensyms (count i)

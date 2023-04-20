@@ -67,12 +67,12 @@ isn't in *CHECK-VERBOSE-QUIET*")
           )
          ((failed ,ret)
           (with-simple-restart (continue "continue")
-            (error "~a failed ~s (~s)?~%~s" ',(car form)
-                   (cffi:foreign-enum-keyword '%::%result ,ret :errorp nil)
-                   ,ret
-                   ',form))))
+            (xr-error ,ret "~a failed ~s (~s)?~%~s"
+                      ',(car form)
+                      (cffi:foreign-enum-keyword '%::%result ,ret :errorp nil)
+                      ,ret
+                      ',form))))
        ,ret)))
-
 
 ;; 2.9 handles
 (import-export %:+null-handle+

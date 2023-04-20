@@ -80,6 +80,8 @@
         (:d3d12(error "todo"))
         (:vulkan(error "todo"))))))
 
+(import-export %:destroy-session)
+
 (defmacro with-session ((session system-id &rest r) &body body)
   `(let ((,session (create-session ,system-id ,@r)))
      (when *create-verbose*

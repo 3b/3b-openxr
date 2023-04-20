@@ -76,7 +76,8 @@
             (cffi:with-foreign-object (instance '%::instance)
               (let ((r (%::create-instance ici instance)))
                 (unless (unqualified-success r)
-                  (error "create instance failed ~s?" r))
+                  (xr-error r "create instance failed ~s?"
+                            (cffi:foreign-enum-keyword '%::%result r :errorp nil)))
                 (when *create-verbose*
                   (format *debug-io* "~&created instance ~x~%" (cffi:mem-ref instance '%::instance)))
                 (cffi:mem-ref instance '%::instance)))))))))

@@ -160,8 +160,8 @@
     (cffi:with-foreign-object (messenger '%::debug-utils-messenger-ext)
       (let ((r (%::create-debug-utils-messenger-ext instance p messenger)))
         (unless (unqualified-success r)
-          (error "create debug utils messenger failed ~s?"
-                 (cffi:foreign-enum-keyword '%::%result r :errorp nil)))
+          (xr-error r "create debug utils messenger failed ~s?"
+                    (cffi:foreign-enum-keyword '%::%result r :errorp nil)))
         (when *create-verbose*
           (format *debug-io* "~&create debug utils messenger ~x~%" (cffi:mem-ref messenger '%::debug-utils-messenger-ext)))
         (cffi:mem-ref messenger '%::debug-utils-messenger-ext)))))

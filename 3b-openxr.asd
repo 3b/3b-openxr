@@ -8,6 +8,7 @@
   :components ((:file "package")
                (:file "mid-level")
                (:file "generated-macros")
+               (:file "errors")
                (:file "util")
                (:file "macros")
                (:file "wrappers-2")
@@ -21,6 +22,7 @@
                (:file "wrappers-10")
                (:file "wrappers-11")
                (:file "wrappers-extensions")
+               (:file "misc")
                ))
 
 

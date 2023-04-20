@@ -37,15 +37,35 @@
                                  (declare (ignore r))
                                  (error "openxr extension support not initialized correctly?"))))
 
-;; wrapper for instance, containing handle and function pointers
-(defstruct %instance
+;;; wrapper for handle types, to be included into structs for handles
+;;; (like instance) that need extra info. Handles are not
+;;; automatically wrapped by low-level bindings, but the extension
+;;; code needs INSTANCE to be wrapped, so this is defined here.
+(defstruct wrapped-handle
   ;; 0 is +null-handle+, but that isn't defined yet
   (handle 0 :type (unsigned-byte 64))
-  (pointers *function-getters* :type %extension-function-vector%))
+  ;; object-type of the handle, for some things like
+  ;; debug-utils-object-name-info-ext that need it
+  (type :unknown :type symbol)
+  ;; optional name for the object (like
+  ;; debug-utils-object-name-info-ext but at CL level. May
+  ;; automatically set debug utils object name at some point
+  (name nil :type (or null string)))
 
-(defun wrap-instance (handle)
+;; wrapper for instance, containing handle and function pointers
+(defstruct (%instance (:include wrapped-handle))
+  (pointers *function-getters* :type %extension-function-vector%)
+  ;; flag indicating the instance was created with debug-utils
+  ;; extension, so we can set debug names for objects as they are
+  ;; created
+  (has-debug-utils nil :type boolean))
+
+(defun wrap-instance (handle &key name debug)
   (make-%instance :handle (or handle 0)
-                  :pointers (copy-seq *function-getters*)))
+                  :type :instance
+                  :name name
+                  :pointers (copy-seq *function-getters*)
+                  :has-debug-utils (not (null debug))))
 
 (declaim (type %instance *instance*))
 ;; global value is NULL instance, which only has a few valid functions
@@ -53,13 +73,10 @@
 ;; change with extensions and extensions are expected to return NULL
 ;; for anything not on the list)
 (defvar *instance* (wrap-instance nil))
+(setf (wrapped-handle-name *instance*) "null instance")
 #+sbcl(declaim (sb-ext:always-bound *instance*))
 
 
-
-(defmacro with-instance ((handle) &body body)
-  `(let ((*instance* (wrap-instance ,handle)))
-     ,@body))
 
 (defmacro defextfun ((foreign-name lisp-name index) result-type &rest body)
   (let ((args-list (mapcar #'first body)))

@@ -43,14 +43,14 @@
   (cffi:with-foreign-object (p '%:time)
     (cffi:with-foreign-object (ts '(:struct timespec))
       (setf (cffi:mem-ref ts '(:struct timespec)) timespec)
-      (%:convert-timespec-time-to-time-khr *instance* timespec p))
+      (%:convert-timespec-time-to-time-khr (handle *instance*) timespec p))
     (cffi:mem-ref p '%:time)))
 
 (defun convert-time-to-timespec-time-khr (time)
   (error "todo: decide how timespec should be translated")
   #++
   (cffi:with-foreign-object (ts '(:struct timespec))
-    (%:convert-time-to-timespec-time-khr *instance* time tx)
+    (%:convert-time-to-timespec-time-khr (handle *instance*) time tx)
     (cffi:mem-ref ts '(:struct timespec))))
 
 ;;; 12.12. XR_KHR_D3D11_enable
@@ -81,7 +81,7 @@
             %:min-api-version-supported 0
             %:max-api-version-supported 0)
       (check-result (%:get-opengl-graphics-requirements-khr
-                     *instance* system-id p))
+                     (handle *instance*) system-id p))
       (let ((min %:min-api-version-supported)
             (max %:max-api-version-supported))
         (list :min-api (list (%:version-major min)
@@ -127,11 +127,11 @@
   (cffi:with-foreign-object (pc :int64)
     (setf (cffi:mem-ref pc :int64) counter)
     (with-returned-atom (pt %:time)
-      (%:convert-win32-performance-counter-to-time-khr *instance* pc pt))))
+      (%:convert-win32-performance-counter-to-time-khr (handle *instance*) pc pt))))
 
 (defun convert-time-to-win32-performance-counter-khr (time)
   (with-returned-atom (pc :int64)
-    (%:convert-time-to-win32-performance-counter-khr *instance* time pc)))
+    (%:convert-time-to-win32-performance-counter-khr (handle *instance*) time pc)))
 
 ;;; 12.24. XR_EXT_active_action_set_priority
 ;; adds .next to ACTIONS-SYNC-INFO for SYNC-ACTIONS
@@ -139,48 +139,31 @@
 ;;; 12.25. XR_EXT_conformance_automation
 
 ;;; 12.26. XR_EXT_debug_utils
-(defun set-debug-utils-object-name-ext (handle type name)
-  ;; fixme: possibly should wrap all handles and include TYPE in
-  ;; wrapper? (with common base struct or generic function protocol so
-  ;; no type dispatch is needed)
-  (etypecase handle
-    (unsigned-byte
-     ;; not wrapped, do nothing
-     )
-    (hand-tracker
-     (setf handle (hand-tracker-handle handle)))
-    (cons ;; plist for swapchain
-     (assert (member :handle handle))
-     (setf handle (getf handle :handle))))
+(defun set-debug-utils-object-name-ext (handle name)
+  (setf (handle-name handle) name)
   (with-debug-utils-object-name-info-ext (duonie
-                                          :object-type type
-                                          :object-handle handle
+                                          :object-type (handle-type handle)
+                                          :object-handle (handle handle)
                                           :object-name name)
-    (check-result (%:set-debug-utils-object-name-ext *instance* duonie))))
+    (check-result (%:set-debug-utils-object-name-ext (handle *instance*) duonie))))
 
 
 ;; todo: decide on a user API for translating the C callback to lisp
 ;; callbacks
-(defun create-debug-utils-messenger-ext (instance
-                                         &key message-severities message-types
-                                           user-callback (user-data 0))
+(defun create-debug-utils-messenger-ext (&key message-severities message-types
+                                           user-callback (user-data 0)
+                                           object-name)
   (with-debug-utils-messenger-create-info-ext
       (p :message-severities message-severities
          :message-types message-types
          :user-callback user-callback
          :user-data user-data)
-    (cffi:with-foreign-object (messenger '%::debug-utils-messenger-ext)
-      (let ((r (%::create-debug-utils-messenger-ext instance p messenger)))
-        (unless (unqualified-success r)
-          (xr-error r "create debug utils messenger failed ~s?"
-                    (cffi:foreign-enum-keyword '%::%result r :errorp nil)))
-        (when *create-verbose*
-          (format *debug-io* "~&create debug utils messenger ~x~%" (cffi:mem-ref messenger '%::debug-utils-messenger-ext)))
-        (cffi:mem-ref messenger '%::debug-utils-messenger-ext)))))
+    (with-returned-handle (messenger %::debug-utils-messenger-ext
+                           :debug-utils-messenger-ext :name object-name)
+      (%:create-debug-utils-messenger-ext (handle *instance*) p messenger))))
 
-
-#++
-(import-export %:destroy-debug-utils-messenger-ext)
+(defun destroy-debug-utils-messenger-ext (messenger)
+  (%:destroy-debug-utils-messenger-ext (handle messenger)))
 
 (defun submit-debug-utils-message-ext (message
                                        &key
@@ -197,13 +180,14 @@
          :session-label-count 0
          :session-labels (cffi:null-pointer))
     (check-result
-     (%:submit-debug-utils-message-ext *instance* severity type d))))
+     (%:submit-debug-utils-message-ext (handle *instance*) severity type d))))
 
 (defun session-begin-debug-utils-label-region-ext (session label)
   (with-debug-utils-label-ext (d :label-name label)
-    (%:session-begin-debug-utils-label-region-ext session d)))
+    (%:session-begin-debug-utils-label-region-ext (handle session) d)))
 
-(import-export %:session-end-debug-utils-label-region-ext)
+(defun session-end-debug-utils-label-region-ext (session)
+  (%:session-end-debug-utils-label-region-ext (handle session)))
 
 (defmacro with-debug-utils-label ((session label) &body body)
   (a:once-only (session label)
@@ -215,7 +199,7 @@
 
 (defun session-insert-debug-utils-label-ext (session label)
   (with-debug-utils-label-ext (d :label-name label)
-    (%:session-insert-debug-utils-label-ext session d)))
+    (%:session-insert-debug-utils-label-ext (handle session) d)))
 
 
 ;;; 12.27. XR_EXT_dpad_binding
@@ -231,11 +215,11 @@
 
 ;; wrapper for hand-tracker handle, since we need to know how many
 ;; joints to allocate, which depends on the joint-set
-(defstruct hand-tracker
-  (handle nil :type (or null (unsigned-byte 64)))
+(defstruct (hand-tracker (:include %:wrapped-handle))
   (joint-count %:+hand-joint-count-ext+ :type (unsigned-byte 32)))
 
-(defun create-hand-tracker-ext (session hand &key (joint-set :default-ext))
+(defun create-hand-tracker-ext (session hand &key (joint-set :default-ext)
+                                               object-name)
   (with-hand-tracker-create-info-ext (ci :hand hand
                                          :hand-joint-set joint-set)
     ;; calculate joint count first so we error before creating handle
@@ -244,19 +228,25 @@
                 %:+hand-joint-count-ext+)
                (:hand-with-forearm-ultraleap
                 %:+hand-forearm-joint-count-ultraleap+))))
-      (make-hand-tracker
-       :handle (with-returned-handle (h %:hand-tracker-ext)
-                 (%:create-hand-tracker-ext session ci h))
-       :joint-count c))))
+      (let ((h (make-hand-tracker
+                :handle (with-returned-handle (h %:hand-tracker-ext nil)
+                          (%:create-hand-tracker-ext (handle session) ci h))
+                :type :hand-tracker-ext
+                :name object-name
+                :joint-count c)))
+        (when (and object-name (%use-debug))
+          (set-debug-utils-object-name-ext h object-name))
+        h))))
 
 (defun destroy-hand-tracker-ext (hand-tracker)
-  (%:destroy-hand-tracker-ext (hand-tracker-handle hand-tracker)))
+  (%:destroy-hand-tracker-ext (handle hand-tracker)))
 
 (defun locate-hand-joints-ext (hand-tracker base-space time)
-  (let ((h (hand-tracker-handle hand-tracker))
+  (let ((h (handle hand-tracker))
         (n (hand-tracker-joint-count hand-tracker)))
     ;; todo: optionally? add velocities
-    (with-hand-joints-locate-info-ext (li :base-space base-space :time time)
+    (with-hand-joints-locate-info-ext (li :base-space (handle base-space)
+                                          :time time)
       (cffi:with-foreign-object (loc-array '(:struct %:hand-joint-location-ext)
                                  n)
         (with-hand-joint-locations-ext (l :%slots t
@@ -291,16 +281,16 @@
 
 (defun enumerate-display-refresh-rates-fb (session)
   (with-two-call (i o p :float)
-    (%:enumerate-display-refresh-rates-fb session i o p)))
+    (%:enumerate-display-refresh-rates-fb (handle session) i o p)))
 
 (defun get-display-refresh-rate-fb (session)
   (with-returned-atom (p :float)
-    (%:get-display-refresh-rate-fb session p)))
+    (%:get-display-refresh-rate-fb (handle session) p)))
 
 
 (defun request-display-refresh-rate-fb (session rate)
-  (%:request-display-refresh-rate-fb session rate))
+  (%:request-display-refresh-rate-fb (handle session) rate))
 
 (defun (setf get-display-refresh-rate-fb) (new-rate session)
-  (%:request-display-refresh-rate-fb session new-rate)
+  (%:request-display-refresh-rate-fb (handle session) new-rate)
   new-rate)

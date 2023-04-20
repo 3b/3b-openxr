@@ -2,7 +2,15 @@
 
 ;; with-foo and other macros
 
-(defmacro with-returned-handle ((var type) &body form)
+(defmacro with-returned-atom ((var type) &body form)
+  ;; &body just for indentation
+  (assert (= 1 (length form)))
+  (setf form (car form))
+  `(cffi:with-foreign-object (,var ',type)
+     (check-result ,form)
+     (cffi:mem-ref ,var ',type)))
+
+(defmacro with-returned-handle ((var type object-type &key name) &body form)
   ;; &body just for indentation
   (assert (= 1 (length form)))
   (setf form (car form))
@@ -10,17 +18,10 @@
      (check-result ,form)
      (when *create-verbose*
        (format *debug-io* "created ~s = #x~x~%" ',type (cffi:mem-ref ,var ',type)))
-     (cffi:mem-ref ,var ',type)))
-
-(defmacro with-returned-atom ((var type) &body form)
-  ;; &body just for indentation
-  (assert (= 1 (length form)))
-  (setf form (car form))
-  ;; pretty much same as with-returned-handle, but might add leak
-  ;; tracking to that since handles need destroyed but atoms don't
-  `(cffi:with-foreign-object (,var ',type)
-     (check-result ,form)
-     (cffi:mem-ref ,var ',type)))
+     ,(if object-type
+          `(wrap-handle (cffi:mem-ref ,var ',type) ,object-type ,name)
+          ;; for things that wrap manually
+          `(cffi:mem-ref ,var ',type))))
 
 (defmacro with-instance ((&rest r
                           &key
@@ -43,21 +44,21 @@
                    application-name application-version
                    engine-name engine-version api-version
                    message-severities message-types user-callback
-                   user-data))
+                   user-data object-name))
   `(let ((*instance* (create-instance ,@r)))
      (unwind-protect
-          (%::with-instance (*instance*)
+          (progn
             ,@body)
        (when *create-verbose*
          (format *debug-io* "~&destroy instance #x~x~%" *instance*))
-       (%:destroy-instance *instance*))))
+       (destroy-instance *instance*))))
 
 (defmacro with-debug-messsenger ((var &rest r
                                   &key message-severities message-types
                                     user-callback (user-data 0))
                                  &body body)
   (declare (ignore message-types message-severities user-callback user-data))
-  `(let ((,var (create-debug-utils-messenger-ext *instance* ,@r)))
+  `(let ((,var (create-debug-utils-messenger-ext ,@r)))
      (unwind-protect (progn ,@body)
        (when *create-verbose*
          (format *debug-io* "~&destroy messenger #x~x~%" ,var))

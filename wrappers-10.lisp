@@ -6,55 +6,68 @@
 
 (defun enumerate-swapchain-formats (session)
   (with-two-call (i o p :int64)
-    (%:enumerate-swapchain-formats session i o p)))
+    (%:enumerate-swapchain-formats (handle session) i o p)))
 
+(defstruct (swapchain (:include %:wrapped-handle))
+  (width 0 :type (unsigned-byte 32))
+  (height 0 :type (unsigned-byte 32))
+  ;; image type depends on API, unsigned-byte 32 for gl,gles, pointer
+  ;; for vk and d3d (called texture for d3d, but not bothering to
+  ;; split here for now)
+  (images #() :type (simple-array t (*))))
 
-(defun create-swapchain(session .format .width .height
+(defun create-swapchain(session format width height
                         &key (sample-count 1)
                           (face-count 1) (array-size 1) (mip-count 1)
                           (create-flags ())
-                          (usage-flags '(:color-attachment)))
+                          (usage-flags '(:color-attachment))
+                          object-name)
   (with-swapchain-create-info (sci
+                               :%slots t
                                :create-flags create-flags
                                :usage-flags usage-flags
-                               :format .format
+                               :format format
                                :sample-count sample-count
-                               :width .width
-                               :height .height
+                               :width width
+                               :height height
                                :face-count face-count
                                :array-size array-size
                                :mip-count mip-count)
     (cffi:with-foreign-object (p '%:swapchain)
       (setf (cffi:mem-ref p :uint32) #xdead)
-      (check-result (%:create-swapchain session sci p))
+      (check-result (%:create-swapchain (handle session) sci p))
       (let ((s (cffi:mem-ref p '%:swapchain)))
-        (list :handle s
-              :width (cffi:foreign-slot-value
-                      sci '(:struct %:swapchain-create-info) '%:width)
-              :height (cffi:foreign-slot-value
-                       sci '(:struct %:swapchain-create-info) '%:height))))))
+        (make-swapchain :handle s :type :swapchain :name object-name
+                        :width %:width :height %:height)))))
 
 (defun create-swapchain/gl (session format width height
                             &rest r
                             &key (sample-count 1)
                               (face-count 1) (array-size 1) (mip-count 1)
                               (create-flags ())
-                              (usage-flags '(:color-attachment)))
-  (declare (ignorable sample-count face-count array-size mip-count create-flags usage-flags))
-  (let* ((s (apply #'create-swapchain session format width height r))
-         (h (getf s :handle)))
-    (list* :images (coerce
-                    (loop for i in (enumerate-swapchain-images/gl h)
-                          collect (getf i '%:image))
-                    'vector)
-           s)))
+                              (usage-flags '(:color-attachment))
+                              object-name)
+  ;; keywords are only defined here for autodoc, passed to create with
+  ;; apply
+  (declare (ignorable sample-count face-count array-size mip-count
+                      create-flags usage-flags object-name))
+  (let* ((s (apply #'create-swapchain session format width height r)))
+    (setf (swapchain-images s) (enumerate-swapchain-images/gl s))
+    s))
 
 
-(import-export %:destroy-swapchain)
+(defun destroy-swapchain (swapchain)
+  (%:destroy-swapchain (handle swapchain)))
 
 (defun enumerate-swapchain-images/gl (swapchain)
-  (with-two-call (i o p (:struct %:swapchain-image-opengl-khr))
-    (%:enumerate-swapchain-images swapchain i o p)))
+  (coerce
+   (with-two-call (i o p (:struct %:swapchain-image-opengl-khr)
+                   :filter-pointer (lambda (p)
+                                     (cffi:foreign-slot-value
+                                      p '(:struct %:swapchain-image-opengl-khr)
+                                      '%:image)))
+     (%:enumerate-swapchain-images (handle swapchain) i o p))
+   'vector))
 
 ;; no enumerate-swapchain-images for now since it needs a specific
 ;; type
@@ -64,16 +77,16 @@
   ;; put in :next.
   (with-swapchain-image-acquire-info (siai)
     (with-returned-atom (p :uint32)
-      (%:acquire-swapchain-image swapchain siai p))))
+      (%:acquire-swapchain-image (handle swapchain) siai p))))
 
 (defun wait-swapchain-image (swapchain &key (timeout 0))
   (with-swapchain-image-wait-info (siwi :timeout timeout)
-    (check-result (%:wait-swapchain-image swapchain siwi))))
+    (check-result (%:wait-swapchain-image (handle swapchain) siwi))))
 
 (defun release-swapchain-image (swapchain)
   ;; empty struct, so could be null pointer instead
   (with-swapchain-image-release-info (siri)
-    (%:release-swapchain-image swapchain siri)))
+    (%:release-swapchain-image (handle swapchain) siri)))
 
 (defmacro with-swapchain-image/1 ((index-var swapchain)
                                   &body body)
@@ -108,7 +121,7 @@
   (fov (make-fov) :type fov)
   ;; composition-layer-projection-view sub-image
   (index 0 :type (unsigned-byte 32))
-  (swapchain 0 :type (unsigned-byte 64))
+  (swapchain nil :type (or null %:wrapped-handle))
   ;; composition-layer-projection-view sub-image image-rect
   (image-top 0 :type (signed-byte 32))
   (image-bottom 0 :type (signed-byte 32))
@@ -120,10 +133,10 @@
 (defun locate-views (session at view-config space)
   (with-view-locate-info (vli :view-configuration-type view-config
                               :display-time at
-                              :space space)
+                              :space (handle space))
     (with-view-state (vs :%slots t)
       (loop with views = (with-two-call (i o p (:struct %:view))
-                           (%:locate-views session vli vs i o p))
+                           (%:locate-views (handle session) vli vs i o p))
             ;; this needs to be after call to %:locate-views
             with f = %:view-state-flags
             for v in views
@@ -149,7 +162,7 @@
 (defun wait-frame (session)
   (with-frame-wait-info (fwi)
     (with-frame-state (fs :%slots t)
-      (check-result (%:wait-frame session fwi fs))
+      (check-result (%:wait-frame (handle session) fwi fs))
       (values (not (zerop %:should-render))
               %:predicted-display-time %:predicted-display-period))))
 
@@ -157,7 +170,7 @@
 
 (defun begin-frame (session)
   (with-frame-begin-info (fbi)
-    (check-result (%:begin-frame session fbi))))
+    (check-result (%:begin-frame (handle session) fbi))))
 
 (defun %translate-projection-view (l p)
   (cffi:with-foreign-slots ((%:type
@@ -192,7 +205,7 @@
                                %:swapchain)
                               sub-image (:struct %:swapchain-sub-image))
       (setf %:image-array-index 0
-            %:swapchain (projection-view-swapchain l))
+            %:swapchain (handle (projection-view-swapchain l)))
       (cffi:with-foreign-slots (((offset :pointer %:offset)
                                  (extent :pointer %:extent))
                                 image-rect (:struct %:rect-2d-i))
@@ -217,7 +230,7 @@
             do (%translate-projection-view v p1))
       (with-composition-layer-projection (clp
                                           :layer-flags ()
-                                          :space space
+                                          :space (handle space)
                                           :view-count n
                                           :views clpv)
         (cffi:with-foreign-object (p :pointer)
@@ -226,7 +239,7 @@
                                     :environment-blend-mode blend-mode
                                     :layer-count 1
                                     :layers p)
-            (check-result (%:end-frame session fei))))))))
+            (check-result (%:end-frame (handle session) fei))))))))
 
 (defmacro with-frame ((session space display-time layers-var) &body body)
   ;; todo: blend-mode, layers args
@@ -248,4 +261,4 @@
 (defun enumerate-environment-blend-modes (system-id view-config)
   (with-two-call (i o p %:environment-blend-mode)
     (%:enumerate-environment-blend-modes
-     *instance* system-id view-config i o p)))
+     (handle *instance*) system-id view-config i o p)))

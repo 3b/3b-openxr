@@ -42,7 +42,9 @@
                          ;; graphics-binding-vulkan-khr
                          instance physical-device
                          ;; device shared with d3d
-                         queue-family-index queue-index)
+                         queue-family-index queue-index
+                         ;; optional object name for debugging
+                         object-name)
   (declare (ignorable display visual-id glx-fbconfig glx-drawable glx-context
                       connection screen-number fb-config-id
                       device queue instance physical-device
@@ -70,9 +72,8 @@
                    next2 (cffi:null-pointer) ;; gb
                    %:hdc hdc
                    %:hglrc hglrc)
-             (cffi:with-foreign-object (s '%:session)
-               (check-result (%:create-session *instance* sci s))
-               (cffi:mem-ref s '%:session)))))
+             (with-returned-handle (s %:session :session :name object-name)
+               (%:create-session (handle *instance*) sci s)))))
         (:gl-xlib (error "todo"))
         (:gl-xcb(error "todo"))
         (:gl-wayland(error "todo"))
@@ -80,7 +81,8 @@
         (:d3d12(error "todo"))
         (:vulkan(error "todo"))))))
 
-(import-export %:destroy-session)
+(defun destroy-session (session)
+  (%:destroy-session (handle session)))
 
 (defmacro with-session ((session system-id &rest r) &body body)
   `(let ((,session (create-session ,system-id ,@r)))
@@ -90,7 +92,7 @@
           (progn ,@body)
        (when *create-verbose*
          (format *debug-io* "destroy session #x~x~%" ,session))
-       (%:destroy-session ,session))))
+       (destroy-session ,session))))
 
 ;; 9.3. Session Control
 
@@ -98,8 +100,12 @@
   (with-session-begin-info (sbi
                             :primary-view-configuration-type
                             view-configuration-type)
-    (check-result (%:begin-session session sbi))))
+    (check-result (%:begin-session (handle session) sbi))))
 
-(import-export %:end-session %:request-exit-session)
+(defun end-session (session)
+  (%:end-session (handle session)))
+
+(defun request-exit-session (session)
+  (%:request-exit-session (handle session)))
 
 ;; 9.4. Session States

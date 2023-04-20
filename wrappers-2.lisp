@@ -342,7 +342,7 @@ isn't in *CHECK-VERBOSE-QUIET*")
           `(with-event-data-buffer (,edb)
              ;; don't do anything if it returns :event-unavailable
              (when (unqualified-success
-                    (check-result (%:poll-event *instance* ,edb)))
+                    (check-result (%:poll-event (handle *instance*) ,edb)))
                (let ((,edb-type (cffi:foreign-slot-value
                                  ,edb '(:struct %:event-data-buffer) '%:type)))
                  (case ,edb-type

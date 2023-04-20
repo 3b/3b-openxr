@@ -8,11 +8,12 @@
 
 (defun enumerate-view-configurations (system-id)
   (with-two-call (i o p %:view-configuration-type)
-    (%:enumerate-view-configurations *instance* system-id i o p)))
+    (%:enumerate-view-configurations (handle *instance*) system-id i o p)))
 
 (defun get-view-configuration-properties (system-id view-configuration-type)
   (with-view-configuration-properties (vcp :%slots t)
-    (check-result (%:get-view-configuration-properties *instance* system-id
+    (check-result (%:get-view-configuration-properties (handle *instance*)
+                                                       system-id
                                                        view-configuration-type
                                                        vcp))
     (list %:view-configuration-type :fov-mutable (not (zerop %:fov-mutable)))))
@@ -46,4 +47,4 @@
                                        %:next '(:struct %:base-in-structure)
                                        '%:type))))))))
     (%:enumerate-view-configuration-views
-     *instance* system-id view-configuration-type i o p)))
+     (handle *instance*) system-id view-configuration-type i o p)))

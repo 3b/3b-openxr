@@ -1,8 +1,34 @@
 (in-package #:3b-openxr-wrappers)
 
-(defvar *instance* nil)
 (defvar *create-verbose* nil)
 
+(defun wrap-handle (handle type name)
+  (let ((w (%:make-wrapped-handle :handle handle
+                                  :type type
+                                  :name name)))
+    (when (and name (%use-debug))
+      (set-debug-utils-object-name-ext w name))
+    w))
+
+(declaim (inline %use-debug handle handle-name handle-type))
+;; some shortcuts for accessing handles
+(defun %use-debug ()
+  (%::%instance-has-debug-utils *instance*))
+(defun handle (handle)
+  (when handle (%:wrapped-handle-handle handle)))
+(defun handle-name (handle)
+  (%:wrapped-handle-name handle))
+(defun (setf handle-name) (new handle)
+  (setf (%:wrapped-handle-name handle) new))
+(defun handle-type (handle)
+  (%:wrapped-handle-type handle))
+
+(declaim (inline ensure-vector))
+(defun ensure-vector (a)
+  (etypecase a
+    (vector a)
+    (atom (vector a))
+    (list (coerce a 'vector))))
 ;;; mostly just for documentation, since defpackage should have
 ;;; corresponding import/export.
 (defmacro import-export (&rest symbols)

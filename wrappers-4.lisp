@@ -51,47 +51,57 @@
                           (user-data 0)
                           ;; todo: instance-create-info-android?
                           ;; next pointer?
-                          )
-  (with-debug-utils-messenger-create-info-ext
-      (dumci :message-severities message-severities
-             :message-types message-types
-             :user-callback user-callback
-             :user-data user-data)
-    (with-application-info (ai :application-version application-version
-                               :engine-version engine-version
-                               :api-version api-version
-                               :application-name application-name
-                               :engine-name engine-name)
-      (with-foreign-string-array (fs-extensions extensions)
-        (with-foreign-string-array (fs-layers layers)
-          (with-instance-create-info (ici
-                                      :next (if user-callback
-                                                dumci
-                                                ;; todo: generate casts for next?
-                                                (cffi:null-pointer))
-                                      :create-flags create-flags
-                                      :application-info ai
-                                      :enabled-api-layer-count (length layers)
-                                      :enabled-api-layer-names fs-layers
-                                      :enabled-extension-count (length extensions)
-                                      :enabled-extension-names fs-extensions)
-            (cffi:with-foreign-object (instance '%::instance)
-              (let ((r (%::create-instance ici instance)))
-                (unless (unqualified-success r)
-                  (xr-error r "create instance failed ~s?"
-                            (cffi:foreign-enum-keyword '%::%result r :errorp nil)))
-                (when *create-verbose*
-                  (format *debug-io* "~&created instance ~x~%" (cffi:mem-ref instance '%::instance)))
-                (cffi:mem-ref instance '%::instance)))))))))
+                          object-name)
+  (let ((use-debug (member %:ext-debug-utils-extension-name extensions
+                           :test 'string=)))
+    (when (and user-callback (not use-debug))
+      (error "supplied debug-utils callback without enabling extension?"))
+    (with-debug-utils-messenger-create-info-ext
+        (dumci :message-severities message-severities
+               :message-types message-types
+               :user-callback user-callback
+               :user-data user-data)
+      (with-application-info (ai :application-version application-version
+                                 :engine-version engine-version
+                                 :api-version api-version
+                                 :application-name application-name
+                                 :engine-name engine-name)
+        (with-foreign-string-array (fs-extensions extensions)
+          (with-foreign-string-array (fs-layers layers)
+            (with-instance-create-info (ici
+                                        :next (if user-callback
+                                                  dumci
+                                                  ;; todo: generate casts for next?
+                                                  (cffi:null-pointer))
+                                        :create-flags create-flags
+                                        :application-info ai
+                                        :enabled-api-layer-count (length layers)
+                                        :enabled-api-layer-names fs-layers
+                                        :enabled-extension-count (length extensions)
+                                        :enabled-extension-names fs-extensions)
+              (cffi:with-foreign-object (instance '%::instance)
+                (let ((r (%::create-instance ici instance)))
+                  (unless (unqualified-success r)
+                    (xr-error r "create instance failed ~s?"
+                              (cffi:foreign-enum-keyword '%::%result r :errorp nil)))
+                  (when *create-verbose*
+                    (format *debug-io* "~&created instance ~x~%" (cffi:mem-ref instance '%::instance)))
+                  (let ((i (%::wrap-instance (cffi:mem-ref instance '%:instance)
+                                             :name object-name
+                                             :debug use-debug)))
+                    (when (and object-name use-debug)
+                      (set-debug-utils-object-name-ext (handle i) object-name))
+                    i))))))))))
 
 
-(import-export %:destroy-instance)
+(defun destroy-instance (instance)
+  (%:destroy-instance (handle instance)))
 
 ;; 4.3. Instance Information
 
 (defun get-instance-properties ()
   (m:with-instance-properties (ip :%slots t)
-    (check-result (%:get-instance-properties *instance* ip))
+    (check-result (%:get-instance-properties (handle *instance*) ip))
     (list :runtime-name (cffi:foreign-string-to-lisp
                          %:runtime-name :max-chars %:+max-runtime-name-size+
                          :encoding :utf-8)
@@ -111,10 +121,10 @@
   (cffi:with-foreign-pointer-as-string (p %:+max-result-string-size+
                                           :encoding :utf-8
                                           :max-chars %:+max-result-string-size+)
-    (check-result (%:result-to-string (or *instance* 0) result p))))
+    (check-result (%:result-to-string (handle *instance*) result p))))
 
 (defun structure-type-to-string (type)
   (cffi:with-foreign-pointer-as-string (p %:+max-structure-name-size+
                                           :encoding :utf-8
                                           :max-chars %:+max-structure-name-size+)
-    (check-result (%:structure-type-to-string (or *instance* 0) type p))))
+    (check-result (%:structure-type-to-string (handle *instance*) type p))))

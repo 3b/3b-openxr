@@ -340,21 +340,13 @@
                     (#:% #:3b-openxr-bindings)
                     (#:m #:3b-openxr-mid-level))
   (:import-from #:3b-openxr-bindings
-                #:destroy-instance
                 #:+null-handle+
                 #:+null-path+
                 #:+null-system-id+
-                #:width
-                #:height
-                #:destroy-space
+;                #:width
+;                #:height
                 #:pose
-                #:destroy-session
-                #:end-session
-                #:request-exit-session
-                #:destroy-swapchain
-                #:destroy-action-set
-                #:destroy-action
-                #:session-end-debug-utils-label-region-ext)
+                #:*instance*)
   (:export #:seconds-to-time
            #:time-to-seconds
            #:with-instance
@@ -601,7 +593,13 @@
            #:ignore-xr-error
            #:hand-tracker-handle
            #:hand-tracker-joint-count
-           #:*check-verbose*))
+           #:*check-verbose*
+           #:swapchain
+           #:swapchain-p
+           #:swapchain-width
+           #:swapchain-height
+           #:swapchain-images
+           #:destroy-debug-utils-messenger-ext))
 
 
 (defpackage #:3b-openxr
@@ -613,6 +611,7 @@
   (:import-from #:3b-openxr-bindings
                 #:+current-api-version+
                 #:make-version
+                #:parse-version
                 #:version-major
                 #:version-minor
                 #:version-patch
@@ -651,9 +650,10 @@
                 #:component-type
                 #:enabled
                 #:paths
-                #:end-session
-                #:width
-                #:height)
+;                #:end-session
+;                #:width
+;                #:height
+                )
   (:export #:+current-api-version+
            #:make-version
            #:version-major
@@ -937,4 +937,8 @@
            #:destroy-session
            #:hand-tracker-handle
            #:hand-tracker-joint-count
-           #:*check-verbose*))
+           #:*check-verbose*
+           #:swapchain-width
+           #:swapchain-height
+           #:swapchain-images
+           #:destroy-debug-utils-messenger-ext))

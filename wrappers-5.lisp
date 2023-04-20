@@ -16,7 +16,7 @@
       (setf %:type :type-system-get-info
             %:next (cffi:null-pointer)
             %:form-factor form-factor))
-    (check-result (%:get-system *instance* sgi p))
+    (check-result (%:get-system (handle *instance*) sgi p))
     (cffi:mem-ref p '%:system-id)))
 
 ;; 5.3. System Properties
@@ -24,7 +24,7 @@
 (defun %get-system-properties (system-id &key (next (cffi:null-pointer)))
   (m:with-system-properties (sp :%slots t
                                 :next next)
-    (check-result (%:get-system-properties *instance* system-id sp))
+    (check-result (%:get-system-properties (handle *instance*) system-id sp))
     (list :system-id %:system-id
           :vendor-id %:vendor-id
           :system-name (cffi:foreign-string-to-lisp

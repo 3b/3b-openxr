@@ -6,19 +6,21 @@
 
 ;; 11.2. Action Sets
 
-(defun create-action-set (name &key (localized-name name) (priority 0))
+(defun create-action-set (name &key (localized-name name) (priority 0)
+                                 object-name)
   (with-action-set-create-info (asci :action-set-name name
                                      :localized-action-set-name localized-name
                                      :priority priority)
-    (with-returned-handle (p %:action-set)
-      (%:create-action-set *instance* asci p))))
+    (with-returned-handle (p %:action-set :action-set :name object-name)
+      (%:create-action-set (handle *instance*) asci p))))
 
-(import-export %:destroy-action-set)
+(defun destroy-action-set (action-set)
+  (%:destroy-action-set (handle action-set)))
 
 ;; 11.3. Creating Actions
 
 (defun create-action (action-set name atype &key (localized-name name)
-                                              subaction-paths)
+                                              subaction-paths object-name)
   (when subaction-paths
     (break "subaction paths not implemented yet"))
   (with-action-create-info (aci :action-name name
@@ -26,10 +28,11 @@
                                 :action-type atype
                                 :count-subaction-paths 0
                                 :subaction-paths (cffi:null-pointer))
-    (with-returned-handle (p %:action)
-      (%:create-action action-set aci p))))
+    (with-returned-handle (p %:action :action :name object-name)
+      (%:create-action (handle action-set) aci p))))
 
-(import-export %:destroy-action)
+(defun destroy-action (action)
+  (%:destroy-action (handle action)))
 
 ;; 11.4. Suggested Bindings
 
@@ -42,31 +45,32 @@
             for (a b) on bindings by #'cddr
             for p2 = (cffi:mem-aptr p '(:struct %:action-suggested-binding) i)
             do (setf (cffi:foreign-slot-value
-                      p2 '(:struct %:action-suggested-binding) '%:action) a
-                      (cffi:foreign-slot-value
-                       p2 '(:struct %:action-suggested-binding) '%:binding) b))
+                      p2 '(:struct %:action-suggested-binding) '%:action)
+                     (handle a))
+               (setf (cffi:foreign-slot-value
+                      p2 '(:struct %:action-suggested-binding) '%:binding)
+                     b))
       (with-interaction-profile-suggested-binding (ipsb
                                                    :interaction-profile profile
                                                    :suggested-bindings p
                                                    :count-suggested-bindings n)
-        (check-result (%:suggest-interaction-profile-bindings *instance* ipsb))))))
+        (check-result (%:suggest-interaction-profile-bindings (handle *instance*) ipsb))))))
 
-(defun attach-session-action-sets (session action-sets-vector)
-  (let ((n (length action-sets-vector)))
+(defun attach-session-action-sets (session action-sets)
+  (setf action-sets (ensure-vector action-sets))
+  (let ((n (length action-sets)))
     (cffi:with-foreign-object (p '%:action-set n)
       (loop for i below n
             do (setf (cffi:mem-aref p '%:action-set i)
-                     (aref action-sets-vector i)))
-      (with-session-action-sets-attach-info (sasai
-                                             :count-action-sets
-                                             (length action-sets-vector)
-                                             :action-sets p)
-        (check-result (%:attach-session-action-sets session sasai))))))
+                     (handle (aref action-sets i))))
+      (with-session-action-sets-attach-info (sasai :count-action-sets n
+                                                   :action-sets p)
+        (check-result (%:attach-session-action-sets (handle session) sasai))))))
 
 (defun get-current-interaction-profile (session top-level-user-path)
   (with-interaction-profile-state (ips :%slots t)
     (check-result (%:get-current-interaction-profile
-                   session top-level-user-path ips))
+                   (handle session) top-level-user-path ips))
     %:interaction-profile))
 
 
@@ -76,8 +80,8 @@
 
 (defun get-action-state-boolean (session action)
   (with-action-state-boolean (asb :%slots t)
-    (with-action-state-get-info (agi :action action)
-      (check-result (%:get-action-state-boolean session agi asb)))
+    (with-action-state-get-info (agi :action (handle action))
+      (check-result (%:get-action-state-boolean (handle session) agi asb)))
     (list :current (not (zerop %:current-state))
           :changed (not (zerop %:changed-since-last-sync))
           :last-change-time %:last-change-time
@@ -85,8 +89,8 @@
 
 (defun get-action-state-float (session action)
   (with-action-state-float (asf :%slots t)
-    (with-action-state-get-info (agi :action action)
-      (check-result (%:get-action-state-float session agi asf)))
+    (with-action-state-get-info (agi :action (handle action))
+      (check-result (%:get-action-state-float (handle session) agi asf)))
     (list :current %:current-state
           :changed (not (zerop %:changed-since-last-sync))
           :last-change-time %:last-change-time
@@ -94,8 +98,8 @@
 
 (defun get-action-state-vector-2f (session action)
   (with-action-state-vector-2f (asv :%slots t)
-    (with-action-state-get-info (agi :action action)
-      (check-result (%:get-action-state-float session agi asv)))
+    (with-action-state-get-info (agi :action (handle action))
+      (check-result (%:get-action-state-float (handle session) agi asv)))
     (list :current %:current-state
           :changed (not (zerop %:changed-since-last-sync))
           :last-change-time %:last-change-time
@@ -103,8 +107,8 @@
 
 (defun get-action-state-pose (session action)
   (with-action-state-pose (asp :%slots t)
-    (with-action-state-get-info (agi :action action)
-      (check-result (%:get-action-state-float session agi asp)))
+    (with-action-state-get-info (agi :action (handle action))
+      (check-result (%:get-action-state-float (handle session) agi asp)))
     (list :active %:is-active)))
 
 
@@ -116,32 +120,35 @@
   (with-haptic-vibration (hv :amplitude (float amplitude 1f0)
                              :duration duration
                              :frequency (float frequency 1f0))
-    (with-haptic-action-info (hai :action action
+    (with-haptic-action-info (hai :action (handle action)
                                   :subaction-path subaction-path)
-      (check-result (%:apply-haptic-feedback session hai hv)))))
+      (check-result (%:apply-haptic-feedback (handle session) hai hv)))))
 
 
 (defun stop-haptic-feedback (session action &key (subaction-path +null-path+))
-  (with-haptic-action-info (hai :action action :subaction-path subaction-path)
-    (check-result (%:stop-haptic-feedback session hai))))
+  (with-haptic-action-info (hai :action (handle action)
+                                :subaction-path subaction-path)
+    (check-result (%:stop-haptic-feedback (handle session) hai))))
 
 ;; 11.7. Input Action State Synchronization
 
-(defun sync-actions (session active-action-sets-vector)
-  (assert (= 1 (length active-action-sets-vector)))
-  ;; todo: handle multiple active action sets
-  (with-active-action-set (aas :action-set (aref active-action-sets-vector 0))
+(defun sync-actions (session active-action-sets)
+  (setf active-action-sets (ensure-vector active-action-sets))
+  (assert (= 1 (length active-action-sets)))
+  ;; todo: handle multiple active action sets and subaction-paths
+  (with-active-action-set (aas :action-set (handle (aref active-action-sets 0))
+                               :subaction-path 0)
     (with-actions-sync-info (asi
                              :count-active-action-sets 1
                              :active-action-sets aas)
-      (check-result (%:sync-actions session asi)))))
+      (check-result (%:sync-actions (handle session) asi)))))
 
 ;; 11.8. Bound Sources
 
 (defun enumerate-bound-sources-for-action (session action)
-  (with-bound-sources-for-action-enumerate-info (bsfaei :action action)
+  (with-bound-sources-for-action-enumerate-info (bsfaei :action (handle action))
     (with-two-call (i o p %:path)
-      (%:enumerate-bound-sources-for-action session bsfaei i o p))))
+      (%:enumerate-bound-sources-for-action (handle session) bsfaei i o p))))
 
 (defun get-input-source-localized-name (session path
                                         &key (components '(:user-path
@@ -151,4 +158,4 @@
                                               :source-path path
                                               :which-components components)
     (with-two-call/string (i o p)
-      (%:get-input-source-localized-name session islngi i o p))))
+      (%:get-input-source-localized-name (handle session) islngi i o p))))

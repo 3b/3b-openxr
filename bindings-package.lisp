@@ -1598,7 +1598,14 @@
            #:x
            #:x-display
            #:y
-           #:z))
+           #:z
+           #:wrapped-handle
+           #:make-wrapped-handle
+           #:wrapped-handle-p
+           #:copy-wrapped-handle
+           #:wrapped-handle-handle
+           #:wrapped-handle-type
+           #:wrapped-handle-name))
 (in-package #:3b-openxr-bindings)
 ;; internals used by extension function wrapper generator
 (defconstant %extension-function-count% 166)

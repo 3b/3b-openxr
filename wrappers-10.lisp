@@ -226,8 +226,7 @@
                                     :environment-blend-mode blend-mode
                                     :layer-count 1
                                     :layers p)
-            (float-features:with-float-traps-masked (:overflow)
-              (check-result (%:end-frame session fei)))))))))
+            (check-result (%:end-frame session fei))))))))
 
 (defmacro with-frame ((session space display-time layers-var) &body body)
   ;; todo: blend-mode, layers args

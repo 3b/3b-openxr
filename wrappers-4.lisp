@@ -14,7 +14,9 @@
                                     (getf a '%:layer-name)
                                     :max-chars %::+max-api-layer-name-size+)
                              :version (getf a '%:layer-version)
-                             :spec-version (getf a '%:spec-version)
+                             :spec-version (multiple-value-list
+                                            (%:parse-version
+                                             (getf a '%:spec-version)))
                              :description (cffi:foreign-string-to-lisp
                                            (getf a '%:description)
                                            :max-chars %::+max-api-layer-description-size+))))

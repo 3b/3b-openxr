@@ -83,7 +83,8 @@ isn't in *CHECK-VERBOSE-QUIET*")
 
 ;; 2.11 Buffer Size Parameters
 
-(defmacro with-two-call ((in out pointer type &key filter) &body call)
+(defmacro with-two-call ((in out pointer type &key filter filter-pointer)
+                         &body call)
   ;; &body is just to get formatting in editor, only accept 1 form
   ;; here
   (assert (= 1 (length call)))
@@ -108,15 +109,25 @@ isn't in *CHECK-VERBOSE-QUIET*")
                                 (cffi:null-pointer)))
                  (check-result ,call)
                  (loop for ,i below ,in
-                       collect ,(if filter
-                                    `(,filter (cffi:mem-aref ,pointer ',type ,i))
-                                    `(cffi:mem-aref ,pointer ',type ,i))))
+                       collect ,(cond
+                                  (filter-pointer
+                                   `(,filter-pointer
+                                     (cffi:mem-aptr ,pointer ',type ,i)))
+                                  (filter
+                                   `(,filter (cffi:mem-aref ,pointer ',type ,i)))
+                                  (t
+                                   `(cffi:mem-aref ,pointer ',type ,i)))))
               `(cffi:with-foreign-object (,pointer ',type ,in)
                  (check-result ,call)
                  (loop for ,i below ,in
-                       collect ,(if filter
-                                    `(,filter (cffi:mem-aref ,pointer ',type ,i))
-                                    `(cffi:mem-aref ,pointer ',type ,i)))))))))
+                       collect ,(cond
+                                  (filter-pointer
+                                   `(,filter-pointer
+                                     (cffi:mem-aptr ,pointer ',type ,i)))
+                                  (filter
+                                   `(,filter (cffi:mem-aref ,pointer ',type ,i)))
+                                  (t
+                                   `(cffi:mem-aref ,pointer ',type ,i))))))))))
 
 (defmacro with-two-call/string ((in out pointer) &body call)
   ;; &body is just to get formatting in editor, only accept 1 form

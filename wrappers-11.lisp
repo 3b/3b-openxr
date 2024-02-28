@@ -78,18 +78,20 @@
 
 ;; fixme: should these return multiple values instead of plist?
 
-(defun get-action-state-boolean (session action)
+(defun get-action-state-boolean (session action &key (subaction-path +null-path+))
   (with-action-state-boolean (asb :%slots t)
-    (with-action-state-get-info (agi :action (handle action))
+    (with-action-state-get-info (agi :action (handle action)
+                                     :subaction-path subaction-path)
       (check-result (%:get-action-state-boolean (handle session) agi asb)))
     (list :current (not (zerop %:current-state))
           :changed (not (zerop %:changed-since-last-sync))
           :last-change-time %:last-change-time
           :active %:is-active)))
 
-(defun get-action-state-float (session action)
+(defun get-action-state-float (session action &key (subaction-path +null-path+))
   (with-action-state-float (asf :%slots t)
-    (with-action-state-get-info (agi :action (handle action))
+    (with-action-state-get-info (agi :action (handle action)
+                                     :subaction-path subaction-path)
       (check-result (%:get-action-state-float (handle session) agi asf)))
     (list :current %:current-state
           :changed (not (zerop %:changed-since-last-sync))

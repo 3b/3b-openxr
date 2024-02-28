@@ -21,15 +21,18 @@
 
 (defun create-action (action-set name atype &key (localized-name name)
                                               subaction-paths object-name)
-  (when subaction-paths
-    (break "subaction paths not implemented yet"))
-  (with-action-create-info (aci :action-name name
-                                :localized-action-name localized-name
-                                :action-type atype
-                                :count-subaction-paths 0
-                                :subaction-paths (cffi:null-pointer))
-    (with-returned-handle (p %:action :action :name object-name)
-      (%:create-action (handle action-set) aci p))))
+  (cffi:with-foreign-object (c-paths '%:path (length subaction-paths))
+    (loop for i from 0
+          for path in subaction-paths
+          do (setf (cffi:mem-aref c-paths '%:path i)
+                   path))
+    (with-action-create-info (aci :action-name name
+                                  :localized-action-name localized-name
+                                  :action-type atype
+                                  :count-subaction-paths (length subaction-paths)
+                                  :subaction-paths c-paths)
+      (with-returned-handle (p %:action :action :name object-name)
+        (%:create-action (handle action-set) aci p)))))
 
 (defun destroy-action (action)
   (%:destroy-action (handle action)))

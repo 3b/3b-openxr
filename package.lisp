@@ -830,6 +830,7 @@
            #:destroy-action
            #:get-current-interaction-profile
            #:get-action-state-float
+           #:get-action-state-vector-2f
            #:enumerate-bound-sources-for-action
            #:stop-haptic-feedback
            #:get-input-source-localized-name

@@ -96,10 +96,11 @@
           :last-change-time %:last-change-time
           :active %:is-active)))
 
-(defun get-action-state-vector-2f (session action)
+(defun get-action-state-vector-2f (session action &key (subaction-path +null-path+))
   (with-action-state-vector-2f (asv :%slots t)
-    (with-action-state-get-info (agi :action (handle action))
-      (check-result (%:get-action-state-float (handle session) agi asv)))
+    (with-action-state-get-info (agi :action (handle action)
+                                     :subaction-path subaction-path)
+      (check-result (%:get-action-state-vector-2f (handle session) agi asv)))
     (list :current %:current-state
           :changed (not (zerop %:changed-since-last-sync))
           :last-change-time %:last-change-time

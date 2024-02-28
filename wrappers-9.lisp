@@ -79,7 +79,16 @@
         (:gl-wayland(error "todo"))
         (:d3d11(error "todo"))
         (:d3d12(error "todo"))
-        (:vulkan(error "todo"))))))
+        (:vulkan
+         (with-graphics-binding-vulkan-khr
+             (gb :instance instance
+                 :physical-device physical-device
+                 :device device
+                 :queue-family-index queue-family-index
+                 :queue-index queue-index)
+           (setf %:next gb)
+           (with-returned-handle (s %:session :session :name object-name)
+             (%:create-session (handle *instance*) sci s))))))))
 
 (defun destroy-session (session)
   (%:destroy-session (handle session)))

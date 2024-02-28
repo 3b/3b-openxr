@@ -366,6 +366,7 @@
            #:create-reference-space
            #:enumerate-view-configuration-views
            #:enumerate-swapchain-images/gl
+           #:enumerate-swapchain-images/vulkan
            #:enumerate-swapchain-formats
            #:create-action-set
            #:create-action
@@ -599,7 +600,12 @@
            #:swapchain-width
            #:swapchain-height
            #:swapchain-images
-           #:destroy-debug-utils-messenger-ext))
+           #:destroy-debug-utils-messenger-ext
+           #:get-action-state-vector-2f
+           #:create-vulkan-device-khr
+           #:get-vulkan-graphics-device-2-khr
+           #:create-vulkan-instance-khr
+           #:get-vulkan-graphics-requirements-2-khr))
 
 
 (defpackage #:3b-openxr
@@ -749,6 +755,7 @@
            #:with-debug-messsenger
            #:check-result
            #:enumerate-swapchain-images/gl
+           #:enumerate-swapchain-images/vulkan
            #:create-action-set
            #:create-action
            #:string-to-path
@@ -942,4 +949,8 @@
            #:swapchain-width
            #:swapchain-height
            #:swapchain-images
-           #:destroy-debug-utils-messenger-ext))
+           #:destroy-debug-utils-messenger-ext
+           #:create-vulkan-device-khr
+           #:get-vulkan-graphics-device-2-khr
+           #:create-vulkan-instance-khr
+           #:get-vulkan-graphics-requirements-2-khr))

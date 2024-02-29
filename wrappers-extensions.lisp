@@ -111,12 +111,81 @@
 ;; also handle graphics requirements, creating sessions and enumerating images
 
 ;;; 12.21. XR_KHR_vulkan_enable2
-#+todo(defun %:get-vulkan-graphics-requirements-2-khr ...)
-#+todo(defun %:create-vulkan-instance-khr ...)
-#+todo(defun %:get-vulkan-graphics-device-2-khr)
-#+todo(defun %:create-vulkan-device-khr ...)
-;; also handle graphics requirements, creating sessions and enumerating images
+(defun get-vulkan-graphics-requirements-2-khr (system-id)
+  (with-graphics-requirements-vulkan-khr (gfx-req :%slots t)
+    (check-result
+     (%:get-vulkan-graphics-requirements-2-khr
+      (handle *instance*) system-id gfx-req))
+    (list
+     :min-api (list
+               (%:version-major %:min-api-version-supported)
+               (%:version-minor %:min-api-version-supported)
+               (%:version-patch %:min-api-version-supported))
+     :max-api (list
+               (%:version-major %:max-api-version-supported)
+               (%:version-minor %:max-api-version-supported)
+               (%:version-patch %:max-api-version-supported)))))
 
+(defun create-vulkan-instance-khr (&key
+                                     system-id
+                                     (next (cffi:null-pointer))
+                                     vulkan-create-info
+                                     create-flags
+                                     (vulkan-allocator (cffi:null-pointer))
+                                     pfn-get-instance-proc-addr)
+  (cffi:with-foreign-objects ((instance-handle '%::vk-instance)
+                              (vk-result '%::vk-result))
+    (with-vulkan-instance-create-info-khr
+        (xr-create-info :system-id system-id
+                        :create-flags create-flags
+                        :pfn-get-instance-proc-addr pfn-get-instance-proc-addr
+                        :vulkan-create-info vulkan-create-info
+                        :next next
+                        :vulkan-allocator vulkan-allocator)
+      (check-result
+       (%:create-vulkan-instance-khr
+        (handle *instance*)
+        xr-create-info instance-handle vk-result))
+      (values
+       (cffi:mem-aref instance-handle '%::vk-instance)
+       (cffi:mem-aref vk-result '%::vk-result)))))
+
+(defun get-vulkan-graphics-device-2-khr (&key system-id vulkan-instance (next (cffi:null-pointer)))
+  (cffi:with-foreign-object (device '%::vk-physical-device)
+    (with-vulkan-graphics-device-get-info-khr
+        (dev-get-info :vulkan-instance vulkan-instance
+                      :system-id system-id
+                      :next next)
+      (check-result
+       (%:get-vulkan-graphics-device-2-khr
+        (handle *instance*) dev-get-info device))
+      (cffi:mem-aref device '%::vk-physical-device))))
+
+(defun create-vulkan-device-khr (&key
+                                   system-id
+                                   (next (cffi:null-pointer))
+                                   pfn-get-instance-proc-addr
+                                   vulkan-physical-device
+                                   create-flags
+                                   vulkan-create-info
+                                   (vulkan-allocator (cffi:null-pointer)))
+  (cffi:with-foreign-objects ((device-handle '%::vk-device)
+                              (vk-result '%::vk-result))
+    (with-vulkan-device-create-info-khr
+        (xr-create-info :next next
+                        :system-id system-id
+                        :pfn-get-instance-proc-addr pfn-get-instance-proc-addr
+                        :vulkan-physical-device vulkan-physical-device
+                        :create-flags create-flags
+                        :vulkan-create-info vulkan-create-info
+                        :vulkan-allocator vulkan-allocator)
+      (check-result
+       (%:create-vulkan-device-khr
+        (handle *instance*)
+        xr-create-info device-handle vk-result))
+      (values
+       (cffi:mem-aref device-handle '%::vk-device)
+       (cffi:mem-aref vk-result '%::vk-result)))))
 
 ;;; 12.22. XR_KHR_vulkan_swapchain_format_list
 

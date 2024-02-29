@@ -69,6 +69,16 @@
      (%:enumerate-swapchain-images (handle swapchain) i o p))
    'vector))
 
+(defun enumerate-swapchain-images/vulkan (swapchain)
+  (coerce
+   (with-two-call (i o p (:struct %:swapchain-image-vulkan-khr)
+                   :filter-pointer (lambda (p)
+                                     (cffi:foreign-slot-value
+                                      p '(:struct %:swapchain-image-vulkan-khr)
+                                      '%:image)))
+     (%:enumerate-swapchain-images (handle swapchain) i o p))
+   'vector))
+
 ;; no enumerate-swapchain-images for now since it needs a specific
 ;; type
 

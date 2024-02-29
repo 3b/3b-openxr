@@ -21,15 +21,18 @@
 
 (defun create-action (action-set name atype &key (localized-name name)
                                               subaction-paths object-name)
-  (when subaction-paths
-    (break "subaction paths not implemented yet"))
-  (with-action-create-info (aci :action-name name
-                                :localized-action-name localized-name
-                                :action-type atype
-                                :count-subaction-paths 0
-                                :subaction-paths (cffi:null-pointer))
-    (with-returned-handle (p %:action :action :name object-name)
-      (%:create-action (handle action-set) aci p))))
+  (cffi:with-foreign-object (c-paths '%:path (length subaction-paths))
+    (loop for i from 0
+          for path in subaction-paths
+          do (setf (cffi:mem-aref c-paths '%:path i)
+                   path))
+    (with-action-create-info (aci :action-name name
+                                  :localized-action-name localized-name
+                                  :action-type atype
+                                  :count-subaction-paths (length subaction-paths)
+                                  :subaction-paths c-paths)
+      (with-returned-handle (p %:action :action :name object-name)
+        (%:create-action (handle action-set) aci p)))))
 
 (defun destroy-action (action)
   (%:destroy-action (handle action)))
@@ -78,28 +81,31 @@
 
 ;; fixme: should these return multiple values instead of plist?
 
-(defun get-action-state-boolean (session action)
+(defun get-action-state-boolean (session action &key (subaction-path +null-path+))
   (with-action-state-boolean (asb :%slots t)
-    (with-action-state-get-info (agi :action (handle action))
+    (with-action-state-get-info (agi :action (handle action)
+                                     :subaction-path subaction-path)
       (check-result (%:get-action-state-boolean (handle session) agi asb)))
     (list :current (not (zerop %:current-state))
           :changed (not (zerop %:changed-since-last-sync))
           :last-change-time %:last-change-time
           :active %:is-active)))
 
-(defun get-action-state-float (session action)
+(defun get-action-state-float (session action &key (subaction-path +null-path+))
   (with-action-state-float (asf :%slots t)
-    (with-action-state-get-info (agi :action (handle action))
+    (with-action-state-get-info (agi :action (handle action)
+                                     :subaction-path subaction-path)
       (check-result (%:get-action-state-float (handle session) agi asf)))
     (list :current %:current-state
           :changed (not (zerop %:changed-since-last-sync))
           :last-change-time %:last-change-time
           :active %:is-active)))
 
-(defun get-action-state-vector-2f (session action)
+(defun get-action-state-vector-2f (session action &key (subaction-path +null-path+))
   (with-action-state-vector-2f (asv :%slots t)
-    (with-action-state-get-info (agi :action (handle action))
-      (check-result (%:get-action-state-float (handle session) agi asv)))
+    (with-action-state-get-info (agi :action (handle action)
+                                     :subaction-path subaction-path)
+      (check-result (%:get-action-state-vector-2f (handle session) agi asv)))
     (list :current %:current-state
           :changed (not (zerop %:changed-since-last-sync))
           :last-change-time %:last-change-time

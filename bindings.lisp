@@ -403,7 +403,7 @@
 ;;          attributes of "enum" or "bitmask" indicate that these values should
 ;;          be generated inside an appropriate definition.
 ;; Structure type enumerant
-(defcenum structure-type
+(defcenum (structure-type :int :allow-undeclared-values t)
   (:type-unknown 0)
   (:type-api-layer-properties 1)
   (:type-extension-properties 2)

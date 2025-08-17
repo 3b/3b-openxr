@@ -508,7 +508,9 @@ isn't in *CHECK-VERBOSE-QUIET*")
                    (otherwise
                     (,@ (or (clause 'otherwise t)
                             `(when *check-verbose*
-                               (break "unknown event type ~s?" ,edb-type))))))))))))))
+                               (if (eql *check-verbose* :break)
+                                   (break "unknown event type ~s?" ,edb-type)
+                                   (format t "unknown event type ~s?~%" ,edb-type)))))))))))))))
 
 
 ;; 2.21. System resource lifetime
